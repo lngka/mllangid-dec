@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
 from tensorflow.keras import Model, Input
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, UpSampling2D, Dropout
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, UpSampling2D, Dropout, Flatten, Reshape, Dense
 
 FFT_LENGTH = 198  # to have 100 fft bins
 FFT_BINS = FFT_LENGTH // 2 + 1
@@ -17,20 +17,32 @@ def autoencoder():
     # encoder
     corrupted_x = Dropout(0.1)(input_layer)
     h = Conv2D(64, (3, 3), activation='relu', padding='same')(corrupted_x)
-    h = MaxPooling2D((2, 2), padding='same', name='feature_layer')(h)
+    h = MaxPooling2D((2, 2), padding='same')(h)
+
+    flattened = Flatten()(h)
+    features = Dense(1024, name='feature_layer')(flattened)
 
     # decoder
+    expanded = Dense(h.shape[1] * h.shape[2] * h.shape[3])(features)
+
+    h = Reshape(target_shape=(h.shape[1], h.shape[2], h.shape[3]))(expanded)
+
     corrupted_h = Dropout(0.1)(h)
     y = Conv2D(64, (3, 3), activation='relu', padding='same')(corrupted_h)
     y = UpSampling2D((2, 2))(y)
     y = Conv2D(1, (3, 3), padding='same')(y)
 
-    return Model(input_layer, y, name='autoencoder'), Model(input_layer, h, name='encoder')
+    return Model(input_layer, y, name='autoencoder'), Model(input_layer, features, name='encoder')
+
+
+def load_encoder():
+    return tf.keras.models.load_model('./models/encoder')
 
 
 if __name__ == "__main__":
     autoencoder, encoder = autoencoder()
     autoencoder.summary()
+    exit()
     cn_stfts = np.load('./8K/cn_stfts.npy')
 
     cn_stfts = tf.expand_dims(cn_stfts, axis=-1)
@@ -43,5 +55,8 @@ if __name__ == "__main__":
     autoencoder.compile(loss='MSE', optimizer=optimizer)
     autoencoder.fit(x_train, y_train, batch_size=8,
                     epochs=1, validation_data=(x_val, y_val))
-    # autoencoder.save('./models/ae')
-    # encoder.save('./models/encoder')
+    autoencoder.save('./models/ae')
+    encoder.save('./models/encoder')
+
+    print(autoencoder.get_layer('conv2d').get_weights())
+    print(encoder.get_layer('conv2d').get_weights())
