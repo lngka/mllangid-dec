@@ -56,7 +56,7 @@ def preprocess(mixedpath):
         # print('mix_wav', mix_wav.shape)
 
         mix_stft = tf.signal.stft(
-            mix_wav, frame_length=WIN_SAMPLES, frame_step=HOP_SAMPLES, fft_length=WIN_SAMPLES)
+            mix_wav, frame_length=WIN_SAMPLES, frame_step=HOP_SAMPLES, fft_length=198)
 
         mix_stft = toFixedNumFrames(mix_stft, N_FRAMES)
 
@@ -101,9 +101,19 @@ def loadWaveFolder(pathToFiles):
 if __name__ == "__main__":
     languages = ['en', 'de', 'cn', 'fr', 'ru']
     saveFolder = './8K'
-    for lang in languages:
+
+    for i in range(len(languages)):
+        lang = languages[i]
         phases, stfts = loadWaveFolder(f'/Users/nvckhoa/speech/8K/{lang}')
+
+        labels = np.full(phases.shape[0], i)
+
         np.save(f'{saveFolder}/{lang}_phases', phases)
         np.save(f'{saveFolder}/{lang}_stfts', stfts)
+        np.save(f'{saveFolder}/{lang}_labels', labels)
+
+        print(lang)
         print(phases.shape)
         print(stfts.shape)
+        print(labels.shape)
+        print(labels)
