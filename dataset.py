@@ -98,6 +98,36 @@ def loadWaveFolder(pathToFiles):
     return np.array(phases), np.array(stfts)
 
 
+def get_data_set():
+    languages = ['en', 'de', 'cn', 'fr', 'ru']
+    saveFolder = './8K'
+
+    dataset = list()
+    classes = list()
+
+    for i in range(len(languages)):
+        lang = languages[i]
+        stft = np.load(f'{saveFolder}/{lang}_stfts.npy')
+        label = np.load(f'{saveFolder}/{lang}_labels.npy')
+
+        if i == 0:
+            dataset = stft
+            classes = label
+        else:
+            dataset = np.concatenate((dataset, stft), axis=0)
+            classes = np.concatenate((classes, label), axis=0)
+
+    return shuffle_data_with_label(dataset, classes)
+
+
+def shuffle_data_with_label(dataset, classes):
+    idx = np.random.permutation(dataset.shape[0])
+    x = dataset[idx]
+    y = classes[idx]
+
+    return x, y
+
+
 if __name__ == "__main__":
     languages = ['en', 'de', 'cn', 'fr', 'ru']
     saveFolder = './8K'
