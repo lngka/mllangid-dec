@@ -14,6 +14,7 @@ SAMPLING_RATE = 8000
 WIN_SAMPLES = int(SAMPLING_RATE * 0.025)
 HOP_SAMPLES = int(SAMPLING_RATE * 0.010)
 N_FRAMES = 400
+FFT_LENGTH = 198  # fft_bins = fft_length // 2 -1 = 100
 
 
 def read_wav(in_path):
@@ -56,7 +57,7 @@ def preprocess(mixedpath):
         # print('mix_wav', mix_wav.shape)
 
         mix_stft = tf.signal.stft(
-            mix_wav, frame_length=WIN_SAMPLES, frame_step=HOP_SAMPLES, fft_length=198)
+            mix_wav, frame_length=WIN_SAMPLES, frame_step=HOP_SAMPLES, fft_length=FFT_LENGTH)
 
         mix_stft = toFixedNumFrames(mix_stft, N_FRAMES)
 
@@ -117,7 +118,8 @@ def get_data_set():
             dataset = np.concatenate((dataset, stft), axis=0)
             classes = np.concatenate((classes, label), axis=0)
 
-    return shuffle_data_with_label(dataset, classes)
+    dataset, classes = shuffle_data_with_label(dataset, classes)
+    return dataset, classes
 
 
 def shuffle_data_with_label(dataset, classes):
@@ -125,7 +127,7 @@ def shuffle_data_with_label(dataset, classes):
     x = dataset[idx]
     y = classes[idx]
 
-    return x, y
+    return np.array(x), np.array(y)
 
 
 if __name__ == "__main__":
