@@ -13,14 +13,14 @@ data = np.expand_dims(data, -1)
     1.2: initialize centroids using k_means
 '''
 # train encoder
-# autoencoder = AutoEncoder()
-#autoencoder.fit(data, save_trained_model=True, batch_size=10, epochs=1)
+autoencoder = AutoEncoder()
+autoencoder.fit(data, save_trained_model=True, batch_size=10, epochs=1)
 #encoder = autoencoder.get_encoder()
 
 # load pre-trained encoder
-autoencoder = AutoEncoder()
-encoder = autoencoder.load_encoder()
-
+#autoencoder = AutoEncoder()
+#encoder = autoencoder.load_encoder()
+exit()
 # initialize centroid using k_means
 languageDEC = LanguageDEC(encoder=encoder, n_lang=5)
 languageDEC.initialize(data)

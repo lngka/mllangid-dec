@@ -1,3 +1,4 @@
+import os
 import math
 import time
 import tensorflow as tf
@@ -101,7 +102,8 @@ def loadWaveFolder(pathToFiles):
 
 def get_data_set():
     languages = ['en', 'de', 'cn', 'fr', 'ru']
-    saveFolder = './8K'
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    saveFolder = f'{dir_path}/8K'
 
     dataset = list()
     classes = list()
@@ -132,7 +134,9 @@ def shuffle_data_with_label(dataset, classes):
 
 if __name__ == "__main__":
     languages = ['en', 'de', 'cn', 'fr', 'ru']
-    saveFolder = './8K'
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+
+    saveFolder = f'{dir_path}/8K'
 
     for i in range(len(languages)):
         lang = languages[i]
