@@ -57,8 +57,15 @@ class DECLayer(Layer):
         """
         q = 1.0 / (1.0 + (K.sum(K.square(K.expand_dims(inputs,
                                                        axis=1) - self.clusters), axis=2) / self.alpha))
+        print(q.shape)
         q **= (self.alpha + 1.0) / 2.0
         q = K.transpose(K.transpose(q) / K.sum(q, axis=1))
+
+        print((K.expand_dims(inputs, axis=1) - self.clusters).shape)
+
+        print(inputs.shape)
+        print(self.clusters.shape)
+
         return q
 
     def get_config(self):
@@ -69,5 +76,5 @@ class DECLayer(Layer):
         This method is used when saving the layer or a model that contains this layer.
         '''
         config = {'n_clusters': self.n_clusters}
-        base_config = super(ClusteringLayer, self).get_config()
+        base_config = super(DECLayer, self).get_config()
         return dict(list(base_config.items()) + list(config.items()))

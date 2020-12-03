@@ -31,4 +31,4 @@ languageDEC.initialize(data)
     update_interval: 
 '''
 languageDEC.compile(optimizer='sgd', loss='kld')
-languageDEC.fit(x=data, y=labels, max_iteration=4, update_interval=1)
+languageDEC.fit(x=data, y=labels, max_iteration=1, update_interval=1)
