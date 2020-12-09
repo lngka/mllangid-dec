@@ -2,8 +2,9 @@ from tensorflow.keras import Model
 from sklearn.cluster import KMeans
 from tensorflow.keras.layers import Flatten
 from DECLayer import DECLayer
-
+import tensorflow as tf
 import numpy as np
+import os
 
 
 class LanguageDEC:
@@ -12,10 +13,17 @@ class LanguageDEC:
     assign the features into clusters according to a target distribution
     '''
 
-    def __init__(self, encoder=None, n_lang=5):
-        self.n_lang = n_lang
+    def __init__(self, encoder=None, n_lang=5, save_path=None):
+        # creating properties
+        if save_path == None:
+            dir_path = os.path.dirname(os.path.realpath(__file__))
+            save_path = f'{dir_path}/models'
 
+        self.save_path = save_path
+        self.n_lang = n_lang
         self.encoder = encoder
+
+        # creating model
         flattened = Flatten()(self.encoder.output)
         dec = DECLayer(self.n_lang, name='clustering')
         prediction = dec(flattened)
@@ -91,6 +99,18 @@ class LanguageDEC:
             index = index + 1 if (index + 1) * batch_size <= x.shape[0] else 0
 
         print("Done fitting")
+        tf.keras.models.save_model(
+            self.model, f'{self.save_path}/dec', save_format='h5')
+        tf.keras.models.save_model(
+            self.encoder, f'{self.save_path}/dec_encoder', save_format='h5')
+
+        #self.model.save(f'{self.save_path}/dec', save_format='tf')
+        #self.encoder.save(f'{self.save_path}/dec_encoder', save_format='tf')
+
+        # tf.compat.v1.keras.experimental.export_saved_model(
+        #     self.model, f'{self.save_path}/dec')
+        # tf.compat.v1.keras.experimental.export_saved_model(
+        #     self.encoder, f'{self.save_path}/dec_encoder')
 
 
 class Metrics:
