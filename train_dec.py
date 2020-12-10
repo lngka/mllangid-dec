@@ -12,29 +12,9 @@ data, labels = get_shuffled_data_set()
 data = np.expand_dims(data, -1)
 
 ''' Step1: Initialization
-    1.1: train autoencoder and use the encoder to extract features from data
+    1.1: load pre trained encoder to extract features from data
     1.2: initialize centroids using k_means
 '''
-# train encoder
-# autoencoder = AutoEncoder()
-# for i in range(5):
-#     start = i * 100
-#     end = start + 100
-#     d = data[start:end]
-
-#     if i == 4:
-#         loss = autoencoder.fit(
-#             d, save_trained_model=True, batch_size=64, epochs=512)
-#         print('final loss: ', loss)
-#     else:
-#         loss = autoencoder.fit(d, save_trained_model=False,
-#                                batch_size=64, epochs=512)
-#     print('trained d:', d.shape)
-#     print('trained start:', start)
-#     print('trained end:', end)
-
-
-# encoder = autoencoder.get_encoder()
 
 
 # load pre-trained encoder
@@ -51,4 +31,5 @@ languageDEC.initialize(data)
     update_interval: 
 '''
 languageDEC.compile(optimizer='sgd', loss='kld')
-languageDEC.fit(x=data, y=labels, max_iteration=1, update_interval=1)
+languageDEC.fit(x=data, y=labels, max_iteration=100,
+                update_interval=5, batch_size=100)

@@ -6,6 +6,9 @@ import tensorflow as tf
 import numpy as np
 import os
 
+from tensorflow.keras.layers import Layer, InputSpec
+import tensorflow.keras.backend as K
+
 
 class LanguageDEC:
     '''LanguageDEC Model consist of an encoder to extract features
@@ -79,22 +82,21 @@ class LanguageDEC:
             train_labels = p[idx]
 
             loss = self.model.train_on_batch(x=train_batch, y=train_labels)
-            print('==========================================')
-            print('train_batch', train_batch.shape)
-            print('train_labels.shape', train_labels.shape)
-            print('train_labels', train_labels)
-            print('ground truth', y[idx])
-            print('predicted', self.predict(train_batch))
 
             # evaluate the clustering performance
             if ite % update_interval == 0:
+                print('=================BATCH====================')
+                print('train_batch.shape', train_batch.shape)
+                print('train_labels.shape', train_labels.shape)
+                #print('train_labels', train_labels)
+                #print('ground truth', y[idx])
+                #print('predicted', self.predict(train_batch))
+
                 y_pred = q.argmax(1)
                 acc = np.round(Metrics.acc(y, y_pred), 5)
                 loss = np.round(loss, 5)
-
                 print('Iter %d: acc = %.5f' % (ite, acc),
                       '; loss = ', loss)
-
             # update index
             index = index + 1 if (index + 1) * batch_size <= x.shape[0] else 0
 
@@ -119,6 +121,7 @@ class Metrics:
         """Calculate clustering accuracy.
         Arguments
             y_true: labels with shape (n_samples,)
+                    en-0, de-1, cn-2, fr-3, ru-4
             y_pred: predicted labels with shape (n_samples,)
         Return
             accuracy
@@ -132,6 +135,17 @@ class Metrics:
         for i in range(y_pred.size):
             # w[i, j] = count of prediction&groundtruth pair i&j
             w[y_pred[i], y_true[i]] += 1
+
+        print("Prediction results: ")
+        print(w)
+        labelmap = tf.argmax(w, axis=0)
+        class_count = tf.reduce_max(w, axis=0)
+        print(labelmap)
+        print(class_count)
+
+        for i in range(5):
+            print(f'True label {i} classified as {labelmap[i]}')
+            print(f'Count: {class_count[i]}')
 
         acc = sum(w.diagonal()) / y_pred.size
         return acc
