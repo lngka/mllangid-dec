@@ -34,11 +34,11 @@ class AutoEncoder:
                 encoder: model of encoder to initialize features for DECLayer
         '''
         input_layer = Input(shape=(n_frames, fft_bins, 1), dtype=float)
-        x = Flatten(input_layer)
+        x = Flatten()(input_layer)
 
         # encoder
         corrupted_x = Dropout(0.1)(x)
-        h = Dense(10000, 'relu')(x)
+        h = Dense(10000, 'relu')(corrupted_x)
 
         features = Dense(2500)(h)
 
@@ -48,7 +48,7 @@ class AutoEncoder:
 
         h = Dense(n_frames * fft_bins)(h)
 
-        h = Reshape(target_shape=(n_frames, fft_bins, 1))(h)
+        y = Reshape(target_shape=(n_frames, fft_bins, 1))(h)
 
         return Model(input_layer, y, name='autoencoder'), Model(input_layer, features, name='encoder')
 
