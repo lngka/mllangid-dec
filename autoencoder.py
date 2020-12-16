@@ -38,26 +38,26 @@ class AutoEncoder:
 
         # encoder
         corrupted_x = Dropout(0.1)(input_layer)
-        h = Conv2D(16, (3, 3), activation='relu', padding='same')(corrupted_x)
-        h = MaxPooling2D((2, 2), padding='same')(h)
-
-        h = Conv2D(32, (3, 3), activation='relu', padding='same')(h)
+        h = Conv2D(32, (3, 3), activation='relu', padding='same')(corrupted_x)
         h = MaxPooling2D((2, 2), padding='same')(h)
 
         h = Conv2D(64, (3, 3), activation='relu', padding='same')(h)
+        h = MaxPooling2D((2, 2), padding='same')(h)
+
+        h = Conv2D(128, (3, 3), activation='relu', padding='same')(h)
 
         features = Conv2D(1, (3, 3), padding='same', name='features_layer')(h)
 
         # decoder
         corrupted_h = Dropout(0.1)(features)
 
-        h = Conv2D(64, (3, 3), activation='relu', padding='same')(corrupted_h)
+        h = Conv2D(128, (3, 3), activation='relu', padding='same')(corrupted_h)
+
+        h = UpSampling2D((2, 2))(h)
+        h = Conv2D(64, (3, 3), activation='relu', padding='same')(h)
 
         h = UpSampling2D((2, 2))(h)
         h = Conv2D(32, (3, 3), activation='relu', padding='same')(h)
-
-        h = UpSampling2D((2, 2))(h)
-        h = Conv2D(16, (3, 3), activation='relu', padding='same')(h)
 
         y = Conv2D(1, (3, 3), padding='same')(h)
 
