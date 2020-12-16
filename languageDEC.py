@@ -63,11 +63,30 @@ class LanguageDEC:
             [kmeans.cluster_centers_])
         print(f'Set {self.n_lang} cluster centroids initial weights of DECLayer')
 
-    def fit(self, x, y, max_iteration=128, batch_size=64, update_interval=32):
+    def write_training_log(self, key=None, value=''):
+        '''
+        Write to log file 
+        '''
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        log_path = f'{dir_path}/logs/dec_logs.txt'
+        if os.path.exists(log_path):
+            open_mode = 'a'  # append if already exists
+        else:
+            open_mode = 'w'
+
+        with open(log_path, open_mode) as text_file:
+            if key == None:
+                self.model.summary(
+                    print_fn=lambda x: text_file.write(x + '\n'))
+            else:
+                print(f'{key}: {value}', file=text_file)
+
+    def fit(self, x, y, max_iteration=128, batch_size=64, update_interval=32, **kwargs):
+        self.write_training_log()
+
         index_array = np.arange(x.shape[0])
         index = 0
         loss = 0
-
         for ite in range(max_iteration):
             q = self.model.predict(x)
             p = self.calulate_target_distribution(q)
@@ -81,7 +100,8 @@ class LanguageDEC:
             train_batch = x[idx]
             train_labels = p[idx]
 
-            loss = self.model.train_on_batch(x=train_batch, y=train_labels)
+            loss = self.model.train_on_batch(
+                x=train_batch, y=train_labels, **kwargs)
 
             # evaluate the clustering performance
             if ite % update_interval == 0:
@@ -91,6 +111,10 @@ class LanguageDEC:
                 #print('train_labels', train_labels)
                 #print('ground truth', y[idx])
                 #print('predicted', self.predict(train_batch))
+                self.write_training_log('ite', ite)
+                self.write_training_log('train_batch.shape', train_batch.shape)
+                self.write_training_log(
+                    'train_labels.shape', train_labels.shape)
 
                 y_pred = q.argmax(1)
                 acc = np.round(Metrics.acc(y, y_pred), 5)
@@ -108,6 +132,21 @@ class LanguageDEC:
 
 
 class Metrics:
+    @staticmethod
+    def write_training_log(key='', value=''):
+        '''
+        Write to log file 
+        '''
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        log_path = f'{dir_path}/logs/dec_logs.txt'
+        if os.path.exists(log_path):
+            open_mode = 'a'  # append if already exists
+        else:
+            open_mode = 'w'
+
+        with open(log_path, open_mode) as text_file:
+            print(f'{key}: {value}', file=text_file)
+
     @staticmethod
     def acc(y_true, y_pred):
         """Calculate clustering accuracy.
@@ -128,16 +167,21 @@ class Metrics:
             # w[i, j] = count of prediction&groundtruth pair i&j
             w[y_pred[i], y_true[i]] += 1
 
-        print("Prediction results: ")
-        print(w)
+        Metrics.write_training_log("Prediction results", " ")
+        Metrics.write_training_log("w", w)
+
         labelmap = tf.argmax(w, axis=0)
         class_count = tf.reduce_max(w, axis=0)
-        print(labelmap)
-        print(class_count)
+
+        Metrics.write_training_log("labelmap", labelmap)
+        Metrics.write_training_log("class_count", class_count)
 
         for i in range(5):
-            print(f'True label {i} classified as {labelmap[i]}')
-            print(f'Count: {class_count[i]}')
+            #print(f'True label {i} classified as {labelmap[i]}')
+            #print(f'Count: {class_count[i]}')
+            Metrics.write_training_log(
+                f'True label {i} classified as', f'{labelmap[i]}')
+            Metrics.write_training_log("Count", class_count[i])
 
         acc = sum(w.diagonal()) / y_pred.size
         return acc
