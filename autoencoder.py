@@ -19,6 +19,7 @@ class AutoEncoder:
         autoencoder, encoder = AutoEncoder.build_autoencoder()
         self.autoencoder = autoencoder
         self.encoder = encoder
+        self.already_compiled = False
 
     def get_encoder(self):
         return self.encoder
@@ -69,16 +70,20 @@ class AutoEncoder:
             path_to_encoder = f'{dir_path}/models/encoder'
         return tf.compat.v1.keras.experimental.load_from_saved_model(path_to_encoder)
 
-    def fit(self, data, save_trained_model=False, batch_size=10, epochs=1, loss='MSE'):
+    def fit(self, data, save_trained_model=False, batch_size=10, epochs=1, loss='MSE', **kwargs):
         self.autoencoder.summary()
-
-        optimizer = tf.keras.optimizers.Adam(
-            learning_rate=0.001)
-
         steps_per_epoch = math.ceil(data.shape[0] / batch_size)
-        self.autoencoder.compile(loss=loss, optimizer=optimizer)
-        loss = self.autoencoder.fit(data, data, batch_size=batch_size,
-                                    epochs=epochs, steps_per_epoch=steps_per_epoch)
+
+        if self.already_compiled:
+            loss = self.autoencoder.fit(data, data, batch_size=batch_size,
+                                        epochs=epochs, steps_per_epoch=steps_per_epoch, **kwargs)
+        else:
+            # compile and fit if not already compiled
+            optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
+            self.autoencoder.compile(loss=loss, optimizer=optimizer)
+            self.already_compiled = True
+            loss = self.autoencoder.fit(data, data, batch_size=batch_size,
+                                        epochs=epochs, steps_per_epoch=steps_per_epoch, **kwargs)
 
         if save_trained_model:
             tf.compat.v1.keras.experimental.export_saved_model(
@@ -87,6 +92,3 @@ class AutoEncoder:
                 self.encoder, f'{self.save_path}/encoder')
 
         return loss
-
-        # print(autoencoder.get_layer('conv2d').get_weights())
-        # print(encoder.get_layer('conv2d').get_weights())

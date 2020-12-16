@@ -37,14 +37,21 @@ class AutoEncoder:
         x = Flatten()(input_layer)
 
         # encoder
-        corrupted_x = Dropout(0.1)(x)
-        h = Dense(10000, 'relu')(corrupted_x)
+        x = Dropout(0.1)(x)
+        h = Dense(500, 'relu')(x)
+        h = Dense(500, 'relu')(h)
+        h = Dense(2000, 'relu')(h)
+        h = Dense(100, 'relu')(h)
 
-        features = Dense(2500)(h)
+
+        features = Dense(50, name='feature_layers')(h)
 
         # decoder
-        corrupted_h = Dropout(0.1)(features)
-        h = Dense(10000, 'relu')(corrupted_h)
+        h = Dropout(0.1)(features)
+        h = Dense(100, 'relu')(h)
+        h = Dense(2000, 'relu')(h)
+        h = Dense(500, 'relu')(h)
+        h = Dense(500, 'relu')(h)
 
         h = Dense(n_frames * fft_bins)(h)
 
@@ -59,7 +66,7 @@ class AutoEncoder:
             path_to_encoder = f'{dir_path}/models/encoder'
         return tf.compat.v1.keras.experimental.load_from_saved_model(path_to_encoder)
 
-    def fit(self, data, save_trained_model=False, batch_size=10, epochs=1, loss='MSE'):
+    def fit(self, data, save_trained_model=False, batch_size=10, epochs=1, loss='MSE', **kwargs):
         self.autoencoder.summary()
 
         optimizer = tf.keras.optimizers.Adam(
@@ -68,7 +75,7 @@ class AutoEncoder:
         steps_per_epoch = math.ceil(data.shape[0] / batch_size)
         self.autoencoder.compile(loss=loss, optimizer=optimizer)
         loss = self.autoencoder.fit(data, data, batch_size=batch_size,
-                                    epochs=epochs, steps_per_epoch=steps_per_epoch)
+                                    epochs=epochs, steps_per_epoch=steps_per_epoch, **kwargs)
 
         if save_trained_model:
             tf.compat.v1.keras.experimental.export_saved_model(
