@@ -27,7 +27,8 @@ class LanguageDEC:
         self.encoder = encoder
 
         # creating model
-        flattened = Flatten()(self.encoder.output)
+        flattened = Flatten(name='flattened_encoder_output')(
+            self.encoder.output)
         dec = DECLayer(self.n_lang, name='clustering')
         prediction = dec(flattened)
 
@@ -57,7 +58,6 @@ class LanguageDEC:
         kmeans.fit_predict(features)
         print(f'Initialized {self.n_lang} cluster centroids')
         print(kmeans.cluster_centers_)
-        print(np.array(kmeans.cluster_centers_).shape)
 
         self.model.get_layer(name='clustering').set_weights(
             [kmeans.cluster_centers_])
@@ -105,14 +105,6 @@ class LanguageDEC:
             self.model, f'{self.save_path}/dec', save_format='h5')
         tf.keras.models.save_model(
             self.encoder, f'{self.save_path}/dec_encoder', save_format='h5')
-
-        #self.model.save(f'{self.save_path}/dec', save_format='tf')
-        #self.encoder.save(f'{self.save_path}/dec_encoder', save_format='tf')
-
-        # tf.compat.v1.keras.experimental.export_saved_model(
-        #     self.model, f'{self.save_path}/dec')
-        # tf.compat.v1.keras.experimental.export_saved_model(
-        #     self.encoder, f'{self.save_path}/dec_encoder')
 
 
 class Metrics:

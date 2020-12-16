@@ -1,5 +1,6 @@
 from tensorflow.keras.layers import Layer, InputSpec
 import tensorflow.keras.backend as K
+import tensorflow as tf
 
 
 class DECLayer(Layer):
@@ -58,18 +59,41 @@ class DECLayer(Layer):
         Return:
             q: student's t-distribution, or soft labels for each sample. shape=(n_samples, n_lang)
         """
-        q = 1.0 / (1.0 + (K.sum(K.square(K.expand_dims(inputs,
-                                                       axis=1) - self.clusters), axis=2) / self.alpha))
-        print(q.shape)
-        q **= (self.alpha + 1.0) / 2.0
-        q = K.transpose(K.transpose(q) / K.sum(q, axis=1))
+        inputs_expanded = K.expand_dims(inputs, axis=1)
 
-        print((K.expand_dims(inputs, axis=1) - self.clusters).shape)
+        minus_centroids = inputs_expanded - self.clusters
 
-        print(inputs.shape)
-        print(self.clusters.shape)
+        squared = K.square(minus_centroids)
 
-        return q
+        squared_sum = K.sum(squared, axis=2)
+
+        divide_alpha = squared_sum / self.alpha
+
+        # the numnerator in q_ịj formular in the paper
+        numerator = 1.0 / (1.0 + divide_alpha)
+        numerator **= (self.alpha + 1.0) / 2.0
+
+        denominator = K.sum(numerator, axis=1)
+
+        quiu = K.transpose(numerator) / denominator
+        quiu = K.transpose(quiu)
+
+        # print('inputs: ', inputs.shape)
+        # print('inputs_expanded: ', inputs_expanded.shape)
+        # print('minus_centroids: ', minus_centroids.shape)
+        # print('squared: ', squared.shape)
+        # print('squared_sum: ', squared_sum.shape)
+        # print('divide_alpha: ', divide_alpha.shape)
+        # print('numerator: ', numerator.shape)
+        # print('denominator: ', denominator.shape)
+        # print('quiu: ', quiu)
+
+        # q = 1.0 / (1.0 + (K.sum(K.square(K.expand_dims(inputs,
+        #                                                axis=1) - self.clusters), axis=2) / self.alpha))
+        # q **= (self.alpha + 1.0) / 2.0
+        # q = K.transpose(K.transpose(q) / K.sum(q, axis=1))
+
+        return quiu
 
     def get_config(self):
         '''
