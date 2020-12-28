@@ -105,30 +105,20 @@ class LanguageDEC:
 
             # evaluate the clustering performance
             if ite % update_interval == 0:
-                print('=================BATCH====================')
-                print('train_batch.shape', train_batch.shape)
-                print('train_labels.shape', train_labels.shape)
-                #print('train_labels', train_labels)
-                #print('ground truth', y[idx])
-                #print('predicted', self.predict(train_batch))
-                self.write_training_log('ite', ite)
-                self.write_training_log('train_batch.shape', train_batch.shape)
-                self.write_training_log(
-                    'train_labels.shape', train_labels.shape)
+                self.write_training_log('=======================ite', ite)
 
+                q = self.model.predict(x)
                 y_pred = q.argmax(1)
-                acc = np.round(Metrics.acc(y, y_pred), 5)
-                loss = np.round(loss, 5)
-                print('Iter %d: acc = %.5f' % (ite, acc),
-                      '; loss = ', loss)
+
+                # not really accuracy, just trigger logging for now
+                acc = Metrics.acc(y, y_pred)
+
             # update index
             index = index + 1 if (index + 1) * batch_size <= x.shape[0] else 0
 
         print("Done fitting")
         tf.keras.models.save_model(
             self.model, f'{self.save_path}/dec', save_format='h5')
-        tf.keras.models.save_model(
-            self.encoder, f'{self.save_path}/dec_encoder', save_format='h5')
 
 
 class Metrics:
@@ -145,7 +135,7 @@ class Metrics:
             open_mode = 'w'
 
         with open(log_path, open_mode) as text_file:
-            print(f'{key}: {value}', file=text_file)
+            print(f'{key}{value}', file=text_file)
 
     @staticmethod
     def acc(y_true, y_pred):
@@ -157,6 +147,7 @@ class Metrics:
         Return
             accuracy
         """
+        languages = ['en', 'de', 'cn', 'fr', 'ru']
         y_true = y_true.astype(np.int64)
 
         assert y_pred.size == y_true.size
@@ -168,20 +159,14 @@ class Metrics:
             w[y_pred[i], y_true[i]] += 1
 
         Metrics.write_training_log("Prediction results", " ")
-        Metrics.write_training_log("w", w)
+        Metrics.write_training_log("(pred_axis, truth_axis) \n", w)
 
-        labelmap = tf.argmax(w, axis=0)
-        class_count = tf.reduce_max(w, axis=0)
-
-        Metrics.write_training_log("labelmap", labelmap)
-        Metrics.write_training_log("class_count", class_count)
+        true_labelmap = tf.argmax(w, axis=0)
+        likelihood = tf.reduce_max(w, axis=0) / tf.reduce_sum(w, axis=0)
 
         for i in range(5):
-            #print(f'True label {i} classified as {labelmap[i]}')
-            #print(f'Count: {class_count[i]}')
             Metrics.write_training_log(
-                f'True label {i} classified as', f'{labelmap[i]}')
-            Metrics.write_training_log("Count", class_count[i])
+                f'True label {languages[i]} classified as ', f'{true_labelmap[i]}, likelihood {likelihood[i]}')
 
         acc = sum(w.diagonal()) / y_pred.size
         return acc

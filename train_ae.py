@@ -68,7 +68,8 @@ log_callback = LossAndErrorPrintingCallback(model=autoencoder.get_encoder())
 my_callbacks = [log_callback]
 
 # autoencoder.fit(data, save_trained_model=True, batch_size=1,
-#                 epochs=4096, callbacks=my_callbacks)
+#                  epochs=4096, callbacks=my_callbacks)
+
 for i in range(5):
     start = i * 100
     end = start + 100

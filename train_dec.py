@@ -7,13 +7,13 @@ import tensorflow as tf
 tf.compat.v1.enable_eager_execution()
 ''' Step0: Get nice data
 '''
-#data, labels = get_shuffled_data_set()
-#data = np.expand_dims(data, -1)
+data, labels = get_shuffled_data_set()
+data = np.expand_dims(data, -1)
 
 # data = np.full(shape=(10, 400, 100, 1), fill_value=0.645)  # fake data to test
-data = np.random.rand(10, 400, 100, 1)
+#data = np.random.rand(10, 400, 100, 1)
 #np.save('./testdata.npy', data)
-labels = np.full(shape=(10,), fill_value=3)
+#labels = np.full(shape=(10,), fill_value=3)
 #data = np.load('./testdata.npy')
 
 ''' Step1: Initialization
@@ -36,5 +36,5 @@ languageDEC.initialize(data)
     update_interval: 
 '''
 languageDEC.compile(optimizer='sgd', loss='kld')
-languageDEC.fit(x=data, y=labels, max_iteration=1,
-                update_interval=1, batch_size=1)
+languageDEC.fit(x=data, y=labels, max_iteration=1024,
+                update_interval=32, batch_size=100)

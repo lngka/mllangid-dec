@@ -1,0 +1,444 @@
+Model: "model"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_1 (InputLayer)         [(None, 400, 100, 1)]     0         
+_________________________________________________________________
+flatten (Flatten)            (None, 40000)             0         
+_________________________________________________________________
+dropout (Dropout)            (None, 40000)             0         
+_________________________________________________________________
+dense (Dense)                (None, 500)               20000500  
+_________________________________________________________________
+dense_1 (Dense)              (None, 500)               250500    
+_________________________________________________________________
+dense_2 (Dense)              (None, 2000)              1002000   
+_________________________________________________________________
+dense_3 (Dense)              (None, 100)               200100    
+_________________________________________________________________
+feature_layers (Dense)       (None, 50)                5050      
+_________________________________________________________________
+flattened_encoder_output (Fl (None, 50)                0         
+_________________________________________________________________
+clustering (DECLayer)        (None, 5)                 250       
+=================================================================
+Total params: 21,458,400
+Trainable params: 21,458,400
+Non-trainable params: 0
+_________________________________________________________________
+=======================ite: 0
+Prediction results 
+(pred_axis, truth_axis) 
+[[54  4  0 93 48]
+ [14  3 20  0  0]
+ [ 1  2 53  0  6]
+ [ 1  0 24  6 29]
+ [30 91  3  1 17]]
+True label en classified as 0, likelihood 0.54
+True label de classified as 4, likelihood 0.91
+True label cn classified as 2, likelihood 0.53
+True label fr classified as 0, likelihood 0.93
+True label ru classified as 0, likelihood 0.48
+=======================ite: 32
+Prediction results 
+(pred_axis, truth_axis) 
+[[49  1  0 88 34]
+ [16  7 22  0  0]
+ [ 3  2 47  0  8]
+ [ 2  0 29 10 46]
+ [30 90  2  2 12]]
+True label en classified as 0, likelihood 0.49
+True label de classified as 4, likelihood 0.9
+True label cn classified as 2, likelihood 0.47
+True label fr classified as 0, likelihood 0.88
+True label ru classified as 3, likelihood 0.46
+=======================ite: 64
+Prediction results 
+(pred_axis, truth_axis) 
+[[47  5  0 90 32]
+ [15 11 22  0  0]
+ [ 2  2 45  0  7]
+ [ 6  0 31 10 52]
+ [30 82  2  0  9]]
+True label en classified as 0, likelihood 0.47
+True label de classified as 4, likelihood 0.82
+True label cn classified as 2, likelihood 0.45
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.52
+=======================ite: 96
+Prediction results 
+(pred_axis, truth_axis) 
+[[43  5  0 90 27]
+ [17 10 22  0  0]
+ [ 2  2 45  0  7]
+ [ 7  0 31 10 55]
+ [31 83  2  0 11]]
+True label en classified as 0, likelihood 0.43
+True label de classified as 4, likelihood 0.83
+True label cn classified as 2, likelihood 0.45
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.55
+=======================ite: 128
+Prediction results 
+(pred_axis, truth_axis) 
+[[37  1  0 90 26]
+ [17 10 22  0  0]
+ [ 3  2 46  0  8]
+ [ 9  0 30 10 56]
+ [34 87  2  0 10]]
+True label en classified as 0, likelihood 0.37
+True label de classified as 4, likelihood 0.87
+True label cn classified as 2, likelihood 0.46
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.56
+=======================ite: 160
+Prediction results 
+(pred_axis, truth_axis) 
+[[40  4  0 90 28]
+ [18 13 22  0  0]
+ [ 2  2 44  0  8]
+ [10  1 32 10 56]
+ [30 80  2  0  8]]
+True label en classified as 0, likelihood 0.4
+True label de classified as 4, likelihood 0.8
+True label cn classified as 2, likelihood 0.44
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.56
+=======================ite: 192
+Prediction results 
+(pred_axis, truth_axis) 
+[[36  5  0 90 26]
+ [21 13 22  0  0]
+ [ 2  2 46  0  8]
+ [ 9  0 30 10 56]
+ [32 80  2  0 10]]
+True label en classified as 0, likelihood 0.36
+True label de classified as 4, likelihood 0.8
+True label cn classified as 2, likelihood 0.46
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.56
+=======================ite: 224
+Prediction results 
+(pred_axis, truth_axis) 
+[[29  1  0 90 25]
+ [21 13 22  0  0]
+ [ 3  2 46  0  9]
+ [11  0 30 10 56]
+ [36 84  2  0 10]]
+True label en classified as 4, likelihood 0.36
+True label de classified as 4, likelihood 0.84
+True label cn classified as 2, likelihood 0.46
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.56
+=======================ite: 256
+Prediction results 
+(pred_axis, truth_axis) 
+[[34  5  0 90 27]
+ [24 17 23  0  0]
+ [ 2  2 44  0  8]
+ [12  0 32 10 56]
+ [28 76  1  0  9]]
+True label en classified as 0, likelihood 0.34
+True label de classified as 4, likelihood 0.76
+True label cn classified as 2, likelihood 0.44
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.56
+=======================ite: 288
+Prediction results 
+(pred_axis, truth_axis) 
+[[30  5  0 90 25]
+ [24 17 23  0  0]
+ [ 3  2 46  0  8]
+ [11  0 30 10 56]
+ [32 76  1  0 11]]
+True label en classified as 4, likelihood 0.32
+True label de classified as 4, likelihood 0.76
+True label cn classified as 2, likelihood 0.46
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.56
+=======================ite: 320
+Prediction results 
+(pred_axis, truth_axis) 
+[[25  1  0 90 25]
+ [24 17 23  0  0]
+ [ 4  2 46  0 10]
+ [11  0 30 10 56]
+ [36 80  1  0  9]]
+True label en classified as 4, likelihood 0.36
+True label de classified as 4, likelihood 0.8
+True label cn classified as 2, likelihood 0.46
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.56
+=======================ite: 352
+Prediction results 
+(pred_axis, truth_axis) 
+[[32  5  0 90 26]
+ [27 19 23  0  0]
+ [ 3  2 44  0  8]
+ [11  0 32 10 56]
+ [27 74  1  0 10]]
+True label en classified as 0, likelihood 0.32
+True label de classified as 4, likelihood 0.74
+True label cn classified as 2, likelihood 0.44
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.56
+=======================ite: 384
+Prediction results 
+(pred_axis, truth_axis) 
+[[28  4  0 90 25]
+ [28 19 23  0  0]
+ [ 4  2 46  0 10]
+ [11  0 30 10 56]
+ [29 75  1  0  9]]
+True label en classified as 4, likelihood 0.29
+True label de classified as 4, likelihood 0.75
+True label cn classified as 2, likelihood 0.46
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.56
+=======================ite: 416
+Prediction results 
+(pred_axis, truth_axis) 
+[[23  1  0 90 24]
+ [27 18 23  0  0]
+ [ 6  2 46  0 10]
+ [11  0 30 10 57]
+ [33 79  1  0  9]]
+True label en classified as 4, likelihood 0.33
+True label de classified as 4, likelihood 0.79
+True label cn classified as 2, likelihood 0.46
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.57
+=======================ite: 448
+Prediction results 
+(pred_axis, truth_axis) 
+[[27  5  0 90 24]
+ [30 19 23  0  0]
+ [ 6  2 44  0 10]
+ [12  0 32 10 57]
+ [25 74  1  0  9]]
+True label en classified as 1, likelihood 0.3
+True label de classified as 4, likelihood 0.74
+True label cn classified as 2, likelihood 0.44
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.57
+=======================ite: 480
+Prediction results 
+(pred_axis, truth_axis) 
+[[23  4  0 90 25]
+ [31 19 23  0  0]
+ [ 6  2 46  0 10]
+ [11  0 30 10 56]
+ [29 75  1  0  9]]
+True label en classified as 1, likelihood 0.31
+True label de classified as 4, likelihood 0.75
+True label cn classified as 2, likelihood 0.46
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.56
+=======================ite: 512
+Prediction results 
+(pred_axis, truth_axis) 
+[[19  1  0 90 22]
+ [30 19 23  0  0]
+ [ 7  2 46  0 13]
+ [12  0 30 10 57]
+ [32 78  1  0  8]]
+True label en classified as 4, likelihood 0.32
+True label de classified as 4, likelihood 0.78
+True label cn classified as 2, likelihood 0.46
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.57
+=======================ite: 544
+Prediction results 
+(pred_axis, truth_axis) 
+[[26  5  0 90 22]
+ [31 19 23  0  0]
+ [ 7  2 44  0 10]
+ [12  0 32 10 59]
+ [24 74  1  0  9]]
+True label en classified as 1, likelihood 0.31
+True label de classified as 4, likelihood 0.74
+True label cn classified as 2, likelihood 0.44
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.59
+=======================ite: 576
+Prediction results 
+(pred_axis, truth_axis) 
+[[23  4  0 90 22]
+ [31 19 23  0  0]
+ [ 7  2 46  0 12]
+ [11  0 30 10 58]
+ [28 75  1  0  8]]
+True label en classified as 1, likelihood 0.31
+True label de classified as 4, likelihood 0.75
+True label cn classified as 2, likelihood 0.46
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.58
+=======================ite: 608
+Prediction results 
+(pred_axis, truth_axis) 
+[[18  0  0 90 22]
+ [32 19 23  0  0]
+ [ 7  2 46  0 14]
+ [12  0 30 10 56]
+ [31 79  1  0  8]]
+True label en classified as 1, likelihood 0.32
+True label de classified as 4, likelihood 0.79
+True label cn classified as 2, likelihood 0.46
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.56
+=======================ite: 640
+Prediction results 
+(pred_axis, truth_axis) 
+[[22  5  0 90 21]
+ [33 21 23  0  0]
+ [ 7  2 45  0 11]
+ [12  0 31 10 60]
+ [26 72  1  0  8]]
+True label en classified as 1, likelihood 0.33
+True label de classified as 4, likelihood 0.72
+True label cn classified as 2, likelihood 0.45
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.6
+=======================ite: 672
+Prediction results 
+(pred_axis, truth_axis) 
+[[18  4  0 90 21]
+ [32 20 23  0  0]
+ [ 7  2 46  0 14]
+ [12  0 30 10 57]
+ [31 74  1  0  8]]
+True label en classified as 1, likelihood 0.32
+True label de classified as 4, likelihood 0.74
+True label cn classified as 2, likelihood 0.46
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.57
+=======================ite: 704
+Prediction results 
+(pred_axis, truth_axis) 
+[[16  1  0 90 21]
+ [32 19 23  0  0]
+ [ 7  2 46  0 14]
+ [13  0 30 10 57]
+ [32 78  1  0  8]]
+True label en classified as 1, likelihood 0.32
+True label de classified as 4, likelihood 0.78
+True label cn classified as 2, likelihood 0.46
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.57
+=======================ite: 736
+Prediction results 
+(pred_axis, truth_axis) 
+[[18  5  0 90 21]
+ [33 21 23  0  0]
+ [ 7  2 46  0 11]
+ [13  0 30 10 60]
+ [29 72  1  0  8]]
+True label en classified as 1, likelihood 0.33
+True label de classified as 4, likelihood 0.72
+True label cn classified as 2, likelihood 0.46
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.6
+=======================ite: 768
+Prediction results 
+(pred_axis, truth_axis) 
+[[17  4  0 90 21]
+ [32 19 23  0  0]
+ [ 7  2 48  0 14]
+ [13  0 28 10 56]
+ [31 75  1  0  9]]
+True label en classified as 1, likelihood 0.32
+True label de classified as 4, likelihood 0.75
+True label cn classified as 2, likelihood 0.48
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.56
+=======================ite: 800
+Prediction results 
+(pred_axis, truth_axis) 
+[[16  1  0 90 21]
+ [32 19 23  0  0]
+ [ 8  2 48  0 15]
+ [12  0 28 10 56]
+ [32 78  1  0  8]]
+True label en classified as 1, likelihood 0.32
+True label de classified as 4, likelihood 0.78
+True label cn classified as 2, likelihood 0.48
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.56
+=======================ite: 832
+Prediction results 
+(pred_axis, truth_axis) 
+[[18  5  0 90 21]
+ [33 20 23  0  0]
+ [ 7  2 46  0 13]
+ [13  0 30 10 58]
+ [29 73  1  0  8]]
+True label en classified as 1, likelihood 0.33
+True label de classified as 4, likelihood 0.73
+True label cn classified as 2, likelihood 0.46
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.58
+=======================ite: 864
+Prediction results 
+(pred_axis, truth_axis) 
+[[17  4  0 90 21]
+ [33 20 23  0  0]
+ [ 7  2 48  0 14]
+ [13  0 28 10 56]
+ [30 74  1  0  9]]
+True label en classified as 1, likelihood 0.33
+True label de classified as 4, likelihood 0.74
+True label cn classified as 2, likelihood 0.48
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.56
+=======================ite: 896
+Prediction results 
+(pred_axis, truth_axis) 
+[[16  1  0 90 21]
+ [33 20 23  0  0]
+ [ 9  2 48  0 15]
+ [12  0 28 10 56]
+ [30 77  1  0  8]]
+True label en classified as 1, likelihood 0.33
+True label de classified as 4, likelihood 0.77
+True label cn classified as 2, likelihood 0.48
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.56
+=======================ite: 928
+Prediction results 
+(pred_axis, truth_axis) 
+[[17  5  0 90 21]
+ [33 20 23  0  0]
+ [ 8  2 45  0 13]
+ [13  0 31 10 58]
+ [29 73  1  0  8]]
+True label en classified as 1, likelihood 0.33
+True label de classified as 4, likelihood 0.73
+True label cn classified as 2, likelihood 0.45
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.58
+=======================ite: 960
+Prediction results 
+(pred_axis, truth_axis) 
+[[17  4  0 90 21]
+ [33 20 23  0  0]
+ [ 9  2 48  0 14]
+ [12  0 28 10 56]
+ [29 74  1  0  9]]
+True label en classified as 1, likelihood 0.33
+True label de classified as 4, likelihood 0.74
+True label cn classified as 2, likelihood 0.48
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.56
+=======================ite: 992
+Prediction results 
+(pred_axis, truth_axis) 
+[[16  1  0 90 21]
+ [33 20 23  0  0]
+ [ 9  2 48  0 15]
+ [12  0 28 10 56]
+ [30 77  1  0  8]]
+True label en classified as 1, likelihood 0.33
+True label de classified as 4, likelihood 0.77
+True label cn classified as 2, likelihood 0.48
+True label fr classified as 0, likelihood 0.9
+True label ru classified as 3, likelihood 0.56
