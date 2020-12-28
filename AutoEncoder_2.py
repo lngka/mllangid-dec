@@ -9,14 +9,15 @@ from dataset import get_data_set
 
 
 class AutoEncoder:
-    def __init__(self, save_path=None):
+    def __init__(self, save_path=None, n_frames=400, fft_bins=100):
         if save_path == None:
             dir_path = os.path.dirname(os.path.realpath(__file__))
             save_path = f'{dir_path}/models'
 
         self.save_path = save_path
 
-        autoencoder, encoder = AutoEncoder.build_autoencoder()
+        autoencoder, encoder = AutoEncoder.build_autoencoder(
+            n_frames=n_frames, fft_bins=fft_bins)
         self.autoencoder = autoencoder
         self.encoder = encoder
 
@@ -38,20 +39,19 @@ class AutoEncoder:
 
         # encoder
         x = Dropout(0.1)(x)
-        h = Dense(500, 'relu')(x)
+        h = Dense(2000, 'relu')(x)
         h = Dense(500, 'relu')(h)
-        h = Dense(2000, 'relu')(h)
+        h = Dense(500, 'relu')(h)
         h = Dense(100, 'relu')(h)
-
 
         features = Dense(50, name='feature_layers')(h)
 
         # decoder
         h = Dropout(0.1)(features)
         h = Dense(100, 'relu')(h)
+        h = Dense(500, 'relu')(h)
+        h = Dense(500, 'relu')(h)
         h = Dense(2000, 'relu')(h)
-        h = Dense(500, 'relu')(h)
-        h = Dense(500, 'relu')(h)
 
         h = Dense(n_frames * fft_bins)(h)
 
