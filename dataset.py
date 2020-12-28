@@ -15,7 +15,8 @@ SAMPLING_RATE = 8000
 WIN_SAMPLES = int(SAMPLING_RATE * 0.025)
 HOP_SAMPLES = int(SAMPLING_RATE * 0.010)
 N_FRAMES = 400
-FFT_LENGTH = 198  # fft_bins = fft_length // 2 -1 = 100
+# FFT_LENGTH = 198  # fft_bins = fft_length // 2 + 1 = 100
+FFT_LENGTH = 78  # fft_bins = fft_length // 2 + 1 = 100
 
 
 def read_wav(in_path):
@@ -81,8 +82,14 @@ def toFixedNumFrames(arr, nframe):
     if(current > nframe):
         return arr[:nframe, :]
     else:
-        new_arr = np.zeros(shape=[nframe, arr.shape[1]], dtype=complex)
-        new_arr[:arr.shape[0], :arr.shape[1]] = arr
+        # fill missing frames with data sliced from start of arr
+        missing = nframe - current
+        slice_arr = arr[:missing, :arr.shape[1]]
+        new_arr = tf.concat([arr, slice_arr], axis=0)
+
+        # fill missing frames with zeros
+        #new_arr = np.zeros(shape=[nframe, arr.shape[1]], dtype=complex)
+        #new_arr[:arr.shape[0], :arr.shape[1]] = arr
         return new_arr
 
 
