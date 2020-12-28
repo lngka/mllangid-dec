@@ -4,7 +4,7 @@ import numpy as np
 import math
 import os
 from tensorflow.keras import Model, Input
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, UpSampling2D, Dropout, Flatten, Reshape, Dense
+from tensorflow.keras.layers import Conv2D, AveragePooling2D, MaxPooling2D, UpSampling2D, Dropout, Flatten, Reshape, Dense
 from dataset import get_data_set
 
 
@@ -52,12 +52,16 @@ class AutoEncoder:
         #features = Conv2D(1, (3, 3), padding='same', name='features_layer')(h)
 
         # squeezed features with conv layer
-        features = Conv2D(128, (100, 10), padding='valid',
-                          name='features_layer')(h)
-        features = UpSampling2D(
-            (100, 10), name='after_features_layer')(features)
+        # features = Conv2D(128, (100, 10), padding='valid',
+        #                   name='embeddings')(h)
+        # features = UpSampling2D(
+        #     (100, 10), name='after_embeddings')(features)
 
         # squeezed features with average pooling
+        features = AveragePooling2D(
+            (100, 10), data_format='channels_last', name='embeddings')(h)
+        features = UpSampling2D(
+            (100, 10), name='after_embeddings')(features)
 
         # decoder
         corrupted_h = Dropout(0.1)(features)
