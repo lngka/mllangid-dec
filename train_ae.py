@@ -75,14 +75,13 @@ autoencoder.fit(data, save_trained_model=True, batch_size=128,
 #     start = i * 100
 #     end = start + 100
 #     d = data[start:end]
-
 #     if i == 4:
 #         loss = autoencoder.fit(
-#             d, save_trained_model=True, batch_size=100, epochs=2048, callbacks=my_callbacks)
+#             d, save_trained_model=True, batch_size=100, epochs=4096, callbacks=my_callbacks)
 #         print('final loss: ', loss)
 #     else:
 #         loss = autoencoder.fit(d, save_trained_model=False,
-#                                batch_size=64, epochs=2048, callbacks=my_callbacks)
+#                                batch_size=100, epochs=2048, callbacks=my_callbacks)
 #     print('trained d:', d.shape)
 #     print('trained start:', start)
 #     print('trained end:', end)
