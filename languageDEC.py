@@ -1,5 +1,6 @@
 from tensorflow.keras import Model
 from sklearn.cluster import KMeans
+from sklearn.metrics.pairwise import euclidean_distances
 from tensorflow.keras.layers import Flatten
 from DECLayer import DECLayer
 import tensorflow as tf
@@ -76,8 +77,14 @@ class LanguageDEC:
 
         with open(log_path, open_mode) as text_file:
             if key == None:
+                # write model summary
                 self.model.summary(
                     print_fn=lambda x: text_file.write(x + '\n'))
+                # write distance between
+                dists = euclidean_distances(
+                    self.model.get_layer(name='clustering').get_weights())
+                print(f'Distances: {dists}', file=text_file)
+
             else:
                 print(f'{key}: {value}', file=text_file)
 
@@ -86,7 +93,6 @@ class LanguageDEC:
 
         index_array = np.arange(x.shape[0])
         index = 0
-        loss = 0
         for ite in range(max_iteration):
             q = self.model.predict(x)
             p = self.calulate_target_distribution(q)

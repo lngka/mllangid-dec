@@ -44,7 +44,7 @@ class AutoEncoder:
         h = Dense(500, 'relu')(h)
         h = Dense(100, 'relu')(h)
 
-        features = Dense(50, name='feature_layers')(h)
+        features = Dense(50, name='embeddings')(h)
 
         # decoder
         h = Dropout(0.1)(features)
