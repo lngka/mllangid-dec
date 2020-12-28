@@ -43,17 +43,18 @@ class LossAndErrorPrintingCallback(keras.callbacks.Callback):
                 file=text_file
             )
 
+
 gpus = tf.config.experimental.list_physical_devices('GPU')
 if gpus:
-  try:
-    # Currently, memory growth needs to be the same across GPUs
-    for gpu in gpus:
-      tf.config.experimental.set_memory_growth(gpu, True)
-    logical_gpus = tf.config.experimental.list_logical_devices('GPU')
-    print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
-  except RuntimeError as e:
-    # Memory growth must be set before GPUs have been initialized
-    print(e)
+    try:
+        # Currently, memory growth needs to be the same across GPUs
+        for gpu in gpus:
+            tf.config.experimental.set_memory_growth(gpu, True)
+        logical_gpus = tf.config.experimental.list_logical_devices('GPU')
+        print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
+    except RuntimeError as e:
+        # Memory growth must be set before GPUs have been initialized
+        print(e)
 
 ''' Step1: Get nice data
 '''
@@ -62,7 +63,7 @@ data = np.expand_dims(data, -1)
 
 ''' Step2: Train
 '''
-autoencoder = AutoEncoder()
+autoencoder = AutoEncoder(n_frames=400, fft_bins=40)
 
 log_callback = LossAndErrorPrintingCallback(model=autoencoder.get_encoder())
 my_callbacks = [log_callback]
@@ -77,11 +78,11 @@ for i in range(5):
 
     if i == 4:
         loss = autoencoder.fit(
-            d, save_trained_model=True, batch_size=100, epochs=2048, callbacks=my_callbacks)
+            d, save_trained_model=True, batch_size=100, epochs=4096, callbacks=my_callbacks)
         print('final loss: ', loss)
     else:
         loss = autoencoder.fit(d, save_trained_model=False,
-                               batch_size=64, epochs=2048, callbacks=my_callbacks)
+                               batch_size=100, epochs=4096, callbacks=my_callbacks)
     print('trained d:', d.shape)
     print('trained start:', start)
     print('trained end:', end)

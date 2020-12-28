@@ -9,14 +9,16 @@ from dataset import get_data_set
 
 
 class AutoEncoder:
-    def __init__(self, save_path=None):
+    def __init__(self, save_path=None, n_frames=400, fft_bins=100):
         if save_path == None:
             dir_path = os.path.dirname(os.path.realpath(__file__))
             save_path = f'{dir_path}/models'
 
         self.save_path = save_path
 
-        autoencoder, encoder = AutoEncoder.build_autoencoder()
+        autoencoder, encoder = AutoEncoder.build_autoencoder(
+            n_frames=n_frames, fft_bins=fft_bins)
+        autoencoder.summary()
         self.autoencoder = autoencoder
         self.encoder = encoder
         self.already_compiled = False
@@ -46,7 +48,16 @@ class AutoEncoder:
 
         h = Conv2D(128, (3, 3), activation='relu', padding='same')(h)
 
-        features = Conv2D(1, (3, 3), padding='same', name='features_layer')(h)
+        # normal conv features
+        #features = Conv2D(1, (3, 3), padding='same', name='features_layer')(h)
+
+        # squeezed features with conv layer
+        features = Conv2D(128, (100, 10), padding='valid',
+                          name='features_layer')(h)
+        features = UpSampling2D(
+            (100, 10), name='after_features_layer')(features)
+
+        # squeezed features with average pooling
 
         # decoder
         corrupted_h = Dropout(0.1)(features)
