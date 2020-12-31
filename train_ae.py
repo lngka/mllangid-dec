@@ -1,5 +1,5 @@
 import numpy as np
-from AutoEncoder_2 import AutoEncoder
+from AutoEncoder import AutoEncoder
 from dataset import get_shuffled_data_set
 import tensorflow as tf
 from tensorflow import keras
@@ -65,23 +65,23 @@ data = np.expand_dims(data, -1)
 '''
 autoencoder = AutoEncoder(n_frames=400, fft_bins=40)
 
-log_callback = LossAndErrorPrintingCallback(model=autoencoder.get_encoder())
+log_callback = LossAndErrorPrintingCallback(
+    model=autoencoder.get_encoder())
 my_callbacks = [log_callback]
 
-autoencoder.fit(data, save_trained_model=True, batch_size=128,
-                epochs=2048, callbacks=my_callbacks)
+# autoencoder.fit(data, save_trained_model=True, batch_size=100,
+#                 epochs=280, callbacks=my_callbacks)
 
 # for i in range(5):
 #     start = i * 100
 #     end = start + 100
 #     d = data[start:end]
 #     if i == 4:
-#         loss = autoencoder.fit(
-#             d, save_trained_model=True, batch_size=100, epochs=4096, callbacks=my_callbacks)
-#         print('final loss: ', loss)
+#         loss = autoencoder.fit_batch(
+#             d, save_trained_model=True, batch_size=100, epochs=1, callbacks=my_callbacks)
 #     else:
-#         loss = autoencoder.fit(d, save_trained_model=False,
-#                                batch_size=100, epochs=2048, callbacks=my_callbacks)
-#     print('trained d:', d.shape)
-#     print('trained start:', start)
-#     print('trained end:', end)
+#         loss = autoencoder.fit_batch(d, save_trained_model=False,
+#                                batch_size=100, epochs=1, callbacks=my_callbacks)
+
+autoencoder.fit_batch(data, save_trained_model=True, batch_size=100,
+                      epochs=512, callbacks=my_callbacks)

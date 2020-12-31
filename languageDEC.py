@@ -80,13 +80,15 @@ class LanguageDEC:
                 # write model summary
                 self.model.summary(
                     print_fn=lambda x: text_file.write(x + '\n'))
-                # write distance between
-                dists = euclidean_distances(
-                    self.model.get_layer(name='clustering').get_weights())
-                print(f'Distances: {dists}', file=text_file)
 
             else:
                 print(f'{key}: {value}', file=text_file)
+
+                # write distance between cluster centers
+                centroids = self.model.get_layer(
+                    name='clustering').get_weights()[0]
+                dists = euclidean_distances(centroids)
+                print(f'Distances:\n{dists}', file=text_file)
 
     def fit(self, x, y, max_iteration=128, batch_size=64, update_interval=32, **kwargs):
         self.write_training_log()
@@ -103,11 +105,11 @@ class LanguageDEC:
             to_index = min((index+1) * batch_size, x.shape[0])
             idx = index_array[from_index:to_index]
 
-            train_batch = x[idx]
-            train_labels = p[idx]
+            train_x = x[idx]
+            train_y = p[idx]
 
-            loss = self.model.train_on_batch(
-                x=train_batch, y=train_labels, **kwargs)
+            self.model.train_on_batch(
+                x=train_x, y=train_y, **kwargs)
 
             # evaluate the clustering performance
             if ite % update_interval == 0:
@@ -117,7 +119,7 @@ class LanguageDEC:
                 y_pred = q.argmax(1)
 
                 # not really accuracy, just trigger logging for now
-                acc = Metrics.acc(y, y_pred)
+                Metrics.acc(y, y_pred)
 
             # update index
             index = index + 1 if (index + 1) * batch_size <= x.shape[0] else 0
