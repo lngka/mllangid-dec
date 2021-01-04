@@ -53,7 +53,7 @@ class LanguageDEC:
         return (weight.T / weight.sum(1)).T
 
     def initialize(self, training_data):
-        kmeans = KMeans(n_clusters=self.n_lang)
+        kmeans = KMeans(n_clusters=self.n_lang, max_iter=512, tol=1e-3)
         features = self.extract_features(training_data)
 
         kmeans.fit_predict(features)
@@ -124,9 +124,8 @@ class LanguageDEC:
             # update index
             index = index + 1 if (index + 1) * batch_size <= x.shape[0] else 0
 
-        print("Done fitting")
-        tf.keras.models.save_model(
-            self.model, f'{self.save_path}/dec', save_format='h5')
+        # tf.keras.models.save_model(
+        #     self.model, f'{self.save_path}/dec', save_format='h5')
 
 
 class Metrics:
