@@ -44,21 +44,21 @@ class AutoEncoder:
 
         # encoder
         corrupted_x = Dropout(0)(input_layer)
-        h = Conv2D(32, (2, 2), activation='relu', padding='same')(corrupted_x)
+        h = Conv2D(32, (3, 3), activation='relu', padding='same')(corrupted_x)
         h = MaxPooling2D((2, 2), padding='same')(h)
 
-        h = Conv2D(64, (2, 2), activation='relu', padding='same')(h)
+        h = Conv2D(64, (3, 3), activation='relu', padding='same')(h)
         h = MaxPooling2D((2, 2), padding='same')(h)
 
-        h = Conv2D(128, (2, 2), activation='relu', padding='same')(h)
+        h = Conv2D(128, (3, 3), activation='relu', padding='same')(h)
 
         # normal conv features
         # features = Conv2D(1, (3, 3), padding='same', name='embeddings')(h)
         # h=features
 
         # flattened bottle neck features
-        h = Conv2D(256, (2, 2), activation='relu', padding='same')(h)
-        h = MaxPooling2D((2, 2), padding='same')(h)
+        h = Conv2D(256, (3, 3), activation='relu', padding='same')(h)
+        h = AveragePooling2D((10, 1), padding='same')(h)
 
         flat = Flatten()(h)
         features = Dense(2000, name='embeddings')(flat)
@@ -66,8 +66,8 @@ class AutoEncoder:
 
         h = Reshape(target_shape=h.shape[1:])(flat)
 
-        h = Conv2D(256, (2, 2), activation='relu', padding='same')(h)
-        h = UpSampling2D((2, 2))(h)
+        h = Conv2D(256, (3, 3), activation='relu', padding='same')(h)
+        h = UpSampling2D((10, 1))(h)
 
         # squeezed features with conv layer
         # features = Conv2D(256, (100, 10), padding='valid',
@@ -84,15 +84,15 @@ class AutoEncoder:
         # decoder
         corrupted_h = Dropout(0)(h)
 
-        h = Conv2D(128, (2, 2), activation='relu', padding='same')(corrupted_h)
+        h = Conv2D(128, (3, 3), activation='relu', padding='same')(corrupted_h)
         h = UpSampling2D((2, 2))(h)
 
-        h = Conv2D(64, (2, 2), activation='relu', padding='same')(h)
+        h = Conv2D(64, (3, 3), activation='relu', padding='same')(h)
         h = UpSampling2D((2, 2))(h)
 
-        h = Conv2D(32, (2, 2), activation='relu', padding='same')(h)
+        h = Conv2D(32, (3, 3), activation='relu', padding='same')(h)
 
-        y = Conv2D(1, (2, 2), padding='same')(h)
+        y = Conv2D(1, (3, 3), padding='same')(h)
 
         return Model(input_layer, y, name='autoencoder'), Model(input_layer, features, name='encoder')
 
@@ -100,7 +100,7 @@ class AutoEncoder:
     def load_encoder(path_to_encoder=None):
         if path_to_encoder == None:
             dir_path = os.path.dirname(os.path.realpath(__file__))
-            path_to_encoder = f'{dir_path}/models/encoder'
+            path_to_encoder = f'{dir_path}/models/encoder_52'
         return tf.compat.v1.keras.experimental.load_from_saved_model(path_to_encoder)
 
     def fit(self, data, save_trained_model=False, batch_size=10, epochs=1, loss='MSE', **kwargs):

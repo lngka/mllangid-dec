@@ -42,13 +42,13 @@ class AutoEncoder:
                 encoder: model of encoder to initialize features for DECLayer
         '''
         input_layer = Input(shape=(n_frames, fft_bins, 1), dtype=float)
-        resnet = ResNet50(input_shape=input_layer.shape[1:],
-                          weights=None, include_top=True)
+        resnet = ResNet50(input_shape=[n_frames, fft_bins, 1],
+                          weights=None, include_top=True, classes=2048)
 
         features = resnet(input_layer)
 
-        h = Dense(2048)(features)
-        h = Reshape(target_shape=(1, 1, 2048))(h)
+        #h = Dense(2048)(features)
+        h = Reshape(target_shape=(1, 1, 2048))(features)
         h = UpSampling2D(size=(50, 5))(h)
         h = Conv2D(512, (3, 3), padding='same', activation='relu')(h)
 
