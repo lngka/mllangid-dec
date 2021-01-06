@@ -144,7 +144,9 @@ def get_data_set(languages=['en', 'de', 'cn', 'fr', 'ru']):
     for i in range(len(languages)):
         lang = languages[i]
         stft = np.load(f'{saveFolder}/{lang}_stfts.npy')
-        label = np.load(f'{saveFolder}/{lang}_labels.npy')
+        n_samples = stft.shape[0]
+        label = np.full(shape=(n_samples, ), fill_value=i)
+        #label = np.load(f'{saveFolder}/{lang}_labels.npy')
 
         if i == 0:
             dataset = stft
