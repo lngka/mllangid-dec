@@ -55,7 +55,7 @@ class LanguageDEC:
         return (weight.T / weight.sum(1)).T
 
     def initialize(self, training_data):
-        kmeans = KMeans(n_clusters=self.n_lang, max_iter=512, tol=1e-3)
+        kmeans = KMeans(n_clusters=self.n_lang)
         features = self.extract_features(training_data)
 
         kmeans.fit_predict(features)
@@ -158,9 +158,14 @@ class Metrics:
         """
         y_true = y_true.astype(np.int64)
 
+        print('y_true:', y_true.shape)
+        print('y_pred:', y_pred.shape)
+
         assert y_pred.size == y_true.size
-        D = max(y_pred.max(), y_true.max()) + 1
-        w = np.zeros((D, D), dtype=np.int64)
+
+        #D = max(y_pred.max(), y_true.max()) + 1
+        n_lang = len(languages)
+        w = np.zeros((n_lang, n_lang), dtype=np.int64)
 
         for i in range(y_pred.size):
             # w[i, j] = count of prediction&groundtruth pair i&j

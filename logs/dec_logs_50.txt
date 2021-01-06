@@ -1,0 +1,737 @@
+Model: "model"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_1 (InputLayer)         [(None, 400, 40, 1)]      0         
+_________________________________________________________________
+dropout (Dropout)            (None, 400, 40, 1)        0         
+_________________________________________________________________
+conv2d (Conv2D)              (None, 400, 40, 32)       160       
+_________________________________________________________________
+max_pooling2d (MaxPooling2D) (None, 200, 20, 32)       0         
+_________________________________________________________________
+conv2d_1 (Conv2D)            (None, 200, 20, 64)       8256      
+_________________________________________________________________
+max_pooling2d_1 (MaxPooling2 (None, 100, 10, 64)       0         
+_________________________________________________________________
+conv2d_2 (Conv2D)            (None, 100, 10, 128)      32896     
+_________________________________________________________________
+conv2d_3 (Conv2D)            (None, 100, 10, 256)      131328    
+_________________________________________________________________
+max_pooling2d_2 (MaxPooling2 (None, 50, 5, 256)        0         
+_________________________________________________________________
+flatten (Flatten)            (None, 64000)             0         
+_________________________________________________________________
+embeddings (Dense)           (None, 2000)              128002000 
+_________________________________________________________________
+flattened_encoder_output (Fl (None, 2000)              0         
+_________________________________________________________________
+clustering (DECLayer)        (None, 5)                 10000     
+=================================================================
+Total params: 128,184,640
+Trainable params: 128,184,640
+Non-trainable params: 0
+_________________________________________________________________
+=======================ite: 0
+Distances:
+[[  0.        92.63782   90.46323  121.06401  166.94998 ]
+ [ 92.63782    0.        68.408585  78.774254 122.42033 ]
+ [ 90.46323   68.408585   0.        81.64218  127.296486]
+ [121.06401   78.774254  81.64218    0.        90.35105 ]
+ [166.94998  122.42033  127.296486  90.35105    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 72  0  1]
+ [19 56 19  6 15]
+ [21  0  7 10 60]
+ [22 35  2 84 24]
+ [37  9  0  0  0]]
+True label en classified as 4, likelihood 0.37
+True label de classified as 1, likelihood 0.56
+True label cn classified as 0, likelihood 0.72
+True label fr classified as 3, likelihood 0.84
+True label ru classified as 2, likelihood 0.6
+=======================ite: 16
+Distances:
+[[  0.        92.63783   90.46324  121.06404  166.95001 ]
+ [ 92.63783    0.        68.40863   78.774315 122.42036 ]
+ [ 90.46324   68.40863    0.        81.64221  127.29651 ]
+ [121.06404   78.774315  81.64221    0.        90.35105 ]
+ [166.95001  122.42036  127.29651   90.35105    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 70  0  0]
+ [12 50 20  1  8]
+ [19  2  7  9 67]
+ [22 30  3 89 23]
+ [46 18  0  1  2]]
+True label en classified as 4, likelihood 0.46
+True label de classified as 1, likelihood 0.5
+True label cn classified as 0, likelihood 0.7
+True label fr classified as 3, likelihood 0.89
+True label ru classified as 2, likelihood 0.67
+=======================ite: 32
+Distances:
+[[  0.        92.63786   90.46327  121.06408  166.95003 ]
+ [ 92.63786    0.        68.408676  78.77437  122.42039 ]
+ [ 90.46327   68.408676   0.        81.642235 127.296524]
+ [121.06408   78.77437   81.642235   0.        90.35104 ]
+ [166.95003  122.42039  127.296524  90.35104    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 0  0 69  0  0]
+ [ 9 45 19  0  4]
+ [19  3  8  9 68]
+ [19 29  4 84 20]
+ [53 23  0  7  8]]
+True label en classified as 4, likelihood 0.53
+True label de classified as 1, likelihood 0.45
+True label cn classified as 0, likelihood 0.69
+True label fr classified as 3, likelihood 0.84
+True label ru classified as 2, likelihood 0.68
+=======================ite: 48
+Distances:
+[[  0.        92.637886  90.463295 121.06411  166.95004 ]
+ [ 92.637886   0.        68.40873   78.77443  122.420425]
+ [ 90.463295  68.40873    0.        81.642265 127.29654 ]
+ [121.06411   78.77443   81.642265   0.        90.35104 ]
+ [166.95004  122.420425 127.29654   90.35104    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 0  0 70  0  0]
+ [10 48 20  1  8]
+ [20  2  7  9 66]
+ [21 29  3 87 21]
+ [49 21  0  3  5]]
+True label en classified as 4, likelihood 0.49
+True label de classified as 1, likelihood 0.48
+True label cn classified as 0, likelihood 0.7
+True label fr classified as 3, likelihood 0.87
+True label ru classified as 2, likelihood 0.66
+=======================ite: 64
+Distances:
+[[  0.        92.63792   90.46332  121.064156 166.95007 ]
+ [ 92.63792    0.        68.40878   78.77449  122.420456]
+ [ 90.46332   68.40878    0.        81.6423   127.29656 ]
+ [121.064156  78.77449   81.6423     0.        90.35104 ]
+ [166.95007  122.420456 127.29656   90.35104    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 0  0 60  0  0]
+ [ 8 32 15  0  2]
+ [16  5 11  8 61]
+ [10 23 13 57 14]
+ [66 40  1 35 23]]
+True label en classified as 4, likelihood 0.66
+True label de classified as 4, likelihood 0.4
+True label cn classified as 0, likelihood 0.6
+True label fr classified as 3, likelihood 0.57
+True label ru classified as 2, likelihood 0.61
+=======================ite: 80
+Distances:
+[[  0.        92.63795   90.46335  121.06419  166.9501  ]
+ [ 92.63795    0.        68.40884   78.77455  122.4205  ]
+ [ 90.46335   68.40884    0.        81.642334 127.29658 ]
+ [121.06419   78.77455   81.642334   0.        90.35104 ]
+ [166.9501   122.4205   127.29658   90.35104    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 0  0 68  0  0]
+ [ 9 42 20  0  5]
+ [18  3  8  8 67]
+ [15 29  4 80 16]
+ [58 26  0 12 12]]
+True label en classified as 4, likelihood 0.58
+True label de classified as 1, likelihood 0.42
+True label cn classified as 0, likelihood 0.68
+True label fr classified as 3, likelihood 0.8
+True label ru classified as 2, likelihood 0.67
+=======================ite: 96
+Distances:
+[[  0.        92.63798   90.46338  121.06423  166.95012 ]
+ [ 92.63798    0.        68.40889   78.77461  122.42053 ]
+ [ 90.46338   68.40889    0.        81.642365 127.2966  ]
+ [121.06423   78.77461   81.642365   0.        90.351036]
+ [166.95012  122.42053  127.2966    90.351036   0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  4]
+ [34 78 26 36 24]
+ [20  0  3  9 54]
+ [17 18  0 55 18]
+ [28  4  0  0  0]]
+True label en classified as 1, likelihood 0.34
+True label de classified as 1, likelihood 0.78
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.55
+True label ru classified as 2, likelihood 0.54
+=======================ite: 112
+Distances:
+[[  0.        92.63802   90.46342  121.06428  166.95015 ]
+ [ 92.63802    0.        68.40896   78.77467  122.42057 ]
+ [ 90.46342   68.40896    0.        81.6424   127.296616]
+ [121.06428   78.77467   81.6424     0.        90.351036]
+ [166.95015  122.42057  127.296616  90.351036   0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 70  0  0]
+ [17 53 23  2  9]
+ [20  0  6 10 66]
+ [21 34  1 87 23]
+ [41 13  0  1  2]]
+True label en classified as 4, likelihood 0.41
+True label de classified as 1, likelihood 0.53
+True label cn classified as 0, likelihood 0.7
+True label fr classified as 3, likelihood 0.87
+True label ru classified as 2, likelihood 0.66
+=======================ite: 128
+Distances:
+[[  0.        92.638054  90.46345  121.064316 166.95018 ]
+ [ 92.638054   0.        68.40901   78.774734 122.42061 ]
+ [ 90.46345   68.40901    0.        81.64243  127.29664 ]
+ [121.064316  78.774734  81.64243    0.        90.35102 ]
+ [166.95018  122.42061  127.29664   90.35102    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  5]
+ [34 80 26 38 25]
+ [20  0  3  9 52]
+ [17 17  0 53 18]
+ [28  3  0  0  0]]
+True label en classified as 1, likelihood 0.34
+True label de classified as 1, likelihood 0.8
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.53
+True label ru classified as 2, likelihood 0.52
+=======================ite: 144
+Distances:
+[[  0.        92.63809   90.463486 121.06437  166.95021 ]
+ [ 92.63809    0.        68.40907   78.77479  122.42064 ]
+ [ 90.463486  68.40907    0.        81.64247  127.29666 ]
+ [121.06437   78.77479   81.64247    0.        90.35101 ]
+ [166.95021  122.42064  127.29666   90.35101    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 72  0  7]
+ [51 87 27 62 40]
+ [23  1  1 10 39]
+ [ 8 10  0 28 14]
+ [17  2  0  0  0]]
+True label en classified as 1, likelihood 0.51
+True label de classified as 1, likelihood 0.87
+True label cn classified as 0, likelihood 0.72
+True label fr classified as 1, likelihood 0.62
+True label ru classified as 1, likelihood 0.4
+=======================ite: 160
+Distances:
+[[  0.        92.63814   90.463524 121.064415 166.95024 ]
+ [ 92.63814    0.        68.40915   78.77486  122.420685]
+ [ 90.463524  68.40915    0.        81.64251  127.296684]
+ [121.064415  78.77486   81.64251    0.        90.35101 ]
+ [166.95024  122.420685 127.296684  90.35101    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  0]
+ [11 52 24  1  8]
+ [21  0  5 10 67]
+ [19 31  0 87 23]
+ [48 17  0  2  2]]
+True label en classified as 4, likelihood 0.48
+True label de classified as 1, likelihood 0.52
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.87
+True label ru classified as 2, likelihood 0.67
+=======================ite: 176
+Distances:
+[[  0.        92.638176  90.46356  121.06446  166.95026 ]
+ [ 92.638176   0.        68.40921   78.77492  122.42072 ]
+ [ 90.46356   68.40921    0.        81.64255  127.2967  ]
+ [121.06446   78.77492   81.64255    0.        90.351   ]
+ [166.95026  122.42072  127.2967    90.351      0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  5]
+ [34 81 26 39 24]
+ [20  0  3  9 53]
+ [16 16  0 52 18]
+ [29  3  0  0  0]]
+True label en classified as 1, likelihood 0.34
+True label de classified as 1, likelihood 0.81
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.52
+True label ru classified as 2, likelihood 0.53
+=======================ite: 192
+Distances:
+[[  0.        92.63821   90.4636   121.064514 166.95029 ]
+ [ 92.63821    0.        68.40928   78.77498  122.42076 ]
+ [ 90.4636    68.40928    0.        81.642586 127.29672 ]
+ [121.064514  78.77498   81.642586   0.        90.35099 ]
+ [166.95029  122.42076  127.29672   90.35099    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  1]
+ [17 53 24  2  9]
+ [21  0  5 10 65]
+ [19 34  0 87 23]
+ [42 13  0  1  2]]
+True label en classified as 4, likelihood 0.42
+True label de classified as 1, likelihood 0.53
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.87
+True label ru classified as 2, likelihood 0.65
+=======================ite: 208
+Distances:
+[[  0.        92.63826   90.463646 121.06457  166.95033 ]
+ [ 92.63826    0.        68.409355  78.77504  122.4208  ]
+ [ 90.463646  68.409355   0.        81.642624 127.296745]
+ [121.06457   78.77504   81.642624   0.        90.350975]
+ [166.95033  122.4208   127.296745  90.350975   0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  2]
+ [21 63 25 11 14]
+ [21  0  4 10 60]
+ [19 31  0 79 23]
+ [38  6  0  0  1]]
+True label en classified as 4, likelihood 0.38
+True label de classified as 1, likelihood 0.63
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.79
+True label ru classified as 2, likelihood 0.6
+=======================ite: 224
+Distances:
+[[  0.        92.6383    90.463684 121.06462  166.95036 ]
+ [ 92.6383     0.        68.409424  78.7751   122.42084 ]
+ [ 90.463684  68.409424   0.        81.64267  127.29677 ]
+ [121.06462   78.7751    81.64267    0.        90.35097 ]
+ [166.95036  122.42084  127.29677   90.35097    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  5]
+ [37 81 27 42 29]
+ [20  0  2  9 48]
+ [17 16  0 49 18]
+ [25  3  0  0  0]]
+True label en classified as 1, likelihood 0.37
+True label de classified as 1, likelihood 0.81
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.49
+True label ru classified as 2, likelihood 0.48
+=======================ite: 240
+Distances:
+[[  0.        92.63834   90.46373  121.064674 166.9504  ]
+ [ 92.63834    0.        68.4095    78.77516  122.42088 ]
+ [ 90.46373   68.4095     0.        81.64271  127.29679 ]
+ [121.064674  78.77516   81.64271    0.        90.35095 ]
+ [166.9504   122.42088  127.29679   90.35095    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  1]
+ [19 60 25  4 11]
+ [21  0  4 10 64]
+ [19 32  0 86 22]
+ [40  8  0  0  2]]
+True label en classified as 4, likelihood 0.4
+True label de classified as 1, likelihood 0.6
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.86
+True label ru classified as 2, likelihood 0.64
+=======================ite: 256
+Distances:
+[[  0.        92.63838   90.463776 121.064735 166.95042 ]
+ [ 92.63838    0.        68.409584  78.77522  122.42092 ]
+ [ 90.463776  68.409584   0.        81.64275  127.296814]
+ [121.064735  78.77522   81.64275    0.        90.35094 ]
+ [166.95042  122.42092  127.296814  90.35094    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 0  0 71  0  0]
+ [10 49 25  0  6]
+ [21  0  4 10 68]
+ [17 29  0 84 16]
+ [52 22  0  6 10]]
+True label en classified as 4, likelihood 0.52
+True label de classified as 1, likelihood 0.49
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.84
+True label ru classified as 2, likelihood 0.68
+=======================ite: 272
+Distances:
+[[  0.       92.63843  90.46382 121.06479 166.95045]
+ [ 92.63843   0.       68.40966  78.77528 122.42096]
+ [ 90.46382  68.40966   0.       81.6428  127.29684]
+ [121.06479  78.77528  81.6428    0.       90.35092]
+ [166.95045 122.42096 127.29684  90.35092   0.     ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  1]
+ [18 59 25  3 11]
+ [21  0  4 10 64]
+ [20 33  0 87 22]
+ [40  8  0  0  2]]
+True label en classified as 4, likelihood 0.4
+True label de classified as 1, likelihood 0.59
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.87
+True label ru classified as 2, likelihood 0.64
+=======================ite: 288
+Distances:
+[[  0.        92.638466  90.46387  121.06485  166.95049 ]
+ [ 92.638466   0.        68.40974   78.77534  122.421   ]
+ [ 90.46387   68.40974    0.        81.642845 127.29686 ]
+ [121.06485   78.77534   81.642845   0.        90.35091 ]
+ [166.95049  122.421    127.29686   90.35091    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  5]
+ [35 81 27 36 26]
+ [20  0  2  9 50]
+ [16 16  0 55 19]
+ [28  3  0  0  0]]
+True label en classified as 1, likelihood 0.35
+True label de classified as 1, likelihood 0.81
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.55
+True label ru classified as 2, likelihood 0.5
+=======================ite: 304
+Distances:
+[[  0.        92.63851   90.46391  121.06491  166.95052 ]
+ [ 92.63851    0.        68.40983   78.775406 122.42105 ]
+ [ 90.46391   68.40983    0.        81.64289  127.29688 ]
+ [121.06491   78.775406  81.64289    0.        90.35088 ]
+ [166.95052  122.42105  127.29688   90.35088    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  1]
+ [13 53 25  1  8]
+ [21  0  4 10 66]
+ [20 35  0 88 23]
+ [45 12  0  1  2]]
+True label en classified as 4, likelihood 0.45
+True label de classified as 1, likelihood 0.53
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.88
+True label ru classified as 2, likelihood 0.66
+=======================ite: 320
+Distances:
+[[  0.        92.63855   90.46396  121.06497  166.95055 ]
+ [ 92.63855    0.        68.409904  78.77546  122.42108 ]
+ [ 90.46396   68.409904   0.        81.642944 127.296906]
+ [121.06497   78.77546   81.642944   0.        90.35087 ]
+ [166.95055  122.42108  127.296906  90.35087    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  1]
+ [16 57 25  2  9]
+ [21  0  4 10 65]
+ [21 32  0 88 23]
+ [41 11  0  0  2]]
+True label en classified as 4, likelihood 0.41
+True label de classified as 1, likelihood 0.57
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.88
+True label ru classified as 2, likelihood 0.65
+=======================ite: 336
+Distances:
+[[  0.        92.638596  90.464005 121.065025 166.95058 ]
+ [ 92.638596   0.        68.40998   78.77551  122.42112 ]
+ [ 90.464005  68.40998    0.        81.64299  127.29693 ]
+ [121.065025  78.77551   81.64299    0.        90.350845]
+ [166.95058  122.42112  127.29693   90.350845   0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  5]
+ [29 76 27 26 21]
+ [21  0  2  9 52]
+ [17 20  0 65 22]
+ [32  4  0  0  0]]
+True label en classified as 4, likelihood 0.32
+True label de classified as 1, likelihood 0.76
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.65
+True label ru classified as 2, likelihood 0.52
+=======================ite: 352
+Distances:
+[[  0.        92.63864   90.46406  121.065094 166.9506  ]
+ [ 92.63864    0.        68.41007   78.775566 122.42116 ]
+ [ 90.46406   68.41007    0.        81.64304  127.29696 ]
+ [121.065094  78.775566  81.64304    0.        90.350815]
+ [166.9506   122.42116  127.29696   90.350815   0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  1]
+ [16 57 25  2  9]
+ [21  0  4 10 66]
+ [21 34  0 88 22]
+ [41  9  0  0  2]]
+True label en classified as 4, likelihood 0.41
+True label de classified as 1, likelihood 0.57
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.88
+True label ru classified as 2, likelihood 0.66
+=======================ite: 368
+Distances:
+[[  0.        92.63869   90.4641   121.065155 166.95064 ]
+ [ 92.63869    0.        68.41016   78.77562  122.42119 ]
+ [ 90.4641    68.41016    0.        81.64309  127.29698 ]
+ [121.065155  78.77562   81.64309    0.        90.35079 ]
+ [166.95064  122.42119  127.29698   90.35079    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  2]
+ [19 58 25  3  9]
+ [21  0  4 10 65]
+ [19 34  0 87 22]
+ [40  8  0  0  2]]
+True label en classified as 4, likelihood 0.4
+True label de classified as 1, likelihood 0.58
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.87
+True label ru classified as 2, likelihood 0.65
+=======================ite: 384
+Distances:
+[[  0.        92.63873   90.46416  121.065216 166.95068 ]
+ [ 92.63873    0.        68.41023   78.77567  122.42122 ]
+ [ 90.46416   68.41023    0.        81.643135 127.297005]
+ [121.065216  78.77567   81.643135   0.        90.35076 ]
+ [166.95068  122.42122  127.297005  90.35076    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  5]
+ [29 75 27 24 20]
+ [21  0  2  9 53]
+ [17 21  0 67 22]
+ [32  4  0  0  0]]
+True label en classified as 4, likelihood 0.32
+True label de classified as 1, likelihood 0.75
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.67
+True label ru classified as 2, likelihood 0.53
+=======================ite: 400
+Distances:
+[[  0.        92.63879   90.46421  121.065285 166.95071 ]
+ [ 92.63879    0.        68.410324  78.77573  122.42125 ]
+ [ 90.46421   68.410324   0.        81.64319  127.297035]
+ [121.065285  78.77573   81.64319    0.        90.35074 ]
+ [166.95071  122.42125  127.297035  90.35074    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  2]
+ [16 57 25  2  8]
+ [21  0  4 10 66]
+ [21 34  0 88 22]
+ [41  9  0  0  2]]
+True label en classified as 4, likelihood 0.41
+True label de classified as 1, likelihood 0.57
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.88
+True label ru classified as 2, likelihood 0.66
+=======================ite: 416
+Distances:
+[[  0.        92.63883   90.464264 121.06535  166.95074 ]
+ [ 92.63883    0.        68.4104    78.77577  122.42128 ]
+ [ 90.464264  68.4104     0.        81.64324  127.297066]
+ [121.06535   78.77577   81.64324    0.        90.35071 ]
+ [166.95074  122.42128  127.297066  90.35071    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  2]
+ [19 58 25  2 10]
+ [21  0  4 10 64]
+ [19 34  0 88 22]
+ [40  8  0  0  2]]
+True label en classified as 4, likelihood 0.4
+True label de classified as 1, likelihood 0.58
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.88
+True label ru classified as 2, likelihood 0.64
+=======================ite: 432
+Distances:
+[[  0.        92.63888   90.46431  121.06542  166.95079 ]
+ [ 92.63888    0.        68.410484  78.77582  122.42131 ]
+ [ 90.46431   68.410484   0.        81.643295 127.29709 ]
+ [121.06542   78.77582   81.643295   0.        90.35068 ]
+ [166.95079  122.42131  127.29709   90.35068    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  5]
+ [29 75 27 24 20]
+ [21  0  2  9 53]
+ [17 21  0 67 22]
+ [32  4  0  0  0]]
+True label en classified as 4, likelihood 0.32
+True label de classified as 1, likelihood 0.75
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.67
+True label ru classified as 2, likelihood 0.53
+=======================ite: 448
+Distances:
+[[  0.        92.63893   90.46437  121.06549  166.95082 ]
+ [ 92.63893    0.        68.410576  78.77587  122.42135 ]
+ [ 90.46437   68.410576   0.        81.64335  127.29711 ]
+ [121.06549   78.77587   81.64335    0.        90.35064 ]
+ [166.95082  122.42135  127.29711   90.35064    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  2]
+ [17 57 25  1  8]
+ [21  0  4 10 66]
+ [20 34  0 89 22]
+ [41  9  0  0  2]]
+True label en classified as 4, likelihood 0.41
+True label de classified as 1, likelihood 0.57
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.89
+True label ru classified as 2, likelihood 0.66
+=======================ite: 464
+Distances:
+[[  0.        92.63898   90.464424 121.06556  166.95087 ]
+ [ 92.63898    0.        68.41066   78.77592  122.42138 ]
+ [ 90.464424  68.41066    0.        81.6434   127.29714 ]
+ [121.06556   78.77592   81.6434     0.        90.35061 ]
+ [166.95087  122.42138  127.29714   90.35061    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  2]
+ [17 57 25  2 10]
+ [21  0  4 10 64]
+ [21 35  0 88 22]
+ [40  8  0  0  2]]
+True label en classified as 4, likelihood 0.4
+True label de classified as 1, likelihood 0.57
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.88
+True label ru classified as 2, likelihood 0.64
+=======================ite: 480
+Distances:
+[[  0.        92.63903   90.46448  121.06563  166.9509  ]
+ [ 92.63903    0.        68.410736  78.77596  122.42141 ]
+ [ 90.46448   68.410736   0.        81.643456 127.297165]
+ [121.06563   78.77596   81.643456   0.        90.35058 ]
+ [166.9509   122.42141  127.297165  90.35058    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  1 71  0  5]
+ [29 73 27 23 21]
+ [20  0  2  9 53]
+ [18 22  0 68 21]
+ [32  4  0  0  0]]
+True label en classified as 4, likelihood 0.32
+True label de classified as 1, likelihood 0.73
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.68
+True label ru classified as 2, likelihood 0.53
+=======================ite: 496
+Distances:
+[[  0.        92.639084  90.46453  121.065704 166.95094 ]
+ [ 92.639084   0.        68.410835  78.77601  122.42144 ]
+ [ 90.46453   68.410835   0.        81.64352  127.29719 ]
+ [121.065704  78.77601   81.64352    0.        90.35054 ]
+ [166.95094  122.42144  127.29719   90.35054    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  2]
+ [16 57 25  1  9]
+ [21  0  4 10 65]
+ [21 34  0 89 22]
+ [41  9  0  0  2]]
+True label en classified as 4, likelihood 0.41
+True label de classified as 1, likelihood 0.57
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.89
+True label ru classified as 2, likelihood 0.65
+=======================ite: 512
+Distances:
+[[  0.        92.63914   90.46459  121.06577  166.95097 ]
+ [ 92.63914    0.        68.41091   78.776054 122.42147 ]
+ [ 90.46459   68.41091    0.        81.64358  127.29722 ]
+ [121.06577   78.776054  81.64358    0.        90.3505  ]
+ [166.95097  122.42147  127.29722   90.3505     0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  2]
+ [17 57 25  1 10]
+ [21  0  4 10 64]
+ [21 34  0 89 22]
+ [40  9  0  0  2]]
+True label en classified as 4, likelihood 0.4
+True label de classified as 1, likelihood 0.57
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.89
+True label ru classified as 2, likelihood 0.64
+=======================ite: 528
+Distances:
+[[  0.        92.63919   90.464645 121.06585  166.95102 ]
+ [ 92.63919    0.        68.410995  78.7761   122.42149 ]
+ [ 90.464645  68.410995   0.        81.64363  127.29724 ]
+ [121.06585   78.7761    81.64363    0.        90.350464]
+ [166.95102  122.42149  127.29724   90.350464   0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  1 72  0  6]
+ [30 73 27 23 22]
+ [19  0  1  9 52]
+ [19 22  0 68 20]
+ [31  4  0  0  0]]
+True label en classified as 4, likelihood 0.31
+True label de classified as 1, likelihood 0.73
+True label cn classified as 0, likelihood 0.72
+True label fr classified as 3, likelihood 0.68
+True label ru classified as 2, likelihood 0.52
+=======================ite: 544
+Distances:
+[[  0.        92.63925   90.46471  121.065926 166.95105 ]
+ [ 92.63925    0.        68.41109   78.77615  122.421524]
+ [ 90.46471   68.41109    0.        81.64369  127.29727 ]
+ [121.065926  78.77615   81.64369    0.        90.350426]
+ [166.95105  122.421524 127.29727   90.350426   0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  0 71  0  2]
+ [16 54 25  1  9]
+ [21  0  4 10 65]
+ [21 36  0 89 22]
+ [41 10  0  0  2]]
+True label en classified as 4, likelihood 0.41
+True label de classified as 1, likelihood 0.54
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.89
+True label ru classified as 2, likelihood 0.65
+=======================ite: 560
+Distances:
+[[  0.        92.6393    90.46475  121.065994 166.9511  ]
+ [ 92.6393     0.        68.41117   78.77619  122.421555]
+ [ 90.46475   68.41117    0.        81.64375  127.297295]
+ [121.065994  78.77619   81.64375    0.        90.35039 ]
+ [166.9511   122.421555 127.297295  90.35039    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  1 71  0  2]
+ [16 56 25  1 10]
+ [21  0  4 10 64]
+ [22 34  0 89 22]
+ [40  9  0  0  2]]
+True label en classified as 4, likelihood 0.4
+True label de classified as 1, likelihood 0.56
+True label cn classified as 0, likelihood 0.71
+True label fr classified as 3, likelihood 0.89
+True label ru classified as 2, likelihood 0.64
+=======================ite: 576
+Distances:
+[[  0.        92.63935   90.46481  121.06607  166.95113 ]
+ [ 92.63935    0.        68.411255  78.776245 122.42158 ]
+ [ 90.46481   68.411255   0.        81.64381  127.297325]
+ [121.06607   78.776245  81.64381    0.        90.35035 ]
+ [166.95113  122.42158  127.297325  90.35035    0.      ]]
+Prediction results 
+(pred_axis, truth_axis) 
+[[ 1  1 72  0  7]
+ [30 73 27 21 22]
+ [19  0  1  9 50]
+ [19 22  0 70 21]
+ [31  4  0  0  0]]
+True label en classified as 4, likelihood 0.31
+True label de classified as 1, likelihood 0.73
+True label cn classified as 0, likelihood 0.72
+True label fr classified as 3, likelihood 0.7
+True label ru classified as 2, likelihood 0.5
