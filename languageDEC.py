@@ -17,14 +17,16 @@ class LanguageDEC:
     assign the features into clusters according to a target distribution
     '''
 
-    def __init__(self, encoder=None, n_lang=5, save_path=None):
+    def __init__(self, encoder=None, save_path=None, languages=['en', 'de', 'cn', 'fr', 'ru']):
         # creating properties
         if save_path == None:
             dir_path = os.path.dirname(os.path.realpath(__file__))
             save_path = f'{dir_path}/models'
 
         self.save_path = save_path
-        self.n_lang = n_lang
+        self.languages = languages
+        self.n_lang = len(languages)
+
         self.encoder = encoder
 
         # creating model
@@ -119,13 +121,13 @@ class LanguageDEC:
                 y_pred = q.argmax(1)
 
                 # not really accuracy, just trigger logging for now
-                Metrics.acc(y, y_pred)
+                Metrics.acc(y, y_pred, languages=self.languages)
 
             # update index
             index = index + 1 if (index + 1) * batch_size <= x.shape[0] else 0
 
-        # tf.keras.models.save_model(
-        #     self.model, f'{self.save_path}/dec', save_format='h5')
+        tf.keras.models.save_model(
+            self.model, f'{self.save_path}/dec', save_format='h5')
 
 
 class Metrics:
@@ -145,7 +147,7 @@ class Metrics:
             print(f'{key}{value}', file=text_file)
 
     @staticmethod
-    def acc(y_true, y_pred):
+    def acc(y_true, y_pred, languages=['en', 'de', 'cn', 'fr', 'ru']):
         """Calculate clustering accuracy.
         Arguments
             y_true: labels with shape (n_samples,)
@@ -154,7 +156,6 @@ class Metrics:
         Return
             accuracy
         """
-        languages = ['en', 'de', 'cn', 'fr', 'ru']
         y_true = y_true.astype(np.int64)
 
         assert y_pred.size == y_true.size
@@ -171,7 +172,7 @@ class Metrics:
         true_labelmap = tf.argmax(w, axis=0)
         likelihood = tf.reduce_max(w, axis=0) / tf.reduce_sum(w, axis=0)
 
-        for i in range(5):
+        for i in range(len(languages)):
             Metrics.write_training_log(
                 f'True label {languages[i]} classified as ', f'{true_labelmap[i]}, likelihood {likelihood[i]}')
 

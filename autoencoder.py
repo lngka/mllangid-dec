@@ -56,9 +56,9 @@ class AutoEncoder:
         # features = Conv2D(1, (3, 3), padding='same', name='embeddings')(h)
         # h=features
 
-        # flattened bottle neck features
+        # squeezed bottle neck features
         h = Conv2D(256, (3, 3), activation='relu', padding='same')(h)
-        h = AveragePooling2D((10, 1), padding='same')(h)
+        h = MaxPooling2D((2, 2), padding='same')(h)
 
         flat = Flatten()(h)
         features = Dense(2000, name='embeddings')(flat)
@@ -67,19 +67,7 @@ class AutoEncoder:
         h = Reshape(target_shape=h.shape[1:])(flat)
 
         h = Conv2D(256, (3, 3), activation='relu', padding='same')(h)
-        h = UpSampling2D((10, 1))(h)
-
-        # squeezed features with conv layer
-        # features = Conv2D(256, (100, 10), padding='valid',
-        #                   name='embeddings')(h)
-        # features = UpSampling2D(
-        #     (100, 10), name='after_embeddings')(features)
-
-        # squeezed features with average pooling
-        # features = AveragePooling2D(
-        #     (100, 10), data_format='channels_last', name='embeddings')(h)
-        # h = UpSampling2D(
-        #     (100, 10), name='after_embeddings')(features)
+        h = UpSampling2D((2, 2))(h)
 
         # decoder
         corrupted_h = Dropout(0)(h)
@@ -100,7 +88,7 @@ class AutoEncoder:
     def load_encoder(path_to_encoder=None):
         if path_to_encoder == None:
             dir_path = os.path.dirname(os.path.realpath(__file__))
-            path_to_encoder = f'{dir_path}/models/encoder_52'
+            path_to_encoder = f'{dir_path}/models/encoder_50_4L'
         return tf.compat.v1.keras.experimental.load_from_saved_model(path_to_encoder)
 
     def fit(self, data, save_trained_model=False, batch_size=10, epochs=1, loss='MSE', **kwargs):
@@ -125,20 +113,25 @@ class AutoEncoder:
 
         return loss
 
-    def fit_batch(self, data, save_trained_model=False, batch_size=10, epochs=1, loss='MSE', **kwargs):
+    def fit_batch(self, data, save_trained_model=False, batch_size=100, epochs=1, loss='MSE', **kwargs):
         optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
         self.autoencoder.compile(loss=loss, optimizer=optimizer)
         self.already_compiled = True
 
-        for i in range(5):
-            start = i * 100
-            end = start + 100
+        n_batch = data.shape[0] // batch_size
+        print(
+            f'Training in {n_batch} batches of {batch_size} elements, each {epochs} epochs')
+
+        for i in range(n_batch):
+            start = i * batch_size
+            end = start + batch_size
             d = data[start:end]
 
-            if i == 4:
+            if i == (n_batch - 1):
                 loss = self.autoencoder.fit(
                     d, d, batch_size=batch_size, epochs=epochs, **kwargs)
 
+                # last batch trained
                 if save_trained_model:
                     tf.compat.v1.keras.experimental.export_saved_model(
                         self.autoencoder, f'{self.save_path}/ae')

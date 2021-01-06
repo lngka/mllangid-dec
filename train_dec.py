@@ -7,7 +7,10 @@ import tensorflow as tf
 tf.compat.v1.enable_eager_execution()
 ''' Step0: Get nice data
 '''
-data, labels = get_shuffled_data_set()
+#languages = ['en', 'de', 'cn', 'fr', 'ru']
+languages = ['en', 'cn', 'fr', 'ru']
+
+data, labels = get_shuffled_data_set(languages)
 data = np.expand_dims(data, -1)
 
 # data = np.full(shape=(10, 400, 100, 1), fill_value=0.645)  # fake data to test
@@ -27,7 +30,7 @@ autoencoder = AutoEncoder()
 encoder = autoencoder.load_encoder()
 
 # initialize centroid using k_means
-languageDEC = LanguageDEC(encoder=encoder, n_lang=5)
+languageDEC = LanguageDEC(encoder=encoder, languages=languages)
 languageDEC.initialize(data)
 
 

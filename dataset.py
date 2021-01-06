@@ -107,8 +107,9 @@ def loadWaveFolder(pathToFiles):
     return np.array(phases), np.array(stfts)
 
 
-def get_shuffled_data_set():
-    languages = ['en', 'de', 'cn', 'fr', 'ru']
+def get_shuffled_data_set(languages=['en', 'de', 'cn', 'fr', 'ru']):
+    #languages = ['en', 'de', 'cn', 'fr', 'ru']
+
     dir_path = os.path.dirname(os.path.realpath(__file__))
     saveFolder = f'{dir_path}/8K'
 
