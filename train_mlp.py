@@ -5,7 +5,7 @@ import numpy as np
 from AutoEncoder import AutoEncoder
 
 
-data, labels = get_shuffled_data_set()
+data, labels = get_shuffled_data_set(languages=['en', 'cn', 'fr', 'ru'])
 data = np.expand_dims(data, -1)
 
 autoencoder = AutoEncoder()
