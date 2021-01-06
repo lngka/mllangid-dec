@@ -158,7 +158,11 @@ class Metrics:
         """
         y_true = y_true.astype(np.int64)
 
+        print('y_true:', y_true.shape)
+        print('y_pred:', y_pred.shape)
+
         assert y_pred.size == y_true.size
+
         #D = max(y_pred.max(), y_true.max()) + 1
         n_lang = len(languages)
         w = np.zeros((n_lang, n_lang), dtype=np.int64)

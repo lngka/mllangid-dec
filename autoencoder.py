@@ -18,7 +18,6 @@ class AutoEncoder:
 
         autoencoder, encoder = AutoEncoder.build_autoencoder(
             n_frames=n_frames, fft_bins=fft_bins)
-        autoencoder.summary()
 
         self.autoencoder = autoencoder
         self.encoder = encoder
