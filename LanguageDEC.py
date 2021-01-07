@@ -110,12 +110,13 @@ class LanguageDEC:
             train_x = x[idx]
             train_y = p[idx]
 
-            self.model.train_on_batch(
+            loss = self.model.train_on_batch(
                 x=train_x, y=train_y, **kwargs)
 
             # evaluate the clustering performance
             if ite % update_interval == 0:
                 self.write_training_log('=======================ite', ite)
+                self.write_training_log('loss: ', loss)
 
                 q = self.model.predict(x)
                 y_pred = q.argmax(1)
