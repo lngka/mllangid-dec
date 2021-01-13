@@ -60,6 +60,11 @@ class LossAndErrorPrintingCallback(keras.callbacks.Callback):
 '''
 data, labels = get_shuffled_data_set(['en', 'de', 'cn', 'fr', 'ru'])
 data = np.expand_dims(data, -1)
+data = np.expand_dims(data, 1)
+
+dataset = tf.data.Dataset.from_tensor_slices(
+    (data, data))
+dataset.shuffle(100).batch(100)
 
 
 ''' Step2: Train
@@ -70,8 +75,8 @@ log_callback = LossAndErrorPrintingCallback(
     model=autoencoder.get_encoder())
 my_callbacks = [log_callback]
 
-# autoencoder.fit(data, save_trained_model=True, batch_size=100,
-#                 epochs=280, callbacks=my_callbacks)
+autoencoder.fit(dataset, save_trained_model=True,
+                epochs=512, callbacks=my_callbacks)
 
-autoencoder.fit_batch(data, save_trained_model=True, batch_size=100,
-                      epochs=512, callbacks=my_callbacks)
+# autoencoder.fit_batch(data, save_trained_model=True, batch_size=100,
+#                       epochs=512, callbacks=my_callbacks)

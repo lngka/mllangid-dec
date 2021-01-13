@@ -97,18 +97,14 @@ class AutoEncoder:
         return tf.compat.v1.keras.experimental.load_from_saved_model(path_to_encoder)
 
     def fit(self, data, save_trained_model=False, batch_size=10, epochs=1, loss='MSE', **kwargs):
-        steps_per_epoch = math.ceil(data.shape[0] / batch_size)
 
-        if self.already_compiled:
-            loss = self.autoencoder.fit(data, data, batch_size=batch_size,
-                                        epochs=epochs, steps_per_epoch=steps_per_epoch, **kwargs)
-        else:
-            # compile and fit if not already compiled
+        if self.already_compiled == False:
+            # compile if not already compiled
             optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
             self.autoencoder.compile(loss=loss, optimizer=optimizer)
             self.already_compiled = True
-            loss = self.autoencoder.fit(data, data, batch_size=batch_size,
-                                        epochs=epochs, steps_per_epoch=steps_per_epoch, **kwargs)
+
+        loss = self.autoencoder.fit(data, epochs=epochs, **kwargs)
 
         if save_trained_model:
             tf.compat.v1.keras.experimental.export_saved_model(
