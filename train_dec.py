@@ -7,8 +7,8 @@ import tensorflow as tf
 tf.compat.v1.enable_eager_execution()
 ''' Step0: Get nice data
 '''
-#languages = ['en', 'de', 'cn', 'fr', 'ru']
-languages = ['en', 'cn', 'fr', 'ru']
+languages = ['en', 'de', 'cn', 'fr', 'ru']
+#languages = ['en','cn', 'fr', 'ru']
 
 data, labels = get_shuffled_data_set(languages)
 data = np.expand_dims(data, -1)

@@ -82,15 +82,14 @@ class LanguageDEC:
                 # write model summary
                 self.model.summary(
                     print_fn=lambda x: text_file.write(x + '\n'))
-
-            else:
-                print(f'{key}: {value}', file=text_file)
-
+            elif key == 'Distance':
                 # write distance between cluster centers
                 centroids = self.model.get_layer(
                     name='clustering').get_weights()[0]
                 dists = euclidean_distances(centroids)
                 print(f'Distances:\n{dists}', file=text_file)
+            else:
+                print(f'{key}: {value}', file=text_file)
 
     def fit(self, x, y, max_iteration=128, batch_size=64, update_interval=32, **kwargs):
         self.write_training_log()
@@ -116,6 +115,7 @@ class LanguageDEC:
             # evaluate the clustering performance
             if ite % update_interval == 0:
                 self.write_training_log('=======================ite', ite)
+                self.write_training_log('Distance')
                 self.write_training_log('loss: ', loss)
 
                 q = self.model.predict(x)

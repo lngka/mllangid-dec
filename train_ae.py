@@ -58,7 +58,7 @@ class LossAndErrorPrintingCallback(keras.callbacks.Callback):
 
 ''' Step1: Get nice data
 '''
-data, labels = get_shuffled_data_set(['en', 'cn', 'fr', 'ru'])
+data, labels = get_shuffled_data_set(['en', 'de', 'cn', 'fr', 'ru'])
 data = np.expand_dims(data, -1)
 
 

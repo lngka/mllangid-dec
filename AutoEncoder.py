@@ -59,11 +59,17 @@ class AutoEncoder:
         h = Conv2D(256, (3, 3), activation='relu', padding='same')(h)
         h = MaxPooling2D((2, 2), padding='same')(h)
 
-        flat = Flatten()(h)
-        features = Dense(2000, name='embeddings')(flat)
-        flat = Dense(flat.shape[1])(features)
+        last_pooling_shape = h.shape
 
-        h = Reshape(target_shape=h.shape[1:])(flat)
+        h = Flatten()(h)
+        flat_shape = h.shape
+
+        h = Dense(2000)(h)
+        features = Dense(500, name='embeddings')(h)
+        h = Dense(2000)(features)
+        h = Dense(flat_shape[1])(h)
+
+        h = Reshape(target_shape=last_pooling_shape[1:])(h)
 
         h = Conv2D(256, (3, 3), activation='relu', padding='same')(h)
         h = UpSampling2D((2, 2))(h)
@@ -87,7 +93,7 @@ class AutoEncoder:
     def load_encoder(path_to_encoder=None):
         if path_to_encoder == None:
             dir_path = os.path.dirname(os.path.realpath(__file__))
-            path_to_encoder = f'{dir_path}/models/encoder_50_4L'
+            path_to_encoder = f'{dir_path}/models/encoder_50'
         return tf.compat.v1.keras.experimental.load_from_saved_model(path_to_encoder)
 
     def fit(self, data, save_trained_model=False, batch_size=10, epochs=1, loss='MSE', **kwargs):
