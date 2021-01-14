@@ -44,18 +44,6 @@ class LossAndErrorPrintingCallback(keras.callbacks.Callback):
             )
 
 
-# gpus = tf.config.experimental.list_physical_devices('GPU')
-# if gpus:
-#     try:
-#         # Currently, memory growth needs to be the same across GPUs
-#         for gpu in gpus:
-#             tf.config.experimental.set_memory_growth(gpu, True)
-#         logical_gpus = tf.config.experimental.list_logical_devices('GPU')
-#         print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
-#     except RuntimeError as e:
-#         # Memory growth must be set before GPUs have been initialized
-#         print(e)
-
 ''' Step1: Get nice data
 '''
 data, labels = get_shuffled_data_set(['en', 'de', 'cn', 'fr', 'ru'])
@@ -67,16 +55,33 @@ dataset = tf.data.Dataset.from_tensor_slices(
 dataset = dataset.shuffle(100).batch(100)
 
 
-''' Step2: Train
+''' Step2: Define callback
 '''
 autoencoder = AutoEncoder(n_frames=400, fft_bins=40)
 
+
+dir_path = os.path.dirname(os.path.realpath(__file__))
+checkpoint_filepath = f'{dir_path}/model_checkpoints/ae/weights' + \
+    '.{epoch:02d}.hdf5'
+
+model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
+    filepath=checkpoint_filepath,
+    save_weights_only=True,
+    monitor='loss',
+    mode='min',
+    save_best_only=True)
+
 log_callback = LossAndErrorPrintingCallback(
     model=autoencoder.get_encoder())
-my_callbacks = [log_callback]
+
+my_callbacks = [log_callback, model_checkpoint_callback]
+
+''' Step3: Train
+'''
+
 
 autoencoder.fit(dataset, save_trained_model=True,
-                epochs=1, callbacks=my_callbacks)
+                epochs=512, callbacks=my_callbacks)
 
 # autoencoder.fit_batch(data, save_trained_model=True, batch_size=100,
 #                       epochs=512, callbacks=my_callbacks)
