@@ -9,13 +9,13 @@ from dataset import get_data_set
 
 
 class AutoEncoder:
-    def __init__(self, save_path=None, n_frames=400, fft_bins=100):
+    def __init__(self, save_path=None, n_frames=400, fft_bins=100, model_id=''):
         if save_path == None:
             dir_path = os.path.dirname(os.path.realpath(__file__))
             save_path = f'{dir_path}/models'
 
         self.save_path = save_path
-
+        self.model_id = model_id
         autoencoder, encoder = AutoEncoder.build_autoencoder(
             n_frames=n_frames, fft_bins=fft_bins)
 
@@ -108,9 +108,7 @@ class AutoEncoder:
 
         if save_trained_model:
             tf.compat.v1.keras.experimental.export_saved_model(
-                self.autoencoder, f'{self.save_path}/ae')
-            tf.compat.v1.keras.experimental.export_saved_model(
-                self.encoder, f'{self.save_path}/encoder')
+                self.encoder, f'{self.save_path}/encoder_{self.model_id}')
 
         return loss
 
