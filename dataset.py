@@ -8,6 +8,8 @@ if int(tf.version.VERSION.split('.')[0]) == 2:
 import numpy as np
 import functools
 import librosa
+import librosa.display
+import matplotlib.pyplot as plt
 from scipy.io.wavfile import read as wavread
 from scipy.io.wavfile import write as wavwrite
 
@@ -16,7 +18,7 @@ WIN_SAMPLES = int(SAMPLING_RATE * 0.025)
 HOP_SAMPLES = int(SAMPLING_RATE * 0.010)
 N_FRAMES = 400
 # FFT_LENGTH = 198  # fft_bins = fft_length // 2 + 1 = 100
-FFT_LENGTH = 78  # fft_bins = fft_length // 2 + 1 = 100
+FFT_LENGTH = 78  # fft_bins = fft_length // 2 + 1 = 40
 
 
 def read_wav(in_path):
@@ -30,7 +32,9 @@ def read_wav(in_path):
     return samples
 
 
-def preprocess(mixedpath):
+def preprocess(mixedpath, use_mel=False):
+    tf.compat.v1.enable_eager_execution()
+
     try:
         mixedsamples = read_wav(mixedpath)
         mixedsamples = mixedsamples / (max(abs(mixedsamples))+0.000001)
@@ -49,25 +53,23 @@ def preprocess(mixedpath):
         # print('Number of frames',
         #       (1 + (len(mixedsamples) - WIN_SAMPLES) / HOP_SAMPLES))
 
-        tf.compat.v1.enable_eager_execution()
-
-        # data processing
         mix_wav = mixedsamples
         mix_wav = tf.reshape(mix_wav, [-1])
-
-        # print('================================reshape=================================================')
-        # print('mix_wav', mix_wav.shape)
 
         mix_stft = tf.signal.stft(
             mix_wav, frame_length=WIN_SAMPLES, frame_step=HOP_SAMPLES, fft_length=FFT_LENGTH)
 
         mix_stft = toFixedNumFrames(mix_stft, N_FRAMES)
 
-        # print('================================STFT=====================================================')
-        # print('mix_stft: ', mix_stft.shape)
-
         mix_phase = tf.angle(mix_stft)
         mix_spectrum = tf.log(tf.abs(mix_stft) + 0.00001)
+
+        if use_mel == True:
+            mel = librosa.feature.melspectrogram(
+                y=mixedsamples, sr=SAMPLING_RATE, n_fft=WIN_SAMPLES, hop_length=HOP_SAMPLES, n_mels=40)
+            mel = np.transpose(mel)
+            mel = toFixedNumFrames(mel, N_FRAMES)
+            return mix_phase, mel
 
         return mix_phase, mix_spectrum
     except EnvironmentError as err:
@@ -93,23 +95,29 @@ def toFixedNumFrames(arr, nframe):
         return new_arr
 
 
-def loadWaveFolder(pathToFiles):
+def loadWaveFolder(pathToFiles, use_mel=False):
     phases = []
-    stfts = []
+    features = []
 
     files = librosa.util.find_files(pathToFiles, ext=['wav'])
     files = np.asarray(files)
     for f in files:
-        phase, stft = preprocess(f)
+        phase, feature = preprocess(f, use_mel=use_mel)
         phases.append(np.array(phase))
-        stfts.append(np.array(stft))
+        features.append(np.array(feature))
 
-    return np.array(phases), np.array(stfts)
+    return np.array(phases), np.array(features)
 
 
-def get_shuffled_data_set(languages=['en', 'de', 'cn', 'fr', 'ru']):
-    #languages = ['en', 'de', 'cn', 'fr', 'ru']
+def get_shuffled_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts'):
+    dataset, classes = get_data_set(languages, feature_type=feature_type)
+    return shuffle_data_with_label(dataset, classes)
 
+
+def get_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts'):
+    '''
+    feature_type: stfts or mel
+    '''
     dir_path = os.path.dirname(os.path.realpath(__file__))
     saveFolder = f'{dir_path}/8K'
 
@@ -118,35 +126,9 @@ def get_shuffled_data_set(languages=['en', 'de', 'cn', 'fr', 'ru']):
 
     for i in range(len(languages)):
         lang = languages[i]
-        stft = np.load(f'{saveFolder}/{lang}_stfts.npy')
+        stft = np.load(f'{saveFolder}/{lang}_{feature_type}.npy')
         n_samples = stft.shape[0]
         label = np.full(shape=(n_samples, ), fill_value=i)
-        #label = np.load(f'{saveFolder}/{lang}_labels.npy')
-
-        if i == 0:
-            dataset = stft
-            classes = label
-        else:
-            dataset = np.concatenate((dataset, stft), axis=0)
-            classes = np.concatenate((classes, label), axis=0)
-
-    dataset, classes = shuffle_data_with_label(dataset, classes)
-    return dataset, classes
-
-
-def get_data_set(languages=['en', 'de', 'cn', 'fr', 'ru']):
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    saveFolder = f'{dir_path}/8K'
-
-    dataset = list()
-    classes = list()
-
-    for i in range(len(languages)):
-        lang = languages[i]
-        stft = np.load(f'{saveFolder}/{lang}_stfts.npy')
-        n_samples = stft.shape[0]
-        label = np.full(shape=(n_samples, ), fill_value=i)
-        #label = np.load(f'{saveFolder}/{lang}_labels.npy')
 
         if i == 0:
             dataset = stft
@@ -167,6 +149,7 @@ def shuffle_data_with_label(dataset, classes):
 
 
 if __name__ == "__main__":
+    use_mel = True
     languages = ['en', 'de', 'cn', 'fr', 'ru']
     dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -174,16 +157,13 @@ if __name__ == "__main__":
 
     for i in range(len(languages)):
         lang = languages[i]
-        phases, stfts = loadWaveFolder(f'/Users/nvckhoa/speech/8K/{lang}')
 
-        labels = np.full(phases.shape[0], i)
+        phases, features = loadWaveFolder(
+            f'/Users/nvckhoa/speech/8K/{lang}', use_mel=True)
+
+        if use_mel == True:
+            np.save(f'{saveFolder}/{lang}_mel', features)
+        else:
+            np.save(f'{saveFolder}/{lang}_stfts', features)
 
         np.save(f'{saveFolder}/{lang}_phases', phases)
-        np.save(f'{saveFolder}/{lang}_stfts', stfts)
-        np.save(f'{saveFolder}/{lang}_labels', labels)
-
-        print(lang)
-        print(phases.shape)
-        print(stfts.shape)
-        print(labels.shape)
-        print(labels)
