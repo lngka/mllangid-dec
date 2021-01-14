@@ -93,7 +93,7 @@ class AutoEncoder:
     def load_encoder(path_to_encoder=None):
         if path_to_encoder == None:
             dir_path = os.path.dirname(os.path.realpath(__file__))
-            path_to_encoder = f'{dir_path}/models/encoder_50'
+            path_to_encoder = f'{dir_path}/models/encoder_60'
         return tf.compat.v1.keras.experimental.load_from_saved_model(path_to_encoder)
 
     def fit(self, data, save_trained_model=False, batch_size=10, epochs=1, loss='MSE', **kwargs):
