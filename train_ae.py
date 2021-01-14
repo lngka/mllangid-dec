@@ -7,9 +7,10 @@ import os
 
 
 class LossAndErrorPrintingCallback(keras.callbacks.Callback):
-    def __init__(self, model=None):
+    def __init__(self, model=None, languages=['en', 'de', 'cn', 'fr', 'ru']):
         super(LossAndErrorPrintingCallback, self).__init__()
         self.model = model
+        self.languages = languages
 
     @staticmethod
     def get_log_path_and_open_mode():
@@ -26,12 +27,7 @@ class LossAndErrorPrintingCallback(keras.callbacks.Callback):
         logpath, open_mode = LossAndErrorPrintingCallback.get_log_path_and_open_mode()
         with open(logpath, open_mode) as text_file:
             self.model.summary(print_fn=lambda x: text_file.write(x + '\n'))
-
-    # def on_train_batch_end(self, batch, logs=None):
-    #     logpath, open_mode = LossAndErrorPrintingCallback.get_log_path_and_open_mode()
-    #     with open(logpath, open_mode) as text_file:
-    #         print("For batch {}, loss is {:7.2f}. \n".format(
-    #             batch, logs["loss"]), file=text_file)
+            print(self.languages,  file=text_file)
 
     def on_epoch_end(self, epoch, logs=None):
         logpath, open_mode = LossAndErrorPrintingCallback.get_log_path_and_open_mode()
@@ -46,7 +42,8 @@ class LossAndErrorPrintingCallback(keras.callbacks.Callback):
 
 ''' Step1: Get nice data
 '''
-data, labels = get_shuffled_data_set(['en', 'de', 'cn', 'fr', 'ru'])
+languages = ['en', 'de', 'cn', 'fr', 'ru']
+data, labels = get_shuffled_data_set(languages)
 data = np.expand_dims(data, -1)
 #data = np.expand_dims(data, 1)
 
@@ -72,7 +69,7 @@ model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
     save_best_only=True)
 
 log_callback = LossAndErrorPrintingCallback(
-    model=autoencoder.get_encoder())
+    model=autoencoder.get_encoder(), languages=languages)
 
 my_callbacks = [log_callback, model_checkpoint_callback]
 

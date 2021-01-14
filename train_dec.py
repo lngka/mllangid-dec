@@ -39,7 +39,7 @@ languageDEC.initialize(data)
     update_interval: 
 '''
 #optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
-optimizer = tf.keras.optimizers.SGD(learning_rate=0.001)
+optimizer = tf.keras.optimizers.SGD(learning_rate=0.0005)
 languageDEC.compile(optimizer=optimizer, loss='kld')
 languageDEC.fit(x=data, y=labels, max_iteration=512,
                 update_interval=16, batch_size=100)
