@@ -17,13 +17,13 @@ class LanguageDEC:
     assign the features into clusters according to a target distribution
     '''
 
-    def __init__(self, encoder=None, save_path=None, languages=['en', 'de', 'cn', 'fr', 'ru']):
+    def __init__(self, encoder=None, dir_path=None, languages=['en', 'de', 'cn', 'fr', 'ru'], model_id=''):
         # creating properties
-        if save_path == None:
+        if dir_path == None:
             dir_path = os.path.dirname(os.path.realpath(__file__))
-            save_path = f'{dir_path}/models'
+        self.dir_path = dir_path
+        self.model_id = model_id
 
-        self.save_path = save_path
         self.languages = languages
         self.n_lang = len(languages)
 
@@ -96,6 +96,8 @@ class LanguageDEC:
 
         index_array = np.arange(x.shape[0])
         index = 0
+        last_loss = float("inf")
+
         for ite in range(max_iteration):
             q = self.model.predict(x)
             p = self.calulate_target_distribution(q)
@@ -124,11 +126,16 @@ class LanguageDEC:
                 # not really accuracy, just trigger logging for now
                 Metrics.acc(y, y_pred, languages=self.languages)
 
-            # update index
-            index = index + 1 if (index + 1) * batch_size <= x.shape[0] else 0
+                if loss < last_loss:
+                    # save if loss decreased
+                    tf.compat.v1.keras.experimental.export_saved_model(
+                        self.encoder, f'{self.dir_path}/model_checkpoints/dec_{self.model_id}_encoder_ite{ite}')
+                    tf.keras.models.save_model(
+                        self.model, f'{self.dir_path}/models/dec_{self.model_id}', save_format='h5')
 
-        tf.keras.models.save_model(
-            self.model, f'{self.save_path}/dec', save_format='h5')
+            # update index and last loss
+            index = index + 1 if (index + 1) * batch_size <= x.shape[0] else 0
+            last_loss = loss
 
 
 class Metrics:
