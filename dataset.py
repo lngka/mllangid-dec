@@ -109,18 +109,18 @@ def loadWaveFolder(pathToFiles, use_mel=False):
     return np.array(phases), np.array(features)
 
 
-def get_shuffled_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts'):
-    dataset, classes = get_data_set(languages, feature_type=feature_type)
+def get_shuffled_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts', **kwargs):
+    dataset, classes = get_data_set(languages, feature_type=feature_type, **kwargs)
     return shuffle_data_with_label(dataset, classes)
 
 
-def get_stacked_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts', n_stack=5):
+def get_stacked_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts', n_stack=5, **kwargs):
     '''
     Apply stacking on data set
     n_stack=5 means 1 central row, 2 rows below, 2 rows above
     And move the central row 1 step upward then repeat the stacking process
     '''
-    dataset, classes = get_data_set(languages, feature_type=feature_type)
+    dataset, classes = get_data_set(languages, feature_type=feature_type, **kwargs)
 
     n_examples = dataset.shape[0]
     n_rows = dataset.shape[2]
@@ -140,7 +140,7 @@ def get_stacked_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type=
     return dataset, np.array(stacked_dataset), classes
 
 
-def get_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts'):
+def get_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts', mini=False):
     '''
     feature_type: stfts or mel
     '''
@@ -152,15 +152,19 @@ def get_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts')
 
     for i in range(len(languages)):
         lang = languages[i]
-        stft = np.load(f'{saveFolder}/{lang}_{feature_type}.npy')
-        n_samples = stft.shape[0]
+        features = np.load(f'{saveFolder}/{lang}_{feature_type}.npy')
+
+        if mini == True:
+            features = features[:10]
+
+        n_samples = features.shape[0]
         label = np.full(shape=(n_samples, ), fill_value=i)
 
         if i == 0:
-            dataset = stft
+            dataset = features
             classes = label
         else:
-            dataset = np.concatenate((dataset, stft), axis=0)
+            dataset = np.concatenate((dataset, features), axis=0)
             classes = np.concatenate((classes, label), axis=0)
 
     return dataset, classes

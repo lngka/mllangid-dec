@@ -38,7 +38,7 @@ class LanguageDEC:
         self.model = Model(inputs=self.encoder.input, outputs=prediction)
 
     def compile(self, optimizer='sgd', loss='kld'):
-        self.model.compile(optimizer=optimizer, loss=loss)
+        self.model.compile(optimizer=optimizer, loss=loss, run_eagerly=True)
         self.model.summary()
 
     def extract_features(self, x):
@@ -129,9 +129,11 @@ class LanguageDEC:
                 if loss < last_loss:
                     # save if loss decreased
                     tf.compat.v1.keras.experimental.export_saved_model(
-                        self.encoder, f'{self.dir_path}/model_checkpoints/dec_{self.model_id}_encoder_ite{ite}')
-                    tf.keras.models.save_model(
-                        self.model, f'{self.dir_path}/models/dec_{self.model_id}', save_format='h5')
+                        self.encoder, f'{self.dir_path}/model_checkpoints/dec/dec_{self.model_id}_encoder_ite{ite}')
+                    # tf.keras.models.save_model(
+                    #    self.model, f'{self.dir_path}/models/dec_{self.model_id}', save_format='h5')
+                    tf.compat.v1.keras.experimental.export_saved_model(
+                        self.model, f'{self.dir_path}/models/dec_{self.model_id}')
 
             # update index and last loss
             index = index + 1 if (index + 1) * batch_size <= x.shape[0] else 0

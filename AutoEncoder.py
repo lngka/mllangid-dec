@@ -65,7 +65,7 @@ class AutoEncoder:
         flat_shape = h.shape
 
         h = Dense(2000)(h)
-        features = Dense(500, name='embeddings')(h)
+        features = Dense(100, name='embeddings')(h)
         h = Dense(2000)(features)
         h = Dense(flat_shape[1])(h)
 
@@ -90,13 +90,13 @@ class AutoEncoder:
         return Model(input_layer, y, name='autoencoder'), Model(input_layer, features, name='encoder')
 
     @staticmethod
-    def load_encoder(path_to_encoder=None):
+    def load_encoder(path_to_encoder=None, model_id=''):
         if path_to_encoder == None:
             dir_path = os.path.dirname(os.path.realpath(__file__))
-            path_to_encoder = f'{dir_path}/models/encoder_60'
+            path_to_encoder = f'{dir_path}/models/encoder_{model_id}'
         return tf.compat.v1.keras.experimental.load_from_saved_model(path_to_encoder)
 
-    def fit(self, data, save_trained_model=False, batch_size=10, epochs=1, loss='MSE', **kwargs):
+    def fit(self, data, save_trained_model=True, batch_size=10, epochs=1, loss='MSE', **kwargs):
 
         if self.already_compiled == False:
             # compile if not already compiled
@@ -112,7 +112,7 @@ class AutoEncoder:
 
         return loss
 
-    def fit_batch(self, data, save_trained_model=False, batch_size=100, epochs=1, loss='MSE', **kwargs):
+    def fit_batch(self, data, save_trained_model=True, batch_size=100, epochs=1, loss='MSE', **kwargs):
         optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
         self.autoencoder.compile(loss=loss, optimizer=optimizer)
         self.already_compiled = True
