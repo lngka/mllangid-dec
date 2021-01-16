@@ -33,12 +33,14 @@ class LossAndErrorPrintingCallback(keras.callbacks.Callback):
         logpath, open_mode = LossAndErrorPrintingCallback.get_log_path_and_open_mode()
         with open(logpath, open_mode) as text_file:
             print(
-                "The average loss for epoch {} is {:7.2f}".format(
+                "The average loss for epoch {} is {:7.3f}".format(
                     epoch, logs["loss"]
                 ),
                 file=text_file
             )
 
+
+MODEL_ID = '61'  # use to name log txt file and save model
 
 ''' Step1: Get nice data
 '''
@@ -54,7 +56,7 @@ dataset = dataset.shuffle(100).batch(100)
 
 ''' Step2: Define callback
 '''
-autoencoder = AutoEncoder(n_frames=400, fft_bins=40)
+autoencoder = AutoEncoder(n_frames=400, fft_bins=40, model_id=MODEL_ID)
 
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -75,10 +77,7 @@ my_callbacks = [log_callback, model_checkpoint_callback]
 
 ''' Step3: Train
 '''
-
-
-autoencoder.fit(dataset, save_trained_model=True,
-                epochs=512, callbacks=my_callbacks)
+autoencoder.fit(dataset, epochs=1024, callbacks=my_callbacks)
 
 # autoencoder.fit_batch(data, save_trained_model=True, batch_size=100,
 #                       epochs=512, callbacks=my_callbacks)
