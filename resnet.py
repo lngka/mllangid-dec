@@ -8,7 +8,7 @@ from tensorflow.keras.layers import Conv2D, AveragePooling2D, MaxPooling2D, UpSa
 input_layer = Input(shape=(400, 40, 1), dtype=float)
 resnet = ResNet50(input_shape=input_layer.shape[1:],
                   weights=None, include_top=True)
-# resnet.summary()
+resnet.summary()
 
 
 x = input_layer

@@ -114,6 +114,32 @@ def get_shuffled_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type
     return shuffle_data_with_label(dataset, classes)
 
 
+def get_stacked_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts', n_stack=5):
+    '''
+    Apply stacking on data set
+    n_stack=5 means 1 central row, 2 rows below, 2 rows above
+    And move the central row 1 step upward then repeat the stacking process
+    '''
+    dataset, classes = get_data_set(languages, feature_type=feature_type)
+
+    n_examples = dataset.shape[0]
+    n_rows = dataset.shape[2]
+    assert n_rows % n_stack == 0
+
+    stacked_dataset = []
+    for i in range(n_examples):
+        example = dataset[i]
+        stacked_example = example[:, 0:n_stack]
+        for j in range(1, n_rows-n_stack):
+            start = j
+            end = j + n_stack
+            stack = example[:, start:end]
+            stacked_example = np.concatenate([stacked_example, stack], axis=1)
+        stacked_dataset.append(stacked_example)
+
+    return dataset, np.array(stacked_dataset), classes
+
+
 def get_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts'):
     '''
     feature_type: stfts or mel
