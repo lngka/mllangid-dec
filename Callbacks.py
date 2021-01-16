@@ -1,0 +1,46 @@
+from tensorflow import keras
+import os
+import tensorflow as tf
+
+
+class LossAndErrorPrintingCallback(keras.callbacks.Callback):
+    def __init__(self, model=None, languages=['en', 'de', 'cn', 'fr', 'ru']):
+        super(LossAndErrorPrintingCallback, self).__init__()
+        self.model = model
+        self.languages = languages
+
+    @staticmethod
+    def get_log_path_and_open_mode():
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        log_path = f'{dir_path}/logs/ae_logs.txt'
+
+        if os.path.exists(log_path):
+            open_mode = 'a'  # append if already exists
+        else:
+            open_mode = 'w'  # make a new file if not
+        return log_path, open_mode
+
+    def on_train_begin(self, logs=None):
+        logpath, open_mode = LossAndErrorPrintingCallback.get_log_path_and_open_mode()
+        with open(logpath, open_mode) as text_file:
+            self.model.summary(print_fn=lambda x: text_file.write(x + '\n'))
+            print(self.languages,  file=text_file)
+
+    def on_epoch_end(self, epoch, logs=None):
+        logpath, open_mode = LossAndErrorPrintingCallback.get_log_path_and_open_mode()
+        with open(logpath, open_mode) as text_file:
+            print(
+                "The average loss for epoch {} is {:7.2f}".format(
+                    epoch, logs["loss"]
+                ),
+                file=text_file
+            )
+
+
+def ModelCheckpoint(checkpoint_filepath='', save_weights_only=True, monitor='loss', mode='min', **kwargs):
+    return tf.keras.callbacks.ModelCheckpoint(
+        filepath=checkpoint_filepath,
+        save_weights_only=save_weights_only,
+        monitor=monitor,
+        mode=mode,
+        save_best_only=True, **kwargs)

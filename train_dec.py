@@ -13,11 +13,6 @@ languages = ['en', 'de', 'cn', 'fr', 'ru']
 data, labels = get_shuffled_data_set(languages)
 data = np.expand_dims(data, -1)
 
-# data = np.full(shape=(10, 400, 100, 1), fill_value=0.645)  # fake data to test
-#data = np.random.rand(10, 400, 100, 1)
-#np.save('./testdata.npy', data)
-#labels = np.full(shape=(10,), fill_value=3)
-#data = np.load('./testdata.npy')
 
 ''' Step1: Initialization
     1.1: load pre trained encoder to extract features from data
