@@ -30,14 +30,13 @@ checkpoint_filepath = f'{dir_path}/model_checkpoints/ae/weights' + \
 model_checkpoint_callback = ModelCheckpoint(checkpoint_filepath)
 
 # to log
-autoencoder = AutoEncoder(n_frames=400, fft_bins=40)
+autoencoder = AutoEncoder(n_frames=400, fft_bins=40, model_id=MODEL_ID)
 log_callback = LossAndErrorPrintingCallback(
-    model=autoencoder.get_encoder(), languages=languages)
+    model=autoencoder.get_encoder(), languages=languages, model_id=MODEL_ID)
 
 # together
 my_callbacks = [log_callback, model_checkpoint_callback]
 
 ''' Step3: Train
 '''
-autoencoder.fit(dataset, save_trained_model=True,
-                epochs=512, callbacks=my_callbacks)
+autoencoder.fit(dataset, epochs=512, callbacks=my_callbacks)

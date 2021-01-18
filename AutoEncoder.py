@@ -96,7 +96,7 @@ class AutoEncoder:
             path_to_encoder = f'{dir_path}/models/encoder_{model_id}'
         return tf.compat.v1.keras.experimental.load_from_saved_model(path_to_encoder)
 
-    def fit(self, data, save_trained_model=True, batch_size=10, epochs=1, loss='MSE', **kwargs):
+    def fit(self, data, save_trained_model=False, batch_size=10, epochs=1, loss='MSE', **kwargs):
 
         if self.already_compiled == False:
             # compile if not already compiled

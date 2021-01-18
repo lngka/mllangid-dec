@@ -14,7 +14,7 @@ data = np.expand_dims(data, -1)
 ''' Step2: Get embedded data
 '''
 autoencoder = AutoEncoder()
-encoder = autoencoder.load_encoder()
+encoder = autoencoder.load_encoder(model_id='61')
 data = encoder.predict(data)
 
 X = data
@@ -33,6 +33,6 @@ colors = 'r', 'g', 'b', 'c', 'm', 'y', 'k', 'w', 'orange', 'purple'
 for i, color, lang in zip(indices, colors, languages):
     plt.scatter(X_2d[y == i, 0], X_2d[y == i, 1], c=color, label=lang)
 
-plt.title('encoder_60')
+plt.title('encoder_61')
 plt.legend()
 plt.show()

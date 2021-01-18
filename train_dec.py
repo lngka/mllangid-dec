@@ -23,8 +23,9 @@ data = np.expand_dims(data, -1)
 
 
 # load pre-trained encoder
-autoencoder = AutoEncoder()
+autoencoder = AutoEncoder(n_frames=400, fft_bins=40)
 encoder = autoencoder.load_encoder(model_id=MODEL_ID)
+
 
 # initialize centroid using k_means
 languageDEC = LanguageDEC(
