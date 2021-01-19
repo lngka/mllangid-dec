@@ -5,6 +5,7 @@ from dataset import get_shuffled_data_set
 import tensorflow as tf
 
 tf.compat.v1.enable_eager_execution()
+
 MODEL_ID = '61'  # use to name log txt file and save model
 
 ''' Step0: Get nice data

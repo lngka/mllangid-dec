@@ -8,11 +8,13 @@ from AutoEncoder import AutoEncoder
 from dataset import get_shuffled_data_set
 from Callbacks import LossAndErrorPrintingCallback, ModelCheckpoint
 
-MODEL_ID = '61'  # use to name log txt file and save model
+MODEL_ID = '62'  # use to name log txt file and save model
 
 ''' Step1: Get nice data
 '''
-languages = ['en', 'de', 'cn', 'fr', 'ru']
+#languages = ['en', 'de', 'cn', 'fr', 'ru']
+languages = ['en', 'cn']
+
 data, labels = get_shuffled_data_set(languages)
 data = np.expand_dims(data, -1)
 
@@ -30,7 +32,7 @@ checkpoint_filepath = f'{dir_path}/model_checkpoints/ae/weights' + \
 model_checkpoint_callback = ModelCheckpoint(checkpoint_filepath)
 
 # to log
-autoencoder = AutoEncoder(n_frames=400, fft_bins=40)
+autoencoder = AutoEncoder(n_frames=400, fft_bins=40, model_id=MODEL_ID)
 log_callback = LossAndErrorPrintingCallback(
     model=autoencoder.get_encoder(), languages=languages)
 
@@ -40,4 +42,4 @@ my_callbacks = [log_callback, model_checkpoint_callback]
 ''' Step3: Train
 '''
 autoencoder.fit(dataset, save_trained_model=True,
-                epochs=512, callbacks=my_callbacks)
+                epochs=1024, callbacks=my_callbacks)

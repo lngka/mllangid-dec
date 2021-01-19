@@ -128,16 +128,21 @@ class LanguageDEC:
 
                 if loss < last_loss:
                     # save if loss decreased
-                    tf.compat.v1.keras.experimental.export_saved_model(
-                        self.encoder, f'{self.dir_path}/model_checkpoints/dec/dec_{self.model_id}_encoder_ite{ite}')
+                    self.encoder.save(
+                        f'{self.dir_path}/model_checkpoints/dec/trained_encoder_{self.model_id}_ite{ite}', save_format='tf')
+
+                    # tf.compat.v1.keras.experimental.export_saved_model(
+                    #     self.encoder, f'{self.dir_path}/model_checkpoints/dec/dec_{self.model_id}_encoder_ite{ite}')
                     # tf.keras.models.save_model(
-                    #    self.model, f'{self.dir_path}/models/dec_{self.model_id}', save_format='h5')
-                    tf.compat.v1.keras.experimental.export_saved_model(
-                        self.model, f'{self.dir_path}/models/dec_{self.model_id}')
+                    #    self.model, f'{self.dir_path}/models/dec_{self.model_id}.h5', save_format='h5')
+                    # tf.compat.v1.keras.experimental.export_saved_model(
+                    #     self.model, f'{self.dir_path}/models/dec_{self.model_id}')
 
             # update index and last loss
             index = index + 1 if (index + 1) * batch_size <= x.shape[0] else 0
             last_loss = loss
+        self.model.save(
+            f'{self.dir_path}/models/dec_{self.model_id}', save_format='tf')
 
 
 class Metrics:
@@ -167,9 +172,6 @@ class Metrics:
             accuracy
         """
         y_true = y_true.astype(np.int64)
-
-        print('y_true:', y_true.shape)
-        print('y_pred:', y_pred.shape)
 
         assert y_pred.size == y_true.size
 
