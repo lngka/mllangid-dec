@@ -11,10 +11,12 @@ MODEL_ID = '62_re'  # use to name log txt file and save model
 ''' Step0: Get nice data
 '''
 #languages = ['en', 'de', 'cn', 'fr', 'ru']
-languages = ['en', 'cn']
+languages = ['en', 'de', 'cn']
+dataset_train, classes_train, dataset_test, classes_test = get_shuffled_data_set(
+    languages,  split=True)
 
-data, labels = get_shuffled_data_set(languages)
-data = np.expand_dims(data, -1)
+data = np.expand_dims(dataset_train, -1)
+data_test = np.expand_dims(dataset_test, -1)
 
 
 ''' Step1: Initialization
@@ -24,8 +26,9 @@ data = np.expand_dims(data, -1)
 
 
 # load pre-trained encoder
-autoencoder = AutoEncoder()
-encoder = autoencoder.load_encoder(model_id='62')
+autoencoder = AutoEncoder(n_frames=400, fft_bins=40)
+encoder = autoencoder.load_encoder(model_id=MODEL_ID)
+
 
 # initialize centroid using k_means
 languageDEC = LanguageDEC(
@@ -40,5 +43,5 @@ languageDEC.initialize(data)
 #optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
 optimizer = tf.keras.optimizers.SGD(learning_rate=0.001)
 languageDEC.compile(optimizer=optimizer, loss='kld')
-languageDEC.fit(x=data, y=labels, max_iteration=1024,
-                update_interval=16, batch_size=100)
+languageDEC.fit(x=data, y=classes_train, max_iteration=1024,
+                update_interval=16, batch_size=100, x_test=data_test, y_test=classes_test)
