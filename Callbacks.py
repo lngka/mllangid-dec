@@ -38,6 +38,9 @@ class LossAndErrorPrintingCallback(keras.callbacks.Callback):
 
 
 def ModelCheckpoint(checkpoint_filepath='', save_weights_only=True, monitor='loss', mode='min', **kwargs):
+    if not os.path.exists(os.path.dirname(checkpoint_filepath)):
+        os.makedirs(os.path.dirname(checkpoint_filepath))
+        
     return tf.keras.callbacks.ModelCheckpoint(
         filepath=checkpoint_filepath,
         save_weights_only=save_weights_only,
