@@ -9,11 +9,13 @@ MODEL_ID = '61'  # use to name log txt file and save model
 
 ''' Step0: Get nice data
 '''
-languages = ['en', 'de', 'cn', 'fr', 'ru']
-#languages = ['en','cn', 'fr', 'ru']
+#languages = ['en', 'de', 'cn', 'fr', 'ru']
+languages = ['en', 'de', 'cn']
+dataset_train, classes_train, dataset_test, classes_test = get_shuffled_data_set(
+    languages,  split=True)
 
-data, labels = get_shuffled_data_set(languages)
-data = np.expand_dims(data, -1)
+data = np.expand_dims(dataset_train, -1)
+data_test = np.expand_dims(dataset_test, -1)
 
 
 ''' Step1: Initialization
@@ -40,5 +42,5 @@ languageDEC.initialize(data)
 #optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
 optimizer = tf.keras.optimizers.SGD(learning_rate=0.0001)
 languageDEC.compile(optimizer=optimizer, loss='kld')
-languageDEC.fit(x=data, y=labels, max_iteration=1024,
-                update_interval=16, batch_size=100)
+languageDEC.fit(x=data, y=classes_train, max_iteration=1024,
+                update_interval=16, batch_size=100, x_test=data_test, y_test=classes_test)

@@ -91,7 +91,7 @@ class LanguageDEC:
             else:
                 print(f'{key}: {value}', file=text_file)
 
-    def fit(self, x, y, max_iteration=128, batch_size=64, update_interval=32, **kwargs):
+    def fit(self, x, y, x_test=None, y_test=None, max_iteration=128, batch_size=64, update_interval=32, **kwargs):
         self.write_training_log()
 
         index_array = np.arange(x.shape[0])
@@ -120,11 +120,15 @@ class LanguageDEC:
                 self.write_training_log('Distance')
                 self.write_training_log('loss: ', loss)
 
+                self.write_training_log('Prediction on train set: ', )
                 q = self.model.predict(x)
                 y_pred = q.argmax(1)
+                Metrics.evaluate(y, y_pred, languages=self.languages)
 
-                # not really accuracy, just trigger logging for now
-                Metrics.acc(y, y_pred, languages=self.languages)
+                self.write_training_log('Prediction on test set: ', )
+                q = self.model.predict(x_test)
+                y_pred_test = q.argmax(1)
+                Metrics.evaluate(y_test, y_pred_test, languages=self.languages)
 
                 if loss < last_loss:
                     # save if loss decreased
@@ -157,8 +161,8 @@ class Metrics:
             print(f'{key}{value}', file=text_file)
 
     @staticmethod
-    def acc(y_true, y_pred, languages=['en', 'de', 'cn', 'fr', 'ru']):
-        """Calculate clustering accuracy.
+    def evaluate(y_true, y_pred, languages=['en', 'de', 'cn', 'fr', 'ru']):
+        """Evaluate clustering accuracy.
         Arguments
             y_true: labels with shape (n_samples,)
                     en-0, de-1, cn-2, fr-3, ru-4
@@ -181,7 +185,6 @@ class Metrics:
             # w[i, j] = count of prediction&groundtruth pair i&j
             w[y_pred[i], y_true[i]] += 1
 
-        Metrics.write_training_log("Prediction results", " ")
         Metrics.write_training_log("(pred_axis, truth_axis) \n", w)
 
         true_labelmap = tf.argmax(w, axis=0)

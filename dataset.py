@@ -5,6 +5,7 @@ import tensorflow as tf
 if int(tf.version.VERSION.split('.')[0]) == 2:
     import tensorflow.compat.v1 as tf
     tf.compat.v1.disable_v2_behavior()
+from sklearn.model_selection import train_test_split
 import numpy as np
 import functools
 import librosa
@@ -110,8 +111,14 @@ def loadWaveFolder(pathToFiles, use_mel=False):
 
 
 def get_shuffled_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts', **kwargs):
-    dataset, classes = get_data_set(languages, feature_type=feature_type, **kwargs)
-    return shuffle_data_with_label(dataset, classes)
+    dataset, classes, dataset_test, classes_test = get_data_set(
+        languages, feature_type=feature_type, **kwargs)
+
+    dataset, classes = shuffle_data_with_label(dataset, classes)
+    dataset_test, classes_test = shuffle_data_with_label(
+        dataset_test, classes_test)
+
+    return dataset, classes, dataset_test, classes_test
 
 
 def get_stacked_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts', n_stack=5, **kwargs):
@@ -120,7 +127,8 @@ def get_stacked_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type=
     n_stack=5 means 1 central row, 2 rows below, 2 rows above
     And move the central row 1 step upward then repeat the stacking process
     '''
-    dataset, classes = get_data_set(languages, feature_type=feature_type, **kwargs)
+    dataset, classes, _, _ = get_data_set(
+        languages, feature_type=feature_type, **kwargs)
 
     n_examples = dataset.shape[0]
     n_rows = dataset.shape[2]
@@ -140,34 +148,45 @@ def get_stacked_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type=
     return dataset, np.array(stacked_dataset), classes
 
 
-def get_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts', mini=False):
+def get_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts', split=False):
     '''
     feature_type: stfts or mel
     '''
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    saveFolder = f'{dir_path}/8K'
+    saveFolder = f'{dir_path}/8K_200'
 
     dataset = list()
     classes = list()
+    dataset_test = list()
+    classes_test = list()
 
     for i in range(len(languages)):
         lang = languages[i]
         features = np.load(f'{saveFolder}/{lang}_{feature_type}.npy')
-
-        if mini == True:
-            features = features[:10]
-
         n_samples = features.shape[0]
-        label = np.full(shape=(n_samples, ), fill_value=i)
+        labels = np.full(shape=(n_samples, ), fill_value=i)
+
+        if split == True:
+            X_train, X_test, y_train, y_test = train_test_split(
+                features, labels, test_size=0.2, random_state=1)
+        else:
+            X_train = features
+            y_train = labels
+            X_test = []
+            y_test = []
 
         if i == 0:
-            dataset = features
-            classes = label
+            dataset = X_train
+            classes = y_train
+            dataset_test = X_test
+            classes_test = y_test
         else:
-            dataset = np.concatenate((dataset, features), axis=0)
-            classes = np.concatenate((classes, label), axis=0)
+            dataset = np.concatenate((dataset, X_train), axis=0)
+            classes = np.concatenate((classes, y_train), axis=0)
+            dataset_test = np.concatenate((dataset_test, X_test), axis=0)
+            classes_test = np.concatenate((classes_test, y_test), axis=0)
 
-    return dataset, classes
+    return dataset, classes, dataset_test, classes_test
 
 
 def shuffle_data_with_label(dataset, classes):
@@ -179,17 +198,20 @@ def shuffle_data_with_label(dataset, classes):
 
 
 if __name__ == "__main__":
-    use_mel = True
-    languages = ['en', 'de', 'cn', 'fr', 'ru']
+    use_mel = False
+    #languages = ['en', 'de', 'cn', 'fr', 'ru']
+    languages = ['en', 'de', 'cn']
     dir_path = os.path.dirname(os.path.realpath(__file__))
 
-    saveFolder = f'{dir_path}/8K'
+    saveFolder = f'{dir_path}/8K_200'
+    if not os.path.exists(saveFolder):
+        os.makedirs(saveFolder)
 
     for i in range(len(languages)):
         lang = languages[i]
 
         phases, features = loadWaveFolder(
-            f'/Users/nvckhoa/speech/8K/{lang}', use_mel=True)
+            f'/Users/nvckhoa/speech/8K_200/{lang}', use_mel=True)
 
         if use_mel == True:
             np.save(f'{saveFolder}/{lang}_mel', features)

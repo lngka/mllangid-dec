@@ -5,21 +5,24 @@ import numpy as np
 import os
 
 from AutoEncoder import AutoEncoder
-from dataset import get_shuffled_data_set
+from dataset import get_data_set
 from Callbacks import LossAndErrorPrintingCallback, ModelCheckpoint
 
 MODEL_ID = '61'  # use to name log txt file and save model
 
 ''' Step1: Get nice data
 '''
-languages = ['en', 'de', 'cn', 'fr', 'ru']
-data, labels = get_shuffled_data_set(languages)
-data = np.expand_dims(data, -1)
+#languages = ['en', 'de', 'cn', 'fr', 'ru']
+languages = ['en', 'de', 'cn']
+dataset_train, classes_train, dataset_test, classes_test = get_data_set(
+    languages,  split=False)
 
-dataset = tf.data.Dataset.from_tensor_slices(
+data = np.expand_dims(dataset_train, -1)
+data_test = np.expand_dims(dataset_test, -1)
+
+dataset_train = tf.data.Dataset.from_tensor_slices(
     (data, data))
-dataset = dataset.shuffle(100).batch(100)
-
+dataset_train = dataset_train.shuffle(100).batch(100)
 
 ''' Step2: Define callback
 '''
@@ -39,4 +42,4 @@ my_callbacks = [log_callback, model_checkpoint_callback]
 
 ''' Step3: Train
 '''
-autoencoder.fit(dataset, epochs=512, callbacks=my_callbacks)
+autoencoder.fit(dataset_train, epochs=512, callbacks=my_callbacks)
