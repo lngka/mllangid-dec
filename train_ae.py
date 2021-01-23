@@ -8,12 +8,12 @@ from AutoEncoder import AutoEncoder
 from dataset import get_shuffled_data_set
 from Callbacks import LossAndErrorPrintingCallback, ModelCheckpoint
 
-MODEL_ID = '62'  # use to name log txt file and save model
+MODEL_ID = '63'  # use to name log txt file and save model
 
 ''' Step1: Get nice data
 '''
 #languages = ['en', 'de', 'cn', 'fr', 'ru']
-languages = ['en', 'cn']
+languages = ['en', 'de', 'cn']
 
 data, labels = get_shuffled_data_set(languages)
 data = np.expand_dims(data, -1)
@@ -27,8 +27,11 @@ dataset = dataset.shuffle(100).batch(100)
 '''
 # to save checkpoints
 dir_path = os.path.dirname(os.path.realpath(__file__))
+
+
 checkpoint_filepath = f'{dir_path}/model_checkpoints/ae/weights' + \
     '.{epoch:02d}.hdf5'
+
 model_checkpoint_callback = ModelCheckpoint(checkpoint_filepath)
 
 # to log

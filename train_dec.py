@@ -6,12 +6,12 @@ import tensorflow as tf
 
 tf.compat.v1.enable_eager_execution()
 
-MODEL_ID = '61'  # use to name log txt file and save model
+MODEL_ID = '62_re'  # use to name log txt file and save model
 
 ''' Step0: Get nice data
 '''
-languages = ['en', 'de', 'cn', 'fr', 'ru']
-#languages = ['en','cn', 'fr', 'ru']
+#languages = ['en', 'de', 'cn', 'fr', 'ru']
+languages = ['en', 'cn']
 
 data, labels = get_shuffled_data_set(languages)
 data = np.expand_dims(data, -1)
@@ -25,7 +25,7 @@ data = np.expand_dims(data, -1)
 
 # load pre-trained encoder
 autoencoder = AutoEncoder()
-encoder = autoencoder.load_encoder(model_id=MODEL_ID)
+encoder = autoencoder.load_encoder(model_id='62')
 
 # initialize centroid using k_means
 languageDEC = LanguageDEC(
@@ -38,7 +38,7 @@ languageDEC.initialize(data)
     update_interval: 
 '''
 #optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
-optimizer = tf.keras.optimizers.SGD(learning_rate=0.0001)
+optimizer = tf.keras.optimizers.SGD(learning_rate=0.001)
 languageDEC.compile(optimizer=optimizer, loss='kld')
 languageDEC.fit(x=data, y=labels, max_iteration=1024,
                 update_interval=16, batch_size=100)
