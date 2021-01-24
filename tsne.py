@@ -11,7 +11,7 @@ from matplotlib import pyplot as plt
 #languages = ['en', 'de', 'cn', 'fr', 'ru']
 languages = ['en', 'cn']
 
-data, labels = get_shuffled_data_set(languages)
+data, labels, _, _ = get_shuffled_data_set(languages, split=False)
 data = np.expand_dims(data, -1)
 
 ''' Step2: Get embedded data
@@ -22,7 +22,7 @@ autoencoder = AutoEncoder(n_frames=400, fft_bins=40)
 #encoder = autoencoder.load_encoder(model_id='62')
 
 autoencoder.autoencoder.load_weights(
-    f'{dir_path}/model_checkpoints/ae/weights.676.hdf5')
+    f'{dir_path}/model_checkpoints/ae_62_re/weights.458.hdf5')
 encoder = autoencoder.get_encoder()
 
 # encoder = autoencoder.load_encoder(path_to_encoder=f'{dir_path}/model_checkpoints/dec_61/trained_encoder_61_ite0')

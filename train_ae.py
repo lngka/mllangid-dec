@@ -8,22 +8,26 @@ from AutoEncoder import AutoEncoder
 from dataset import get_data_set
 from Callbacks import LossAndErrorPrintingCallback, ModelCheckpoint
 
-MODEL_ID = '63'  # use to name log txt file and save model
+MODEL_ID = '62_re'  # use to name log txt file and save model
 
 ''' Step1: Get nice data
 '''
 #languages = ['en', 'de', 'cn', 'fr', 'ru']
-languages = ['en', 'de', 'cn']
+languages = ['en', 'cn']
 
 dataset_train, classes_train, dataset_test, classes_test = get_data_set(
     languages,  split=False)
 
-data = np.expand_dims(dataset_train, -1)
-data_test = np.expand_dims(dataset_test, -1)
+print(f'Train dataset with shape {dataset_train.shape}')
+
+
+dataset_train = np.expand_dims(dataset_train, -1)
+dataset_test = np.expand_dims(dataset_test, -1)
 
 dataset_train = tf.data.Dataset.from_tensor_slices(
-    (data, data))
-dataset_train = dataset_train.shuffle(100).batch(100)
+    (dataset_train, dataset_train))
+dataset_train = dataset_train.shuffle(5000).batch(200)
+
 
 ''' Step2: Define callback
 '''
@@ -46,5 +50,4 @@ my_callbacks = [log_callback, model_checkpoint_callback]
 
 ''' Step3: Train
 '''
-
 autoencoder.fit(dataset_train, epochs=512, callbacks=my_callbacks)

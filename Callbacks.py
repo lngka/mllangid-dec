@@ -37,7 +37,7 @@ class LossAndErrorPrintingCallback(keras.callbacks.Callback):
         logpath, open_mode = LossAndErrorPrintingCallback.get_log_path_and_open_mode()
         with open(logpath, open_mode) as text_file:
             print(
-                "The average loss for epoch {} is {:7.2f}".format(
+                "The average loss for epoch {} is {:7.3f}".format(
                     epoch, logs["loss"]
                 ),
                 file=text_file
@@ -47,7 +47,7 @@ class LossAndErrorPrintingCallback(keras.callbacks.Callback):
 def ModelCheckpoint(checkpoint_filepath='', save_weights_only=True, monitor='loss', mode='min', **kwargs):
     if not os.path.exists(os.path.dirname(checkpoint_filepath)):
         os.makedirs(os.path.dirname(checkpoint_filepath))
-        
+
     return tf.keras.callbacks.ModelCheckpoint(
         filepath=checkpoint_filepath,
         save_weights_only=save_weights_only,

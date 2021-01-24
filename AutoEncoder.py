@@ -111,33 +111,3 @@ class AutoEncoder:
                 self.encoder, f'{self.save_path}/encoder_{self.model_id}')
 
         return loss
-
-    def fit_batch(self, data, save_trained_model=True, batch_size=100, epochs=1, loss='MSE', **kwargs):
-        optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
-        self.autoencoder.compile(loss=loss, optimizer=optimizer)
-        self.already_compiled = True
-
-        n_batch = data.shape[0] // batch_size
-        print(
-            f'Training in {n_batch} batches of {batch_size} elements, each {epochs} epochs')
-
-        for i in range(n_batch):
-            start = i * batch_size
-            end = start + batch_size
-            d = data[start:end]
-
-            if i == (n_batch - 1):
-                loss = self.autoencoder.fit(
-                    d, d, batch_size=batch_size, epochs=epochs, **kwargs)
-
-                # last batch trained
-                if save_trained_model:
-                    tf.compat.v1.keras.experimental.export_saved_model(
-                        self.autoencoder, f'{self.save_path}/ae')
-                    tf.compat.v1.keras.experimental.export_saved_model(
-                        self.encoder, f'{self.save_path}/encoder')
-            else:
-                loss = self.autoencoder.fit(
-                    d, d, batch_size=batch_size, epochs=epochs, **kwargs)
-
-        return loss
