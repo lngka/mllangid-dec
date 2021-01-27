@@ -211,7 +211,7 @@ if __name__ == "__main__":
         lang = languages[i]
 
         phases, features = loadWaveFolder(
-            f'/Users/nvckhoa/speech/8K_200/{lang}', use_mel=True)
+            f'/Users/nvckhoa/speech/8K_200/{lang}', use_mel=use_mel)
 
         if use_mel == True:
             np.save(f'{saveFolder}/{lang}_mel', features)
