@@ -50,4 +50,5 @@ my_callbacks = [log_callback, model_checkpoint_callback]
 
 ''' Step3: Train
 '''
-autoencoder.fit(dataset_train, epochs=2048, callbacks=my_callbacks)
+autoencoder.fit(dataset_train, epochs=2048,
+                callbacks=my_callbacks, save_trained_model=True)

@@ -4,25 +4,30 @@ import numpy as np
 import math
 import os
 from tensorflow.keras import Model, Input
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, UpSampling2D, Dropout, Flatten, Reshape, Dense
+from tensorflow.keras.layers import Conv2D, AveragePooling2D, MaxPooling2D, UpSampling2D, Dropout, Flatten, Reshape, Dense
 from dataset import get_data_set
 
 
 class AutoEncoder:
-    def __init__(self, save_path=None, n_frames=400, fft_bins=100):
+    def __init__(self, save_path=None, n_frames=400, fft_bins=100, model_id=''):
         if save_path == None:
             dir_path = os.path.dirname(os.path.realpath(__file__))
             save_path = f'{dir_path}/models'
 
         self.save_path = save_path
-
+        self.model_id = model_id
         autoencoder, encoder = AutoEncoder.build_autoencoder(
             n_frames=n_frames, fft_bins=fft_bins)
+
         self.autoencoder = autoencoder
         self.encoder = encoder
+        self.already_compiled = False
 
     def get_encoder(self):
         return self.encoder
+
+    def get_autoencoder(self):
+        return self.autoencoder
 
     @staticmethod
     def build_autoencoder(n_frames=400, fft_bins=100):
@@ -35,23 +40,22 @@ class AutoEncoder:
                 encoder: model of encoder to initialize features for DECLayer
         '''
         input_layer = Input(shape=(n_frames, fft_bins, 1), dtype=float)
-        x = Flatten()(input_layer)
+        #x = Flatten()(input_layer)
 
         # encoder
-        x = Dropout(0.1)(x)
-        h = Dense(2000, 'relu')(x)
         h = Dense(500, 'relu')(h)
         h = Dense(500, 'relu')(h)
+        h = Dense(2000, 'relu')(input_layer)
+
         h = Dense(100, 'relu')(h)
 
         features = Dense(50, name='embeddings')(h)
 
         # decoder
-        h = Dropout(0.1)(features)
         h = Dense(100, 'relu')(h)
-        h = Dense(500, 'relu')(h)
-        h = Dense(500, 'relu')(h)
         h = Dense(2000, 'relu')(h)
+        h = Dense(500, 'relu')(h)
+        h = Dense(500, 'relu')(h)
 
         h = Dense(n_frames * fft_bins)(h)
 
@@ -60,30 +64,25 @@ class AutoEncoder:
         return Model(input_layer, y, name='autoencoder'), Model(input_layer, features, name='encoder')
 
     @staticmethod
-    def load_encoder(path_to_encoder=None):
+    def load_encoder(path_to_encoder=None, model_id=''):
         if path_to_encoder == None:
             dir_path = os.path.dirname(os.path.realpath(__file__))
-            path_to_encoder = f'{dir_path}/models/encoder'
+            path_to_encoder = f'{dir_path}/models/encoder_{model_id}'
         return tf.compat.v1.keras.experimental.load_from_saved_model(path_to_encoder)
 
     def fit(self, data, save_trained_model=False, batch_size=10, epochs=1, loss='MSE', **kwargs):
-        self.autoencoder.summary()
 
-        optimizer = tf.keras.optimizers.Adam(
-            learning_rate=0.001)
+        if self.already_compiled == False:
+            # compile if not already compiled
+            optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
+            self.autoencoder.compile(loss=loss, optimizer=optimizer)
+            self.already_compiled = True
 
-        steps_per_epoch = math.ceil(data.shape[0] / batch_size)
-        self.autoencoder.compile(loss=loss, optimizer=optimizer)
-        loss = self.autoencoder.fit(data, data, batch_size=batch_size,
-                                    epochs=epochs, steps_per_epoch=steps_per_epoch, **kwargs)
+        loss = self.autoencoder.fit(data, epochs=epochs, **kwargs)
 
         if save_trained_model:
             tf.compat.v1.keras.experimental.export_saved_model(
-                self.autoencoder, f'{self.save_path}/ae')
-            tf.compat.v1.keras.experimental.export_saved_model(
-                self.encoder, f'{self.save_path}/encoder')
+                self.encoder, f'{self.save_path}/encoder_{self.model_id}')
+            # self.encoder.save(f'{self.save_path}/encoder_{self.model_id}')
 
         return loss
-
-        # print(autoencoder.get_layer('conv2d').get_weights())
-        # print(encoder.get_layer('conv2d').get_weights())

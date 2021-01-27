@@ -71,7 +71,7 @@ class LanguageDEC:
         Write to log file 
         '''
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        log_path = f'{dir_path}/logs/dec_logs.txt'
+        log_path = f'{dir_path}/logs/dec_logs_{self.model_id}.txt'
         if os.path.exists(log_path):
             open_mode = 'a'  # append if already exists
         else:
@@ -92,7 +92,7 @@ class LanguageDEC:
                 print(f'{key}: {value}', file=text_file)
 
     def fit(self, x, y, x_test=None, y_test=None, max_iteration=128, batch_size=64, update_interval=32, **kwargs):
-        self.write_training_log()
+        self.write_training_log()  # write the model summary
 
         index_array = np.arange(x.shape[0])
         index = 0
@@ -128,15 +128,12 @@ class LanguageDEC:
                 self.write_training_log('Prediction on test set: ', )
                 q = self.model.predict(x_test)
                 y_pred_test = q.argmax(1)
-                Metrics.evaluate(y_test, y_pred_test, languages=self.languages)
+                Metrics.evaluate(
+                    y_test, y_pred_test, languages=self.languages, model_id=self.model_id)
 
                 if loss < best_loss:
                     best_loss = loss
                     # save if loss decreased
-                    # tf.compat.v1.keras.experimental.export_saved_model(
-                    #     self.encoder, f'{self.dir_path}/model_checkpoints/dec/trained_encoder_{self.model_id}_ite{ite}')
-                    # self.encoder.save(
-                    #     f'{self.dir_path}/model_checkpoints/dec/trained_encoder_{self.model_id}_ite{ite}', save_format='tf')
                     self.encoder.save(
                         f'{self.dir_path}/model_checkpoints/dec/trained_encoder_{self.model_id}_ite{ite}.h5')
 
@@ -151,12 +148,12 @@ class LanguageDEC:
 
 class Metrics:
     @staticmethod
-    def write_training_log(key='', value=''):
+    def write_training_log(key='', value='', model_id=''):
         '''
         Write to log file 
         '''
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        log_path = f'{dir_path}/logs/dec_logs.txt'
+        log_path = f'{dir_path}/logs/dec_logs_{model_id}.txt'
         if os.path.exists(log_path):
             open_mode = 'a'  # append if already exists
         else:
@@ -166,8 +163,8 @@ class Metrics:
             print(f'{key}{value}', file=text_file)
 
     @staticmethod
-    def evaluate(y_true, y_pred, languages=['en', 'de', 'cn', 'fr', 'ru']):
-        """Evaluate clustering accuracy.
+    def evaluate(y_true, y_pred, languages=['en', 'de', 'cn', 'fr', 'ru'], model_id=''):
+        """Evaluate clustering accuracyand write to log
         Arguments
             y_true: labels with shape (n_samples,)
                     en-0, de-1, cn-2, fr-3, ru-4
@@ -187,14 +184,12 @@ class Metrics:
             # w[i, j] = count of prediction&groundtruth pair i&j
             w[y_pred[i], y_true[i]] += 1
 
-        Metrics.write_training_log("(pred_axis, truth_axis) \n", w)
+        Metrics.write_training_log(
+            "(pred_axis, truth_axis) \n", w, model_id=model_id)
 
         true_labelmap = tf.argmax(w, axis=0)
         likelihood = tf.reduce_max(w, axis=0) / tf.reduce_sum(w, axis=0)
 
         for i in range(len(languages)):
             Metrics.write_training_log(
-                f'True label {languages[i]} classified as ', f'{true_labelmap[i]}, likelihood {likelihood[i]}')
-
-        acc = sum(w.diagonal()) / y_pred.size
-        return acc
+                f'True label {languages[i]} classified as ', f'{true_labelmap[i]}, likelihood {likelihood[i]}', model_id=model_id)

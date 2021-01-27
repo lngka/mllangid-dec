@@ -10,10 +10,9 @@ class LossAndErrorPrintingCallback(keras.callbacks.Callback):
         self.languages = languages
         self.model_id = model_id
 
-    @staticmethod
-    def get_log_path_and_open_mode():
+    def get_log_path_and_open_mode(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        log_path = f'{dir_path}/logs/ae_logs.txt'
+        log_path = f'{dir_path}/logs/ae_logs_{self.model_id}.txt'
 
         if os.path.exists(log_path):
             open_mode = 'a'  # append if already exists
@@ -22,19 +21,19 @@ class LossAndErrorPrintingCallback(keras.callbacks.Callback):
         return log_path, open_mode
 
     def on_train_begin(self, logs=None):
-        logpath, open_mode = LossAndErrorPrintingCallback.get_log_path_and_open_mode()
+        logpath, open_mode = self.get_log_path_and_open_mode()
         with open(logpath, open_mode) as text_file:
             self.model.summary(print_fn=lambda x: text_file.write(x + '\n'))
             print(self.languages,  file=text_file)
 
-    def on_train_end(self, logs=None):
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        save_path = f'{dir_path}/models'
-        tf.compat.v1.keras.experimental.export_saved_model(
-            self.model, f'{save_path}/encoder_{self.model_id}')
+    # def on_train_end(self, logs=None):
+    #     dir_path = os.path.dirname(os.path.realpath(__file__))
+    #     save_path = f'{dir_path}/models'
+    #     tf.compat.v1.keras.experimental.export_saved_model(
+    #         self.model, f'{save_path}/encoder_{self.model_id}')
 
     def on_epoch_end(self, epoch, logs=None):
-        logpath, open_mode = LossAndErrorPrintingCallback.get_log_path_and_open_mode()
+        logpath, open_mode = self.get_log_path_and_open_mode()
         with open(logpath, open_mode) as text_file:
             print(
                 "The average loss for epoch {} is {:7.3f}".format(
