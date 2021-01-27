@@ -57,7 +57,7 @@ class AutoEncoder:
         h = Dense(500, 'relu')(h)
         h = Dense(500, 'relu')(h)
 
-        h = Dense(n_frames * fft_bins)(h)
+        h = Dense(fft_bins)(h)
 
         y = Reshape(target_shape=(n_frames, fft_bins))(h)
 
@@ -77,6 +77,7 @@ class AutoEncoder:
             optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
             self.autoencoder.compile(loss=loss, optimizer=optimizer)
             self.already_compiled = True
+            self.autoencoder.summary()
 
         loss = self.autoencoder.fit(data, epochs=epochs, **kwargs)
 

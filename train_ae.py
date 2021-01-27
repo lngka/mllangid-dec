@@ -4,11 +4,11 @@ import tensorflow as tf
 import numpy as np
 import os
 
-from AutoEncoder import AutoEncoder
-from dataset import get_data_set
+from AutoEncoder_2 import AutoEncoder
+from dataset import get_data_set, get_stacked_data_set
 from Callbacks import LossAndErrorPrintingCallback, ModelCheckpoint
 
-MODEL_ID = '62_re_3'  # use to name log txt file and save model
+MODEL_ID = '5re1'  # use to name log txt file and save model
 
 ''' Step1: Get nice data
 '''
@@ -21,8 +21,8 @@ dataset_train, classes_train, dataset_test, classes_test = get_data_set(
 print(f'Train dataset with shape {dataset_train.shape}')
 
 
-dataset_train = np.expand_dims(dataset_train, -1)
-dataset_test = np.expand_dims(dataset_test, -1)
+#dataset_train = np.expand_dims(dataset_train, -1)
+#dataset_test = np.expand_dims(dataset_test, -1)
 
 dataset_train = tf.data.Dataset.from_tensor_slices(
     (dataset_train, dataset_train))
@@ -50,5 +50,5 @@ my_callbacks = [log_callback, model_checkpoint_callback]
 
 ''' Step3: Train
 '''
-autoencoder.fit(dataset_train, epochs=2048,
+autoencoder.fit(dataset_train, epochs=2,
                 callbacks=my_callbacks, save_trained_model=True)
