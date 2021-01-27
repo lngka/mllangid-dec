@@ -43,9 +43,9 @@ class AutoEncoder:
         #x = Flatten()(input_layer)
 
         # encoder
+        h = Dense(500, 'relu')(input_layer)
         h = Dense(500, 'relu')(h)
-        h = Dense(500, 'relu')(h)
-        h = Dense(2000, 'relu')(input_layer)
+        h = Dense(2000, 'relu')(h)
 
         h = Dense(100, 'relu')(h)
 
