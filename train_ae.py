@@ -35,7 +35,7 @@ dataset_train = dataset_train.shuffle(5000).batch(200)
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
-checkpoint_filepath = f'{dir_path}/model_checkpoints/ae/weights' + \
+checkpoint_filepath = f'{dir_path}/model_checkpoints/ae_{MODEL_ID}/weights' + \
     '.{epoch:02d}.hdf5'
 
 model_checkpoint_callback = ModelCheckpoint(checkpoint_filepath)
