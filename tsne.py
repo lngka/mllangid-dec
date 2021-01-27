@@ -45,6 +45,6 @@ colors = 'r', 'g', 'b', 'c', 'm', 'y', 'k', 'w', 'orange', 'purple'
 for i, color, lang in zip(indices, colors, languages):
     plt.scatter(X_2d[y == i, 0], X_2d[y == i, 1], c=color, label=lang)
 
-plt.title('encoder_62_pre_676')
+plt.title('encoder_62re2_pretrained')
 plt.legend()
 plt.show()
