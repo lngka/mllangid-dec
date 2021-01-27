@@ -7,7 +7,7 @@ import os
 
 tf.compat.v1.enable_eager_execution()
 
-MODEL_ID = '62_re'  # use to name log txt file and save model
+MODEL_ID = '62_re_2'  # use to name log txt file and save model
 
 ''' Step0: Get nice data
 '''
@@ -27,12 +27,13 @@ data_test = np.expand_dims(dataset_test, -1)
 # load pre-trained encoder
 autoencoder = AutoEncoder(n_frames=400, fft_bins=40)
 
-# encoder = autoencoder.load_encoder(model_id=MODEL_ID)
+#encoder = autoencoder.load_encoder(model_id=MODEL_ID)
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
-checkpoint_filepath = f'{dir_path}/model_checkpoints/ae_62_re/weights.458.hdf5'
+checkpoint_filepath = f'{dir_path}/model_checkpoints/ae/weights.998.hdf5'
 autoencoder.autoencoder.load_weights(checkpoint_filepath)
 encoder = autoencoder.get_encoder()
+
 
 # initialize centroid using k_means
 languageDEC = LanguageDEC(
@@ -45,7 +46,7 @@ languageDEC.initialize(data)
     update_interval: 
 '''
 #optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
-optimizer = tf.keras.optimizers.SGD(learning_rate=0.001)
+optimizer = tf.keras.optimizers.SGD(learning_rate=0.0005)
 languageDEC.compile(optimizer=optimizer, loss='kld')
 languageDEC.fit(x=data, y=classes_train, max_iteration=1024,
                 update_interval=16, batch_size=100, x_test=data_test, y_test=classes_test)

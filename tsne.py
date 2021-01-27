@@ -22,7 +22,7 @@ autoencoder = AutoEncoder(n_frames=400, fft_bins=40)
 #encoder = autoencoder.load_encoder(model_id='62')
 
 autoencoder.autoencoder.load_weights(
-    f'{dir_path}/model_checkpoints/ae_62_re/weights.458.hdf5')
+    f'{dir_path}/model_checkpoints/ae_62_re_2/weights.998.hdf5')
 encoder = autoencoder.get_encoder()
 
 # encoder = autoencoder.load_encoder(path_to_encoder=f'{dir_path}/model_checkpoints/dec_61/trained_encoder_61_ite0')

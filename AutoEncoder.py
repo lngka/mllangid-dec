@@ -43,13 +43,13 @@ class AutoEncoder:
 
         # encoder
         corrupted_x = Dropout(0)(input_layer)
-        h = Conv2D(32, (3, 3), activation='relu', padding='same')(corrupted_x)
-        h = MaxPooling2D((2, 2), padding='same')(h)
-
-        h = Conv2D(64, (3, 3), activation='relu', padding='same')(h)
+        h = Conv2D(64, (3, 3), activation='relu', padding='same')(corrupted_x)
         h = MaxPooling2D((2, 2), padding='same')(h)
 
         h = Conv2D(128, (3, 3), activation='relu', padding='same')(h)
+        h = MaxPooling2D((2, 2), padding='same')(h)
+
+        #h = Conv2D(128, (3, 3), activation='relu', padding='same')(h)
 
         # normal conv features
         # features = Conv2D(1, (3, 3), padding='same', name='embeddings')(h)
@@ -83,7 +83,7 @@ class AutoEncoder:
         h = Conv2D(64, (3, 3), activation='relu', padding='same')(h)
         h = UpSampling2D((2, 2))(h)
 
-        h = Conv2D(32, (3, 3), activation='relu', padding='same')(h)
+        #h = Conv2D(32, (3, 3), activation='relu', padding='same')(h)
 
         y = Conv2D(1, (3, 3), padding='same')(h)
 
@@ -109,5 +109,6 @@ class AutoEncoder:
         if save_trained_model:
             tf.compat.v1.keras.experimental.export_saved_model(
                 self.encoder, f'{self.save_path}/encoder_{self.model_id}')
+            # self.encoder.save(f'{self.save_path}/encoder_{self.model_id}')
 
         return loss
