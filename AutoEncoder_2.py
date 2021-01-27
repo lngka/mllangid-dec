@@ -39,7 +39,7 @@ class AutoEncoder:
                 autoencoder: model of autoencoder
                 encoder: model of encoder to initialize features for DECLayer
         '''
-        input_layer = Input(shape=(n_frames, fft_bins, 1), dtype=float)
+        input_layer = Input(shape=(n_frames, fft_bins), dtype=float)
         #x = Flatten()(input_layer)
 
         # encoder
@@ -59,7 +59,7 @@ class AutoEncoder:
 
         h = Dense(n_frames * fft_bins)(h)
 
-        y = Reshape(target_shape=(n_frames, fft_bins, 1))(h)
+        y = Reshape(target_shape=(n_frames, fft_bins))(h)
 
         return Model(input_layer, y, name='autoencoder'), Model(input_layer, features, name='encoder')
 
