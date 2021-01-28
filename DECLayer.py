@@ -105,3 +105,7 @@ class DECLayer(Layer):
         config = {'n_clusters': self.n_clusters}
         base_config = super(DECLayer, self).get_config()
         return dict(list(base_config.items()) + list(config.items()))
+
+    def compute_output_shape(self, input_shape):
+        assert input_shape and len(input_shape) == 2
+        return input_shape[0], self.n_clusters
