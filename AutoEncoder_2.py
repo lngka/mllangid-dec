@@ -31,7 +31,7 @@ class AutoEncoder:
 
     @staticmethod
     def build_autoencoder(n_frames=400, fft_bins=100):
-        ''' 
+        '''
         Arguments:
                 n_frames: used to shape Input layer
                 fft_bins: used to shape Input layer
@@ -40,18 +40,31 @@ class AutoEncoder:
                 encoder: model of encoder to initialize features for DECLayer
         '''
         input_layer = Input(shape=(n_frames, fft_bins), dtype=float)
-        #x = Flatten()(input_layer)
+        # x = Flatten()(input_layer)
 
         # encoder
         h = Dense(40, 'relu')(input_layer)
         h = Dense(20, 'relu')(h)
-
         h = Dense(10, 'relu')(h)
+        h = Dense(5)(h)
 
-        features = Dense(5, name='embeddings')(h)
+        before_flatten = h.shape
+        h = Flatten()(h)
+
+        h = Dense(500)(h)
+        h = Dense(100)(h)
+        features = Dense(50, name='embeddings')(h)
+        h = Dense(100)(features)
+        h = Dense(500)(h)
+
+        h = Dense(before_flatten[1] * before_flatten[2])(h)
+
+        h = Reshape(target_shape=(before_flatten[1], before_flatten[2]))(h)
 
         # decoder
-        h = Dense(10, 'relu')(features)
+        h = Dense(5)(h)
+
+        h = Dense(10, 'relu')(h)
         h = Dense(20, 'relu')(h)
         h = Dense(40, 'relu')(h)
 
@@ -61,7 +74,7 @@ class AutoEncoder:
 
         return Model(input_layer, y, name='autoencoder'), Model(input_layer, features, name='encoder')
 
-    @staticmethod
+    @ staticmethod
     def load_encoder(path_to_encoder=None, model_id=''):
         if path_to_encoder == None:
             dir_path = os.path.dirname(os.path.realpath(__file__))
