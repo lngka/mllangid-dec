@@ -43,19 +43,17 @@ class AutoEncoder:
         #x = Flatten()(input_layer)
 
         # encoder
-        h = Dense(500, 'relu')(input_layer)
-        h = Dense(500, 'relu')(h)
-        h = Dense(2000, 'relu')(h)
+        h = Dense(40, 'relu')(input_layer)
+        h = Dense(20, 'relu')(h)
 
-        h = Dense(100, 'relu')(h)
+        h = Dense(10, 'relu')(h)
 
-        features = Dense(50, name='embeddings')(h)
+        features = Dense(5, name='embeddings')(h)
 
         # decoder
-        h = Dense(100, 'relu')(h)
-        h = Dense(2000, 'relu')(h)
-        h = Dense(500, 'relu')(h)
-        h = Dense(500, 'relu')(h)
+        h = Dense(10, 'relu')(features)
+        h = Dense(20, 'relu')(h)
+        h = Dense(40, 'relu')(h)
 
         h = Dense(fft_bins)(h)
 
