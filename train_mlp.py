@@ -4,26 +4,33 @@ from dataset import get_shuffled_data_set
 import numpy as np
 from AutoEncoder import AutoEncoder
 
+
+MODEL_ID = '70'  # use to name log txt file and save model
+
 ''' Step1: Get nice data
 '''
-data, labels = get_shuffled_data_set(languages=['en', 'cn', 'fr', 'ru'])
-data = np.expand_dims(data, -1)
+languages = ['en', 'cn']
+data, classes, data_test, classes_test = get_shuffled_data_set(
+    languages,  split=False)
+#data = np.expand_dims(data, -1)
 
 
 ''' Step2: Get embedded data
 '''
 autoencoder = AutoEncoder()
-encoder = autoencoder.load_encoder()
+encoder = autoencoder.load_encoder(model_id=MODEL_ID)
 
 data = encoder.predict(data)
-X_train, X_test, y_train, y_test = train_test_split(data, labels, stratify=labels,
+X_train, X_test, y_train, y_test = train_test_split(data, classes, stratify=classes,
                                                     random_state=1, train_size=0.8)
 
 ''' Step3: MLP Classification
 '''
+X_train = np.reshape(X_train, (X_train.shape[0], -1))
+X_test = np.reshape(X_test, (X_test.shape[0], -1))
 
 clf = MLPClassifier(hidden_layer_sizes=[
-                    50, 5], random_state=1, max_iter=2048).fit(X_train, y_train)
+                    128, 64, 32], random_state=1, max_iter=200).fit(X_train, y_train)
 
 
 pred = clf.predict(X_test)

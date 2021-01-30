@@ -1,38 +1,39 @@
 import numpy as np
 from LanguageDEC import LanguageDEC
-from AutoEncoder import AutoEncoder
+from AutoEncoder_2 import AutoEncoder
 from dataset import get_shuffled_data_set
 import tensorflow as tf
 import os
 
 tf.compat.v1.enable_eager_execution()
 
-MODEL_ID = '62_re_2'  # use to name log txt file and save model
+MODEL_ID = '70'  # use to name log txt file and save model
 
 ''' Step0: Get nice data
 '''
 #languages = ['en', 'de', 'cn', 'fr', 'ru']
 languages = ['en', 'cn']
-dataset_train, classes_train, dataset_test, classes_test = get_shuffled_data_set(
+data, classes, data_test, classes_test = get_shuffled_data_set(
     languages,  split=True)
 
-data = np.expand_dims(dataset_train, -1)
-data_test = np.expand_dims(dataset_test, -1)
+
+# add dim when train with conv encoder
+#data = np.expand_dims(data, -1)
+#data_test = np.expand_dims(data_test, -1)
 
 
 ''' Step1: Initialization
     1.1: load pre trained encoder to extract features from data
     1.2: initialize centroids using k_means
 '''
-# load pre-trained encoder
 autoencoder = AutoEncoder(n_frames=400, fft_bins=40)
+# load pre-trained encoder
+encoder = autoencoder.load_encoder(model_id=MODEL_ID)
 
-#encoder = autoencoder.load_encoder(model_id=MODEL_ID)
-
-dir_path = os.path.dirname(os.path.realpath(__file__))
-checkpoint_filepath = f'{dir_path}/model_checkpoints/ae/weights.998.hdf5'
-autoencoder.autoencoder.load_weights(checkpoint_filepath)
-encoder = autoencoder.get_encoder()
+# dir_path = os.path.dirname(os.path.realpath(__file__))
+# checkpoint_filepath = f'{dir_path}/model_checkpoints/ae_70/weights.1925.hdf5'
+# autoencoder.autoencoder.load_weights(checkpoint_filepath)
+# encoder = autoencoder.get_encoder()
 
 
 # initialize centroid using k_means
@@ -46,7 +47,7 @@ languageDEC.initialize(data)
     update_interval: 
 '''
 #optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
-optimizer = tf.keras.optimizers.SGD(learning_rate=0.0005)
+optimizer = tf.keras.optimizers.SGD(learning_rate=0.001)
 languageDEC.compile(optimizer=optimizer, loss='kld')
-languageDEC.fit(x=data, y=classes_train, max_iteration=1024,
-                update_interval=16, batch_size=100, x_test=data_test, y_test=classes_test)
+languageDEC.fit(x=data, y=classes, max_iteration=1024,
+                update_interval=16, x_test=data_test, y_test=classes_test)
