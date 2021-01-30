@@ -55,18 +55,22 @@ class LanguageDEC:
         weight = q ** 2 / q.sum(0)
         return (weight.T / weight.sum(1)).T
 
-    def initialize(self, training_data):
+    def initialize(self, training_data, training_label=[]):
         features = self.extract_features(training_data)
 
-        kmeans = KMeans(n_clusters=self.n_lang)
-        kmeans.fit_predict(features)
+        if len(training_label) == 0:
+            kmeans = KMeans(n_clusters=self.n_lang)
+            kmeans.fit_predict(features)
+            cluster_centers = kmeans.cluster_centers_
+        else:
+            cluster_centers = list()
+            for i in range(len(self.languages)):
+                lang_features = features[training_label == i, ]
+                lang_centroid = np.average(lang_features, axis=0)
+                cluster_centers.append(lang_centroid)
 
-        # gm = GaussianMixture(
-        #     n_components=2, random_state=0).fit_predict(features)
-        # self.model.get_layer(name='clustering').set_weights(
-        #     [gm.means_])
+            cluster_centers = np.array(cluster_centers)
 
-        cluster_centers = kmeans.cluster_centers_
         self.model.get_layer(name='clustering').set_weights(
             [cluster_centers])
         print(f'Initialized {self.n_lang} cluster centroids')

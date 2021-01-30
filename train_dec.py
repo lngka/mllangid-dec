@@ -28,18 +28,18 @@ data, classes, data_test, classes_test = get_shuffled_data_set(
 '''
 autoencoder = AutoEncoder(n_frames=400, fft_bins=40)
 # load pre-trained encoder
-encoder = autoencoder.load_encoder(model_id=MODEL_ID)
+#encoder = autoencoder.load_encoder(model_id=MODEL_ID)
 
-# dir_path = os.path.dirname(os.path.realpath(__file__))
-# checkpoint_filepath = f'{dir_path}/model_checkpoints/ae_70/weights.1925.hdf5'
-# autoencoder.autoencoder.load_weights(checkpoint_filepath)
-# encoder = autoencoder.get_encoder()
+dir_path = os.path.dirname(os.path.realpath(__file__))
+checkpoint_filepath = f'{dir_path}/model_checkpoints/ae_70/weights.1925.hdf5'
+autoencoder.autoencoder.load_weights(checkpoint_filepath)
+encoder = autoencoder.get_encoder()
 
 
 # initialize centroid using k_means
 languageDEC = LanguageDEC(
     encoder=encoder, languages=languages, model_id=MODEL_ID)
-languageDEC.initialize(data)
+languageDEC.initialize(data, classes)
 
 
 ''' Step2: Optimze model to target distribution
