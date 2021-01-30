@@ -43,19 +43,13 @@ class AutoEncoder:
 
         # encoder
         corrupted_x = Dropout(0)(input_layer)
-        h = Conv2D(64, (3, 3), activation='relu', padding='same')(corrupted_x)
+        h = Conv2D(32, (3, 3), activation='relu', padding='same')(corrupted_x)
+        h = MaxPooling2D((2, 2), padding='same')(h)
+
+        h = Conv2D(64, (3, 3), activation='relu', padding='same')(h)
         h = MaxPooling2D((2, 2), padding='same')(h)
 
         h = Conv2D(128, (3, 3), activation='relu', padding='same')(h)
-        h = MaxPooling2D((2, 2), padding='same')(h)
-
-        #h = Conv2D(128, (3, 3), activation='relu', padding='same')(h)
-
-        # normal conv features
-        # features = Conv2D(1, (3, 3), padding='same', name='embeddings')(h)
-        # h=features
-
-        # squeezed bottle neck features
         h = Conv2D(256, (3, 3), activation='relu', padding='same')(h)
         h = MaxPooling2D((2, 2), padding='same')(h)
 
@@ -63,7 +57,6 @@ class AutoEncoder:
 
         h = Flatten()(h)
         flat_shape = h.shape
-
         h = Dense(2000)(h)
         features = Dense(100, name='embeddings')(h)
         h = Dense(2000)(features)
@@ -83,7 +76,7 @@ class AutoEncoder:
         h = Conv2D(64, (3, 3), activation='relu', padding='same')(h)
         h = UpSampling2D((2, 2))(h)
 
-        #h = Conv2D(32, (3, 3), activation='relu', padding='same')(h)
+        h = Conv2D(32, (3, 3), activation='relu', padding='same')(h)
 
         y = Conv2D(1, (3, 3), padding='same')(h)
 

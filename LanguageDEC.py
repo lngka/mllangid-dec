@@ -1,5 +1,7 @@
 from tensorflow.keras import Model
 from sklearn.cluster import KMeans
+from sklearn.mixture import GaussianMixture
+
 from sklearn.metrics.pairwise import euclidean_distances
 from tensorflow.keras.layers import Flatten
 from DECLayer import DECLayer
@@ -26,7 +28,6 @@ class LanguageDEC:
 
         self.languages = languages
         self.n_lang = len(languages)
-
         self.encoder = encoder
 
         # creating model
@@ -46,7 +47,7 @@ class LanguageDEC:
         features = features.reshape((features.shape[0], -1))
         return features
 
-    def predict(self, x):  # predict cluster labels using the output of clustering layer
+    def predict(self, x):  # give cluster prediction
         q = self.model.predict(x, verbose=0)
         return q.argmax(1)
 
@@ -55,16 +56,20 @@ class LanguageDEC:
         return (weight.T / weight.sum(1)).T
 
     def initialize(self, training_data):
-        kmeans = KMeans(n_clusters=self.n_lang)
         features = self.extract_features(training_data)
 
+        kmeans = KMeans(n_clusters=self.n_lang)
         kmeans.fit_predict(features)
-        print(f'Initialized {self.n_lang} cluster centroids')
-        print(kmeans.cluster_centers_)
 
+        # gm = GaussianMixture(
+        #     n_components=2, random_state=0).fit_predict(features)
+        # self.model.get_layer(name='clustering').set_weights(
+        #     [gm.means_])
+
+        cluster_centers = kmeans.cluster_centers_
         self.model.get_layer(name='clustering').set_weights(
-            [kmeans.cluster_centers_])
-        print(f'Set {self.n_lang} cluster centroids initial weights of DECLayer')
+            [cluster_centers])
+        print(f'Initialized {self.n_lang} cluster centroids')
 
     def write_training_log(self, key=None, value=''):
         '''
@@ -93,8 +98,6 @@ class LanguageDEC:
 
     def fit(self, x, y, x_test=None, y_test=None, max_iteration=128, batch_size=64, update_interval=32, **kwargs):
         self.write_training_log()  # write the model summary
-
-        index_array = np.arange(x.shape[0])
         index = 0
         best_loss = float("inf")
 
@@ -102,28 +105,33 @@ class LanguageDEC:
             q = self.model.predict(x)
             p = self.calulate_target_distribution(q)
 
-            # idx is a list of indices,
-            # used to select batch from dataset & labels
-            from_index = index * batch_size
-            to_index = min((index+1) * batch_size, x.shape[0])
-            idx = index_array[from_index:to_index]
+            # use idx to select batch from x & y
+            #index_array = np.arange(x.shape[0])
+            #from_index = index * batch_size
+            #to_index = min((index+1) * batch_size, x.shape[0])
+            #idx = index_array[from_index:to_index]
+            #train_x = x[idx]
+            #train_y = p[idx]
 
-            train_x = x[idx]
-            train_y = p[idx]
+            # train all in 1 iteration
+            train_x = x
+            train_y = p
 
             loss = self.model.train_on_batch(
                 x=train_x, y=train_y, **kwargs)
 
             # evaluate the clustering performance
             if ite % update_interval == 0:
-                self.write_training_log('=======================ite', ite)
+                self.write_training_log(
+                    '================================================ite', ite)
                 self.write_training_log('Distance')
                 self.write_training_log('loss: ', loss)
 
                 self.write_training_log('Prediction on train set: ', )
                 q = self.model.predict(x)
                 y_pred = q.argmax(1)
-                Metrics.evaluate(y, y_pred, languages=self.languages)
+                Metrics.evaluate(
+                    y, y_pred, languages=self.languages, model_id=self.model_id)
 
                 self.write_training_log('Prediction on test set: ', )
                 q = self.model.predict(x_test)
@@ -133,11 +141,19 @@ class LanguageDEC:
 
                 if loss < best_loss:
                     best_loss = loss
+                    checkpoint_path = f'{self.dir_path}/model_checkpoints/dec_{self.model_id}'
+                    if not os.path.exists(os.path.dirname(checkpoint_path)):
+                        os.makedirs(os.path.dirname(checkpoint_path))
+
                     # save if loss decreased
                     self.encoder.save(
-                        f'{self.dir_path}/model_checkpoints/dec/trained_encoder_{self.model_id}_ite{ite}.h5')
+                        f'{checkpoint_path}/trained_encoder_ite{ite}.h5')
+                    centroids = self.model.get_layer(
+                        name='clustering').get_weights()
+                    np.save(
+                        f'{checkpoint_path}/centroids_ite{ite}.npy', centroids)
 
-            # update index and last loss
+            # update index
             index = index + 1 if (index + 1) * batch_size <= x.shape[0] else 0
 
         tf.compat.v1.keras.experimental.export_saved_model(

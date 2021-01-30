@@ -22,7 +22,6 @@ class DECLayer(Layer):
         '''Defines custom layer attributes, and creates layer state
         variables that do not depend on input shapes, using `add_weight()`
         '''
-
         self.n_clusters = n_clusters
         self.alpha = alpha
         self.initial_weights = weights

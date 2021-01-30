@@ -8,7 +8,7 @@ from AutoEncoder_2 import AutoEncoder
 from dataset import get_data_set, get_stacked_data_set
 from Callbacks import LossAndErrorPrintingCallback, ModelCheckpoint
 
-MODEL_ID = '5re1'  # use to name log txt file and save model
+MODEL_ID = '70'  # use to name log txt file and save model
 
 ''' Step1: Get nice data
 '''
@@ -50,5 +50,5 @@ my_callbacks = [log_callback, model_checkpoint_callback]
 
 ''' Step3: Train
 '''
-autoencoder.fit(dataset_train, epochs=2,
+autoencoder.fit(dataset_train, epochs=2048,
                 callbacks=my_callbacks, save_trained_model=True)
