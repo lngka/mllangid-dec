@@ -52,10 +52,10 @@ class AutoEncoder:
         h = Flatten()(h)
 
         h = Dense(500)(h)
-        h = Dense(100)(h)
-        features = Dense(50, name='embeddings')(h)
-        h = Dense(100)(features)
-        h = Dense(500)(h)
+        #h = Dense(100)(h)
+        features = Dense(100, name='embeddings')(h)
+        #h = Dense(100)(features)
+        h = Dense(500)(features)
 
         h = Dense(before_flatten[1] * before_flatten[2])(h)
 

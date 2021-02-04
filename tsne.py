@@ -1,7 +1,6 @@
-from dataset import get_shuffled_data_set, get_data_set
+import pandas as pd
 import numpy as np
 import os
-from AutoEncoder_2 import AutoEncoder
 from sklearn import datasets
 from sklearn.cluster import KMeans
 from sklearn.manifold import TSNE
@@ -9,66 +8,16 @@ from sklearn.ensemble import IsolationForest
 from sklearn.neighbors import LocalOutlierFactor
 from matplotlib import pyplot as plt
 
-import scipy as sp
-import pandas as pd
-
-from scipy.stats import chi2
-from sklearn.covariance import MinCovDet
+from AutoEncoder_2 import AutoEncoder
+from dataset import get_shuffled_data_set, get_data_set
+from helpers import robust_mahalanobis_method, mahalanobis_method
 
 
-def robust_mahalanobis_method(df):
-    # Minimum covariance determinant
-    rng = np.random.RandomState(0)
-    real_cov = np.cov(df.values.T)
-    X = rng.multivariate_normal(mean=np.mean(
-        df, axis=0), cov=real_cov, size=506)
-    cov = MinCovDet(random_state=0).fit(X)
-    mcd = cov.covariance_  # robust covariance metric
-    robust_mean = cov.location_  # robust mean
-    inv_covmat = sp.linalg.inv(mcd)  # inverse covariance metric
-
-    # Robust M-Distance
-    x_minus_mu = df - robust_mean
-    left_term = np.dot(x_minus_mu, inv_covmat)
-    mahal = np.dot(left_term, x_minus_mu.T)
-    md = np.sqrt(mahal.diagonal())
-
-    # Flag as outlier
-    outlier = []
-    # degrees of freedom = number of variables
-    C = np.sqrt(chi2.ppf((1-0.001), df=df.shape[1]))
-    for index, value in enumerate(md):
-        if value > C:
-            outlier.append(index)
-        else:
-            continue
-    return outlier, md
-
-
-def mahalanobis_method(df):
-    # M-Distance
-    x_minus_mu = df - np.mean(df)
-    cov = np.cov(df.values.T)  # Covariance
-    inv_covmat = sp.linalg.inv(cov)  # Inverse covariance
-    left_term = np.dot(x_minus_mu, inv_covmat)
-    mahal = np.dot(left_term, x_minus_mu.T)
-    md = np.sqrt(mahal.diagonal())
-
-    # Flag as outlier
-    outlier = []
-    # Cut-off point
-    # degrees of freedom = number of variables
-    C = np.sqrt(chi2.ppf((1-0.001), df=df.shape[1]))
-    for index, value in enumerate(md):
-        if value > C:
-            outlier.append(index)
-        else:
-            continue
-    return outlier, md
-
-
+''' Step0: Config flags
+'''
 PLOT_CENTROIDS = True
 PLOT_CUSTOM_CENTROIDS = True
+
 ''' Step1: Get nice data
 '''
 #languages = ['en', 'de', 'cn', 'fr', 'ru']
@@ -97,7 +46,6 @@ X = X.reshape((X.shape[0], -1))
 
 ''' Step3: Get centroids
 '''
-
 if PLOT_CUSTOM_CENTROIDS:
     custom_centroids = list()
 

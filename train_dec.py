@@ -1,13 +1,13 @@
-import numpy as np
 from LanguageDEC import LanguageDEC
+import tensorflow as tf
+import numpy as np
 from AutoEncoder_2 import AutoEncoder
 from dataset import get_shuffled_data_set
-import tensorflow as tf
 import os
 
 tf.compat.v1.enable_eager_execution()
 
-MODEL_ID = '70'  # use to name log txt file and save model
+MODEL_ID = '71'  # use to name log txt file and save model
 
 ''' Step0: Get nice data
 '''
@@ -27,13 +27,12 @@ data, classes, data_test, classes_test = get_shuffled_data_set(
     1.2: initialize centroids using k_means
 '''
 autoencoder = AutoEncoder(n_frames=400, fft_bins=40)
-# load pre-trained encoder
-#encoder = autoencoder.load_encoder(model_id=MODEL_ID)
+encoder = autoencoder.load_encoder(model_id=MODEL_ID)
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
-checkpoint_filepath = f'{dir_path}/model_checkpoints/ae_70/weights.1925.hdf5'
-autoencoder.autoencoder.load_weights(checkpoint_filepath)
-encoder = autoencoder.get_encoder()
+# dir_path = os.path.dirname(os.path.realpath(__file__))
+# checkpoint_filepath = f'{dir_path}/model_checkpoints/ae_70/weights.1925.hdf5'
+# autoencoder.autoencoder.load_weights(checkpoint_filepath)
+# encoder = autoencoder.get_encoder()
 
 
 # initialize centroid using k_means

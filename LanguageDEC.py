@@ -11,6 +11,7 @@ import os
 
 from tensorflow.keras.layers import Layer, InputSpec
 import tensorflow.keras.backend as K
+from helpers import robust_mahalanobis_method, mahalanobis_method
 
 
 class LanguageDEC:
@@ -25,7 +26,6 @@ class LanguageDEC:
             dir_path = os.path.dirname(os.path.realpath(__file__))
         self.dir_path = dir_path
         self.model_id = model_id
-
         self.languages = languages
         self.n_lang = len(languages)
         self.encoder = encoder
@@ -58,17 +58,27 @@ class LanguageDEC:
     def initialize(self, training_data, training_label=[]):
         features = self.extract_features(training_data)
 
+        cluster_centers = list()
         if len(training_label) == 0:
+            # init using kmean
             kmeans = KMeans(n_clusters=self.n_lang)
             kmeans.fit_predict(features)
             cluster_centers = kmeans.cluster_centers_
         else:
-            cluster_centers = list()
+            # init using outlier removal & averaging
             for i in range(len(self.languages)):
                 lang_features = features[training_label == i, ]
+
+                # remove outliers
+                df = pd.DataFrame(lang_features)
+                outlier, _ = robust_mahalanobis_method(df)
+                is_inlier = np.ones(lang_features.shape[0], dtype=int)
+                is_inlier[outlier] = 0
+
+                lang_features = lang_features[is_inlier == 1]
+
                 lang_centroid = np.average(lang_features, axis=0)
                 cluster_centers.append(lang_centroid)
-
             cluster_centers = np.array(cluster_centers)
 
         self.model.get_layer(name='clustering').set_weights(
@@ -101,6 +111,10 @@ class LanguageDEC:
                 print(f'{key}: {value}', file=text_file)
 
     def fit(self, x, y, x_test=None, y_test=None, max_iteration=128, batch_size=64, update_interval=32, **kwargs):
+        checkpoint_path = f'{self.dir_path}/model_checkpoints/dec_{self.model_id}'
+        if not os.path.exists(checkpoint_path):
+            os.makedirs(checkpoint_path)
+
         self.write_training_log()  # write the model summary
         index = 0
         best_loss = float("inf")
@@ -143,19 +157,12 @@ class LanguageDEC:
                 Metrics.evaluate(
                     y_test, y_pred_test, languages=self.languages, model_id=self.model_id)
 
-                if loss < best_loss:
-                    best_loss = loss
-                    checkpoint_path = f'{self.dir_path}/model_checkpoints/dec_{self.model_id}'
-                    if not os.path.exists(os.path.dirname(checkpoint_path)):
-                        os.makedirs(os.path.dirname(checkpoint_path))
-
-                    # save if loss decreased
-                    self.encoder.save(
-                        f'{checkpoint_path}/trained_encoder_ite{ite}.h5')
-                    centroids = self.model.get_layer(
-                        name='clustering').get_weights()
-                    np.save(
-                        f'{checkpoint_path}/centroids_ite{ite}.npy', centroids)
+                self.encoder.save(
+                    f'{checkpoint_path}/trained_encoder_ite{ite}.h5')
+                centroids = self.model.get_layer(
+                    name='clustering').get_weights()
+                np.save(
+                    f'{checkpoint_path}/centroids_ite{ite}.npy', centroids)
 
             # update index
             index = index + 1 if (index + 1) * batch_size <= x.shape[0] else 0

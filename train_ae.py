@@ -8,7 +8,7 @@ from AutoEncoder_2 import AutoEncoder
 from dataset import get_data_set, get_stacked_data_set
 from Callbacks import LossAndErrorPrintingCallback, ModelCheckpoint
 
-MODEL_ID = '70'  # use to name log txt file and save model
+MODEL_ID = '71'  # use to name log txt file and save model
 
 ''' Step1: Get nice data
 '''
