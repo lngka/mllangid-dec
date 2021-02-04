@@ -6,6 +6,7 @@ from sklearn.metrics.pairwise import euclidean_distances
 from tensorflow.keras.layers import Flatten
 from DECLayer import DECLayer
 import tensorflow as tf
+import pandas as pd
 import numpy as np
 import os
 
