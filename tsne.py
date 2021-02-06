@@ -30,13 +30,13 @@ data, labels, _, _ = get_data_set(languages, split=False)
 dir_path = os.path.dirname(os.path.realpath(__file__))
 autoencoder = AutoEncoder(n_frames=400, fft_bins=40)
 
-#encoder = autoencoder.load_encoder(model_id='62')
+encoder = autoencoder.load_encoder(model_id='70')
 
-autoencoder.autoencoder.load_weights(
-    f'{dir_path}/model_checkpoints/ae_70/weights.1925.hdf5')
+# autoencoder.autoencoder.load_weights(
+#    f'{dir_path}/model_checkpoints/ae_70/weights.1925.hdf5')
 
 encoder = autoencoder.get_encoder()
-encoder.load_weights('model_checkpoints/dec_70/trained_encoder_ite0.h5')
+encoder.load_weights('model_checkpoints/dec_70/trained_encoder_ite1008.h5')
 
 y = labels
 X = encoder.predict(data)
@@ -53,17 +53,13 @@ if PLOT_CUSTOM_CENTROIDS:
         lang = languages[i]
         label = i
         lang_x = X[y == i, ]
-        is_inlier = IsolationForest(
-            random_state=0, max_features=50, contamination=0.2).fit_predict(lang_x)
-        print(is_inlier)
+        # is_inlier = IsolationForest(
+        #     random_state=0, max_features=50, contamination=0.2).fit_predict(lang_x)
 
-        # is_inlier = LocalOutlierFactor(
-        #     n_neighbors=6, contamination=0.2).fit_predict(lang_x)
-
-        # df = pd.DataFrame(lang_x)
-        # outlier, md = robust_mahalanobis_method(df)
-        # is_inlier = np.ones(lang_x.shape[0], dtype=int)
-        # is_inlier[outlier] = 0
+        df = pd.DataFrame(lang_x)
+        outlier, md = robust_mahalanobis_method(df)
+        is_inlier = np.ones(lang_x.shape[0], dtype=int)
+        is_inlier[outlier] = 0
 
         lang_x = lang_x[is_inlier == 1]
         lang_centroid = np.average(lang_x, axis=0)
@@ -83,7 +79,7 @@ if PLOT_CUSTOM_CENTROIDS:
     y = np.concatenate((y_centroids, y), axis=0)
 
 if PLOT_CENTROIDS:
-    centroids = np.load('model_checkpoints/dec_70/centroids_ite0.npy')
+    centroids = np.load('model_checkpoints/dec_70/centroids_ite1008.npy')
     centroids = centroids.reshape((-1, X.shape[-1]))
 
     l_centroids = len(languages)
@@ -120,6 +116,6 @@ for i, color, lang in zip(indices, colors, languages):
                 c=color, label=lang, zorder=z, marker=m, s=size)
 
 
-plt.title('encoder_70_trained_iso_forest')
+plt.title('encoder_70_mahalanobis_ite1008')
 plt.legend()
 plt.show()
