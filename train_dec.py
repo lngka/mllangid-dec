@@ -37,10 +37,11 @@ encoder = autoencoder.load_encoder(model_id=MODEL_ID)
 
 # initialize centroid using k_means
 languageDEC = LanguageDEC(
-    encoder=encoder, languages=languages, model_id=MODEL_ID)
+    encoder=encoder, languages=languages, model_id=MODEL_ID, robust=False)
 languageDEC.initialize(data, classes)
 
-
+print('Exit in train_dec')
+exit()
 ''' Step2: Optimze model to target distribution
     max_iteration: how many times to go through whole data set, aka. epochs
     update_interval: 

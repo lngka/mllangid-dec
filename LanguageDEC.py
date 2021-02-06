@@ -5,6 +5,8 @@ from sklearn.mixture import GaussianMixture
 from sklearn.metrics.pairwise import euclidean_distances
 from tensorflow.keras.layers import Flatten
 from DECLayer import DECLayer
+from DECLayer_2 import MDECLayer
+
 import tensorflow as tf
 import pandas as pd
 import numpy as np
@@ -12,21 +14,23 @@ import os
 
 from tensorflow.keras.layers import Layer, InputSpec
 import tensorflow.keras.backend as K
-from helpers import robust_mahalanobis_method, mahalanobis_method
+from helpers import robust_mahalanobis_method, mahalanobis_method, robust_mahalanobis_params
 
 
 class LanguageDEC:
     '''LanguageDEC Model consist of an encoder to extract features
-    and a Deep Embedded Clustering layer (DECLayer) which accepts and 
+    and a Deep Embedded Clustering layer (DECLayer) which accepts and
     assign the features into clusters according to a target distribution
     '''
 
-    def __init__(self, encoder=None, dir_path=None, languages=['en', 'de', 'cn', 'fr', 'ru'], model_id=''):
+    def __init__(self, encoder=None, dir_path=None, languages=['en', 'de', 'cn', 'fr', 'ru'], model_id='', robust=False):
+        self.model_id = model_id
+        self.robust = robust
+
         # creating properties
         if dir_path == None:
             dir_path = os.path.dirname(os.path.realpath(__file__))
         self.dir_path = dir_path
-        self.model_id = model_id
         self.languages = languages
         self.n_lang = len(languages)
         self.encoder = encoder
@@ -34,7 +38,12 @@ class LanguageDEC:
         # creating model
         flattened = Flatten(name='flattened_encoder_output')(
             self.encoder.output)
-        dec = DECLayer(self.n_lang, name='clustering')
+
+        if robust:
+            dec = MDECLayer(self.n_lang, name='clustering')
+        else:
+            dec = DECLayer(self.n_lang, name='clustering')
+
         prediction = dec(flattened)
 
         self.model = Model(inputs=self.encoder.input, outputs=prediction)
@@ -56,35 +65,46 @@ class LanguageDEC:
         weight = q ** 2 / q.sum(0)
         return (weight.T / weight.sum(1)).T
 
-    def initialize(self, training_data, training_label=[]):
+    def initialize(self, training_data, training_label=[], robust=False):
         features = self.extract_features(training_data)
 
-        cluster_centers = list()
-        if len(training_label) == 0:
-            # init using kmean
-            kmeans = KMeans(n_clusters=self.n_lang)
-            kmeans.fit_predict(features)
-            cluster_centers = kmeans.cluster_centers_
-        else:
-            # init using outlier removal & averaging
+        if self.robust:
+            mean_list = list()
+            inv_cov_list = list()
+
             for i in range(len(self.languages)):
                 lang_features = features[training_label == i, ]
-
-                # remove outliers
                 df = pd.DataFrame(lang_features)
-                outlier, _ = robust_mahalanobis_method(df)
-                is_inlier = np.ones(lang_features.shape[0], dtype=int)
-                is_inlier[outlier] = 0
+                mean, inv_cov = robust_mahalanobis_params(df)
+                mean_list.append(mean)
+                inv_cov_list.append(inv_cov)
+            weights = [np.array(mean_list), np.array(inv_cov_list)]
 
-                lang_features = lang_features[is_inlier == 1]
+        if not self.robust:
+            cluster_centers = list()
+            if len(training_label) == 0:
+                # init using kmean
+                kmeans = KMeans(n_clusters=self.n_lang)
+                kmeans.fit_predict(features)
+                cluster_centers = kmeans.cluster_centers_
+            else:
+                # init using outlier removal & averaging
+                for i in range(len(self.languages)):
+                    lang_features = features[training_label == i, ]
 
-                lang_centroid = np.average(lang_features, axis=0)
-                cluster_centers.append(lang_centroid)
-            cluster_centers = np.array(cluster_centers)
+                    # remove outliers
+                    df = pd.DataFrame(lang_features)
+                    outlier, _ = robust_mahalanobis_method(df)
+                    is_inlier = np.ones(lang_features.shape[0], dtype=int)
+                    is_inlier[outlier] = 0
 
-        self.model.get_layer(name='clustering').set_weights(
-            [cluster_centers])
-        print(f'Initialized {self.n_lang} cluster centroids')
+                    lang_features = lang_features[is_inlier == 1]
+
+                    lang_centroid = np.average(lang_features, axis=0)
+                    cluster_centers.append(lang_centroid)
+                weights = [np.array(cluster_centers)]
+
+        self.model.get_layer(name='clustering').set_weights(weights)
 
     def write_training_log(self, key=None, value=''):
         '''
@@ -125,12 +145,12 @@ class LanguageDEC:
             p = self.calulate_target_distribution(q)
 
             # use idx to select batch from x & y
-            #index_array = np.arange(x.shape[0])
-            #from_index = index * batch_size
-            #to_index = min((index+1) * batch_size, x.shape[0])
-            #idx = index_array[from_index:to_index]
-            #train_x = x[idx]
-            #train_y = p[idx]
+            # index_array = np.arange(x.shape[0])
+            # from_index = index * batch_size
+            # to_index = min((index+1) * batch_size, x.shape[0])
+            # idx = index_array[from_index:to_index]
+            # train_x = x[idx]
+            # train_y = p[idx]
 
             # train all in 1 iteration
             train_x = x
@@ -204,7 +224,7 @@ class Metrics:
 
         assert y_pred.size == y_true.size
 
-        #D = max(y_pred.max(), y_true.max()) + 1
+        # D = max(y_pred.max(), y_true.max()) + 1
         n_lang = len(languages)
         w = np.zeros((n_lang, n_lang), dtype=np.int64)
 

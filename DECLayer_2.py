@@ -1,16 +1,20 @@
-from tensorflow.keras.layers import Layer, InputSpec
+from tensorflow.keras.layers import Layer, InputSpec, Lambda
 import tensorflow.keras.backend as K
 import tensorflow as tf
+import numpy as np
 
 
-class DECLayer(Layer):
+class MDECLayer(Layer):
     """
     Clustering layer converts input sample (feature) to a vector that represents the probability of the
     sample belonging to each cluster.
 
     # Arguments
-        n_lang: number of language cluster.
-        weights: shape (n_lang, n_features) witch represents the initial cluster centers.
+        n_lang: number of language clusters.
+        weights:[means, inv_covmat]
+                means.shape = (n_lang, n_features)
+                inv_covmat.shape = (n_lang, n_features, n_features)
+                Used to calculate the robust mahalanobis distance
         alpha: alpha parameter of Student's t-distribution
     # Input shape
         (batch_size, n_features)
@@ -23,13 +27,13 @@ class DECLayer(Layer):
         variables that do not depend on input shapes, using `add_weight()`
         '''
         self.n_clusters = n_clusters
-        self.alpha = alpha
         self.initial_weights = weights
         self.input_spec = InputSpec(ndim=2)
+        self.alpha = alpha
 
         if 'input_shape' not in kwargs and 'input_dim' in kwargs:
             kwargs['input_shape'] = (kwargs.pop('input_dim'),)
-        super(DECLayer, self).__init__(**kwargs)
+        super(MDECLayer, self).__init__(**kwargs)
 
     def build(self, input_shape):
         '''This method can be used to create weights that
@@ -41,8 +45,11 @@ class DECLayer(Layer):
         input_dim = input_shape[1]
         self.input_spec = InputSpec(dtype=K.floatx(), shape=(None, input_dim))
 
-        self.clusters = self.add_weight(shape=(
-            self.n_clusters, int(input_dim)), initializer='glorot_uniform', name='clusters')
+        self.robust_mean = self.add_weight(shape=(
+            self.n_clusters, int(input_dim)), initializer='glorot_uniform', name='robust_mean')
+
+        self.inv_covmat = self.add_weight(shape=(
+            self.n_clusters, int(input_dim), int(input_dim)), initializer='glorot_uniform', name='inv_covmat')
 
         if self.initial_weights is not None:
             self.set_weights(self.initial_weights)
@@ -50,7 +57,7 @@ class DECLayer(Layer):
         self.built = True
 
     def call(self, inputs, **kwargs):
-        """ performs the logic of applying the layer to the input   
+        """ performs the logic of applying the layer to the input
         student t-distribution:
                  q_ij = 1/(1+dist(x_i, u_j)^2), then normalize it.
         Arguments:
@@ -59,14 +66,45 @@ class DECLayer(Layer):
             q: student's t-distribution, or soft labels for each sample. shape=(n_samples, n_lang)
         """
         inputs_expanded = K.expand_dims(inputs, axis=1)
+        #print('inputs_expanded', inputs_expanded.shape)
+        #print('robust_mean', self.robust_mean.shape)
 
-        minus_centroids = inputs_expanded - self.clusters
+        x_minus_mu = inputs_expanded - self.robust_mean
+        #print('x_minus_mu', x_minus_mu.shape)
 
-        squared = K.square(minus_centroids)
+        left_term = list()
+        for i in range(self.n_clusters):
+            x = x_minus_mu[:, i, :]
+            left = K.dot(x, self.inv_covmat[i])
+            if len(left_term) == 0:
+                left_term = left
+            else:
+                left_term = K.stack([left_term, left], axis=1)
+        #print('inv_covmat', self.inv_covmat.shape)
+        #print('left_term', left_term.shape)
 
-        squared_sum = K.sum(squared, axis=2)
+        left_term_T = K.permute_dimensions(left_term, (1, 0, 2))
+        x_minus_mu_T = K.permute_dimensions(x_minus_mu, (1, 0, 2))
+        #print('x_minus_mu_T', x_minus_mu_T.shape)
+        #print('left_term_T', left_term_T.shape)
 
-        divide_alpha = squared_sum / self.alpha
+        mahal = K.batch_dot(left_term_T, x_minus_mu_T, axes=[2, 2])
+        #print('mahal', mahal.shape)
+
+        mahal_diagonal = list()
+        for i in range(self.n_clusters):
+            m = mahal[i, :, :]
+            diagonal = tf.linalg.tensor_diag_part(m)
+            if len(mahal_diagonal) == 0:
+                mahal_diagonal = diagonal
+            else:
+                mahal_diagonal = K.stack([mahal_diagonal, diagonal], axis=1)
+        #print('mahal_diagonal', mahal_diagonal.shape)
+
+        md = K.sqrt(mahal_diagonal)
+        #print('md', md.shape)
+
+        divide_alpha = md / self.alpha
 
         # the numnerator in q_ịj formular in the paper
         numerator = 1.0 / (1.0 + divide_alpha)
@@ -77,20 +115,7 @@ class DECLayer(Layer):
         quiu = K.transpose(numerator) / denominator
         quiu = K.transpose(quiu)
 
-        # print('inputs: ', inputs.shape)
-        # print('inputs_expanded: ', inputs_expanded.shape)
-        # print('minus_centroids: ', minus_centroids.shape)
-        # print('squared: ', squared.shape)
-        # print('squared_sum: ', squared_sum.shape)
-        # print('divide_alpha: ', divide_alpha.shape)
-        # print('numerator: ', numerator.shape)
-        # print('denominator: ', denominator.shape)
-        # print('quiu: ', quiu.shape)
-
-        # q = 1.0 / (1.0 + (K.sum(K.square(K.expand_dims(inputs,
-        #                                                axis=1) - self.clusters), axis=2) / self.alpha))
-        # q **= (self.alpha + 1.0) / 2.0
-        # q = K.transpose(K.transpose(q) / K.sum(q, axis=1))
+        #print('quiu', quiu.shape)
 
         return quiu
 
@@ -102,7 +127,7 @@ class DECLayer(Layer):
         This method is used when saving the layer or a model that contains this layer.
         '''
         config = {'n_clusters': self.n_clusters}
-        base_config = super(DECLayer, self).get_config()
+        base_config = super(MDECLayer, self).get_config()
         return dict(list(base_config.items()) + list(config.items()))
 
     def compute_output_shape(self, input_shape):

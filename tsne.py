@@ -61,6 +61,8 @@ if PLOT_CUSTOM_CENTROIDS:
         is_inlier = np.ones(lang_x.shape[0], dtype=int)
         is_inlier[outlier] = 0
 
+        exit()
+
         lang_x = lang_x[is_inlier == 1]
         lang_centroid = np.average(lang_x, axis=0)
         custom_centroids.append(lang_centroid)
