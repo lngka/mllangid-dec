@@ -26,12 +26,6 @@ class LossAndErrorPrintingCallback(keras.callbacks.Callback):
             self.model.summary(print_fn=lambda x: text_file.write(x + '\n'))
             print(self.languages,  file=text_file)
 
-    # def on_train_end(self, logs=None):
-    #     dir_path = os.path.dirname(os.path.realpath(__file__))
-    #     save_path = f'{dir_path}/models'
-    #     tf.compat.v1.keras.experimental.export_saved_model(
-    #         self.model, f'{save_path}/encoder_{self.model_id}')
-
     def on_epoch_end(self, epoch, logs=None):
         logpath, open_mode = self.get_log_path_and_open_mode()
         with open(logpath, open_mode) as text_file:

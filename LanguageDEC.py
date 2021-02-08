@@ -138,6 +138,7 @@ class LanguageDEC:
 
         self.write_training_log()  # write the model summary
         index = 0
+        best_acc = 0
         best_loss = float("inf")
 
         for ite in range(max_iteration):
@@ -175,15 +176,21 @@ class LanguageDEC:
                 self.write_training_log('Prediction on test set: ', )
                 q = self.model.predict(x_test)
                 y_pred_test = q.argmax(1)
-                Metrics.evaluate(
+                test_acc = Metrics.evaluate(
                     y_test, y_pred_test, languages=self.languages, model_id=self.model_id)
 
-                self.encoder.save(
-                    f'{checkpoint_path}/trained_encoder_ite{ite}.h5')
-                centroids = self.model.get_layer(
-                    name='clustering').get_weights()
-                np.save(
-                    f'{checkpoint_path}/centroids_ite{ite}.npy', centroids)
+                if test_acc > best_acc:
+                    best_acc = test_acc
+                    self.encoder.save(
+                        f'{checkpoint_path}/trained_encoder_ite{ite}.h5')
+
+                    centroids = self.model.get_layer(
+                        name='clustering').get_weights()
+                    if self.robust:
+                        # robust model has two weights
+                        centroids = centroids[0]
+                    np.save(
+                        f'{checkpoint_path}/centroids_ite{ite}.npy', centroids)
 
             # update index
             index = index + 1 if (index + 1) * batch_size <= x.shape[0] else 0
@@ -241,3 +248,6 @@ class Metrics:
         for i in range(len(languages)):
             Metrics.write_training_log(
                 f'True label {languages[i]} classified as ', f'{true_labelmap[i]}, likelihood {likelihood[i]}', model_id=model_id)
+
+        average_acc = tf.math.reduce_mean(likelihood)
+        return average_acc

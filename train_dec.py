@@ -7,12 +7,12 @@ import os
 
 tf.compat.v1.enable_eager_execution()
 
-MODEL_ID = '71'  # use to name log txt file and save model
+MODEL_ID = '80_3L'  # use to name log txt file and save model
 
 ''' Step0: Get nice data
 '''
 #languages = ['en', 'de', 'cn', 'fr', 'ru']
-languages = ['en', 'cn']
+languages = ['en', 'de', 'cn']
 data, classes, data_test, classes_test = get_shuffled_data_set(
     languages,  split=True)
 
@@ -37,17 +37,16 @@ encoder = autoencoder.load_encoder(model_id=MODEL_ID)
 
 # initialize centroid using k_means
 languageDEC = LanguageDEC(
-    encoder=encoder, languages=languages, model_id=MODEL_ID, robust=False)
+    encoder=encoder, languages=languages, model_id=MODEL_ID, robust=True)
 languageDEC.initialize(data, classes)
 
-print('Exit in train_dec')
-exit()
+
 ''' Step2: Optimze model to target distribution
     max_iteration: how many times to go through whole data set, aka. epochs
     update_interval: 
 '''
-#optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
-optimizer = tf.keras.optimizers.SGD(learning_rate=0.001)
+optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001)
+#optimizer = tf.keras.optimizers.SGD(learning_rate=0.001)
 languageDEC.compile(optimizer=optimizer, loss='kld')
-languageDEC.fit(x=data, y=classes, max_iteration=1024,
+languageDEC.fit(x=data, y=classes, max_iteration=4096,
                 update_interval=16, x_test=data_test, y_test=classes_test)

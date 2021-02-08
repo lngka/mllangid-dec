@@ -1,0 +1,1116 @@
+Model: "functional_1"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_1 (InputLayer)         [(None, 400, 40)]         0         
+_________________________________________________________________
+dense (Dense)                (None, 400, 40)           1640      
+_________________________________________________________________
+dense_1 (Dense)              (None, 400, 20)           820       
+_________________________________________________________________
+dense_2 (Dense)              (None, 400, 10)           210       
+_________________________________________________________________
+dense_3 (Dense)              (None, 400, 5)            55        
+_________________________________________________________________
+flatten (Flatten)            (None, 2000)              0         
+_________________________________________________________________
+dense_4 (Dense)              (None, 500)               1000500   
+_________________________________________________________________
+embeddings (Dense)           (None, 100)               50100     
+_________________________________________________________________
+flattened_encoder_output (Fl (None, 100)               0         
+_________________________________________________________________
+clustering (DECLayer)        (None, 2)                 200       
+=================================================================
+Total params: 1,053,525
+Trainable params: 1,053,525
+Non-trainable params: 0
+_________________________________________________________________
+================================================ite: 0
+Distances:
+[[  0.     102.4719]
+ [102.4719   0.    ]]
+loss: : 0.02570347860455513
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[142  24]
+ [ 18 136]]
+True label en classified as 0, likelihood 0.8875
+True label cn classified as 1, likelihood 0.85
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[34  7]
+ [ 6 33]]
+True label en classified as 0, likelihood 0.85
+True label cn classified as 1, likelihood 0.825
+================================================ite: 16
+Distances:
+[[  0.     102.4719]
+ [102.4719   0.    ]]
+loss: : 0.026021206751465797
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[140  19]
+ [ 20 141]]
+True label en classified as 0, likelihood 0.875
+True label cn classified as 1, likelihood 0.88125
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  6]
+ [ 8 34]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.85
+================================================ite: 32
+Distances:
+[[  0.     102.4719]
+ [102.4719   0.    ]]
+loss: : 0.026238450780510902
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[138  16]
+ [ 22 144]]
+True label en classified as 0, likelihood 0.8625
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  6]
+ [ 8 34]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.85
+================================================ite: 48
+Distances:
+[[  0.     102.4719]
+ [102.4719   0.    ]]
+loss: : 0.026422953233122826
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[138  16]
+ [ 22 144]]
+True label en classified as 0, likelihood 0.8625
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  6]
+ [ 8 34]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.85
+================================================ite: 64
+Distances:
+[[  0.     102.4719]
+ [102.4719   0.    ]]
+loss: : 0.026601111516356468
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[137  16]
+ [ 23 144]]
+True label en classified as 0, likelihood 0.85625
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  5]
+ [ 8 35]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.875
+================================================ite: 80
+Distances:
+[[  0.     102.4719]
+ [102.4719   0.    ]]
+loss: : 0.02678222954273224
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[137  15]
+ [ 23 145]]
+True label en classified as 0, likelihood 0.85625
+True label cn classified as 1, likelihood 0.90625
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  4]
+ [ 8 36]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.9
+================================================ite: 96
+Distances:
+[[  0.     102.4719]
+ [102.4719   0.    ]]
+loss: : 0.026969319209456444
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[137  15]
+ [ 23 145]]
+True label en classified as 0, likelihood 0.85625
+True label cn classified as 1, likelihood 0.90625
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  4]
+ [ 8 36]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.9
+================================================ite: 112
+Distances:
+[[  0.      102.47191]
+ [102.47191   0.     ]]
+loss: : 0.027162140235304832
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[137  15]
+ [ 23 145]]
+True label en classified as 0, likelihood 0.85625
+True label cn classified as 1, likelihood 0.90625
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  4]
+ [ 8 36]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.9
+================================================ite: 128
+Distances:
+[[  0.      102.47191]
+ [102.47191   0.     ]]
+loss: : 0.02735975943505764
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[137  15]
+ [ 23 145]]
+True label en classified as 0, likelihood 0.85625
+True label cn classified as 1, likelihood 0.90625
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  4]
+ [ 8 36]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.9
+================================================ite: 144
+Distances:
+[[  0.      102.47191]
+ [102.47191   0.     ]]
+loss: : 0.027561482042074203
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[137  15]
+ [ 23 145]]
+True label en classified as 0, likelihood 0.85625
+True label cn classified as 1, likelihood 0.90625
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  4]
+ [ 8 36]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.9
+================================================ite: 160
+Distances:
+[[  0.      102.47191]
+ [102.47191   0.     ]]
+loss: : 0.02776694856584072
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[137  15]
+ [ 23 145]]
+True label en classified as 0, likelihood 0.85625
+True label cn classified as 1, likelihood 0.90625
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  4]
+ [ 8 36]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.9
+================================================ite: 176
+Distances:
+[[  0.      102.47192]
+ [102.47192   0.     ]]
+loss: : 0.02797580324113369
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[137  15]
+ [ 23 145]]
+True label en classified as 0, likelihood 0.85625
+True label cn classified as 1, likelihood 0.90625
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  4]
+ [ 8 36]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.9
+================================================ite: 192
+Distances:
+[[  0.      102.47192]
+ [102.47192   0.     ]]
+loss: : 0.02818744257092476
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[137  15]
+ [ 23 145]]
+True label en classified as 0, likelihood 0.85625
+True label cn classified as 1, likelihood 0.90625
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  4]
+ [ 8 36]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.9
+================================================ite: 208
+Distances:
+[[  0.      102.47192]
+ [102.47192   0.     ]]
+loss: : 0.028401698917150497
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[137  16]
+ [ 23 144]]
+True label en classified as 0, likelihood 0.85625
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  4]
+ [ 8 36]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.9
+================================================ite: 224
+Distances:
+[[  0.      102.47192]
+ [102.47192   0.     ]]
+loss: : 0.02861775830388069
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[137  16]
+ [ 23 144]]
+True label en classified as 0, likelihood 0.85625
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  4]
+ [ 8 36]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.9
+================================================ite: 240
+Distances:
+[[  0.      102.47192]
+ [102.47192   0.     ]]
+loss: : 0.02883576788008213
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[137  16]
+ [ 23 144]]
+True label en classified as 0, likelihood 0.85625
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  3]
+ [ 8 37]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.925
+================================================ite: 256
+Distances:
+[[  0.      102.47192]
+ [102.47192   0.     ]]
+loss: : 0.029055971652269363
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[137  16]
+ [ 23 144]]
+True label en classified as 0, likelihood 0.85625
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  3]
+ [ 8 37]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.925
+================================================ite: 272
+Distances:
+[[  0.       102.471924]
+ [102.471924   0.      ]]
+loss: : 0.029277581721544266
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[137  16]
+ [ 23 144]]
+True label en classified as 0, likelihood 0.85625
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  3]
+ [ 8 37]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.925
+================================================ite: 288
+Distances:
+[[  0.       102.471924]
+ [102.471924   0.      ]]
+loss: : 0.029500994831323624
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[138  16]
+ [ 22 144]]
+True label en classified as 0, likelihood 0.8625
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  3]
+ [ 8 37]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.925
+================================================ite: 304
+Distances:
+[[  0.       102.471924]
+ [102.471924   0.      ]]
+loss: : 0.02972610853612423
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[138  16]
+ [ 22 144]]
+True label en classified as 0, likelihood 0.8625
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  3]
+ [ 8 37]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.925
+================================================ite: 320
+Distances:
+[[  0.      102.47193]
+ [102.47193   0.     ]]
+loss: : 0.02995304763317108
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[138  16]
+ [ 22 144]]
+True label en classified as 0, likelihood 0.8625
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  4]
+ [ 8 36]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.9
+================================================ite: 336
+Distances:
+[[  0.      102.47193]
+ [102.47193   0.     ]]
+loss: : 0.03018198534846306
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[138  16]
+ [ 22 144]]
+True label en classified as 0, likelihood 0.8625
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  4]
+ [ 8 36]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.9
+================================================ite: 352
+Distances:
+[[  0.      102.47193]
+ [102.47193   0.     ]]
+loss: : 0.030412528663873672
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[138  16]
+ [ 22 144]]
+True label en classified as 0, likelihood 0.8625
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  4]
+ [ 8 36]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.9
+================================================ite: 368
+Distances:
+[[  0.      102.47193]
+ [102.47193   0.     ]]
+loss: : 0.03064480423927307
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[138  16]
+ [ 22 144]]
+True label en classified as 0, likelihood 0.8625
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  4]
+ [ 8 36]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.9
+================================================ite: 384
+Distances:
+[[  0.      102.47193]
+ [102.47193   0.     ]]
+loss: : 0.03087802603840828
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[138  16]
+ [ 22 144]]
+True label en classified as 0, likelihood 0.8625
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  4]
+ [ 8 36]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.9
+================================================ite: 400
+Distances:
+[[  0.      102.47193]
+ [102.47193   0.     ]]
+loss: : 0.031112629920244217
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[138  16]
+ [ 22 144]]
+True label en classified as 0, likelihood 0.8625
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  4]
+ [ 8 36]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.9
+================================================ite: 416
+Distances:
+[[  0.      102.47194]
+ [102.47194   0.     ]]
+loss: : 0.03134854510426521
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[139  16]
+ [ 21 144]]
+True label en classified as 0, likelihood 0.86875
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  4]
+ [ 8 36]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.9
+================================================ite: 432
+Distances:
+[[  0.      102.47194]
+ [102.47194   0.     ]]
+loss: : 0.03158508613705635
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[139  16]
+ [ 21 144]]
+True label en classified as 0, likelihood 0.86875
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  4]
+ [ 8 36]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.9
+================================================ite: 448
+Distances:
+[[  0.      102.47194]
+ [102.47194   0.     ]]
+loss: : 0.031823575496673584
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[139  16]
+ [ 21 144]]
+True label en classified as 0, likelihood 0.86875
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  4]
+ [ 8 36]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.9
+================================================ite: 464
+Distances:
+[[  0.      102.47194]
+ [102.47194   0.     ]]
+loss: : 0.03206339478492737
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[139  16]
+ [ 21 144]]
+True label en classified as 0, likelihood 0.86875
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  4]
+ [ 8 36]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.9
+================================================ite: 480
+Distances:
+[[  0.      102.47194]
+ [102.47194   0.     ]]
+loss: : 0.032303255051374435
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[140  16]
+ [ 20 144]]
+True label en classified as 0, likelihood 0.875
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  4]
+ [ 8 36]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.9
+================================================ite: 496
+Distances:
+[[  0.      102.47195]
+ [102.47195   0.     ]]
+loss: : 0.03254389017820358
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[140  16]
+ [ 20 144]]
+True label en classified as 0, likelihood 0.875
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  4]
+ [ 8 36]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.9
+================================================ite: 512
+Distances:
+[[  0.      102.47195]
+ [102.47195   0.     ]]
+loss: : 0.032785814255476
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[140  16]
+ [ 20 144]]
+True label en classified as 0, likelihood 0.875
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  5]
+ [ 8 35]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.875
+================================================ite: 528
+Distances:
+[[  0.      102.47195]
+ [102.47195   0.     ]]
+loss: : 0.033028680831193924
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[140  16]
+ [ 20 144]]
+True label en classified as 0, likelihood 0.875
+True label cn classified as 1, likelihood 0.9
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  5]
+ [ 8 35]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.875
+================================================ite: 544
+Distances:
+[[  0.       102.471954]
+ [102.471954   0.      ]]
+loss: : 0.03327234834432602
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[140  17]
+ [ 20 143]]
+True label en classified as 0, likelihood 0.875
+True label cn classified as 1, likelihood 0.89375
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  5]
+ [ 8 35]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.875
+================================================ite: 560
+Distances:
+[[  0.       102.471954]
+ [102.471954   0.      ]]
+loss: : 0.033516593277454376
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[141  17]
+ [ 19 143]]
+True label en classified as 0, likelihood 0.88125
+True label cn classified as 1, likelihood 0.89375
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  5]
+ [ 8 35]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.875
+================================================ite: 576
+Distances:
+[[  0.       102.471954]
+ [102.471954   0.      ]]
+loss: : 0.033761851489543915
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[141  17]
+ [ 19 143]]
+True label en classified as 0, likelihood 0.88125
+True label cn classified as 1, likelihood 0.89375
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[32  5]
+ [ 8 35]]
+True label en classified as 0, likelihood 0.8
+True label cn classified as 1, likelihood 0.875
+================================================ite: 592
+Distances:
+[[  0.       102.471954]
+ [102.471954   0.      ]]
+loss: : 0.034007806330919266
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[141  17]
+ [ 19 143]]
+True label en classified as 0, likelihood 0.88125
+True label cn classified as 1, likelihood 0.89375
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[33  5]
+ [ 7 35]]
+True label en classified as 0, likelihood 0.825
+True label cn classified as 1, likelihood 0.875
+================================================ite: 608
+Distances:
+[[  0.       102.471954]
+ [102.471954   0.      ]]
+loss: : 0.03425458073616028
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[141  20]
+ [ 19 140]]
+True label en classified as 0, likelihood 0.88125
+True label cn classified as 1, likelihood 0.875
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[33  5]
+ [ 7 35]]
+True label en classified as 0, likelihood 0.825
+True label cn classified as 1, likelihood 0.875
+================================================ite: 624
+Distances:
+[[  0.      102.47196]
+ [102.47196   0.     ]]
+loss: : 0.03450113162398338
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[141  20]
+ [ 19 140]]
+True label en classified as 0, likelihood 0.88125
+True label cn classified as 1, likelihood 0.875
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[33  5]
+ [ 7 35]]
+True label en classified as 0, likelihood 0.825
+True label cn classified as 1, likelihood 0.875
+================================================ite: 640
+Distances:
+[[  0.      102.47196]
+ [102.47196   0.     ]]
+loss: : 0.03474729508161545
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[141  20]
+ [ 19 140]]
+True label en classified as 0, likelihood 0.88125
+True label cn classified as 1, likelihood 0.875
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[33  5]
+ [ 7 35]]
+True label en classified as 0, likelihood 0.825
+True label cn classified as 1, likelihood 0.875
+================================================ite: 656
+Distances:
+[[  0.      102.47197]
+ [102.47197   0.     ]]
+loss: : 0.03499313443899155
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[143  20]
+ [ 17 140]]
+True label en classified as 0, likelihood 0.89375
+True label cn classified as 1, likelihood 0.875
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[33  5]
+ [ 7 35]]
+True label en classified as 0, likelihood 0.825
+True label cn classified as 1, likelihood 0.875
+================================================ite: 672
+Distances:
+[[  0.      102.47197]
+ [102.47197   0.     ]]
+loss: : 0.03523906320333481
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[143  20]
+ [ 17 140]]
+True label en classified as 0, likelihood 0.89375
+True label cn classified as 1, likelihood 0.875
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[33  5]
+ [ 7 35]]
+True label en classified as 0, likelihood 0.825
+True label cn classified as 1, likelihood 0.875
+================================================ite: 688
+Distances:
+[[  0.      102.47197]
+ [102.47197   0.     ]]
+loss: : 0.035485051572322845
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[143  20]
+ [ 17 140]]
+True label en classified as 0, likelihood 0.89375
+True label cn classified as 1, likelihood 0.875
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[33  5]
+ [ 7 35]]
+True label en classified as 0, likelihood 0.825
+True label cn classified as 1, likelihood 0.875
+================================================ite: 704
+Distances:
+[[  0.      102.47197]
+ [102.47197   0.     ]]
+loss: : 0.03573065996170044
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[143  20]
+ [ 17 140]]
+True label en classified as 0, likelihood 0.89375
+True label cn classified as 1, likelihood 0.875
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[33  6]
+ [ 7 34]]
+True label en classified as 0, likelihood 0.825
+True label cn classified as 1, likelihood 0.85
+================================================ite: 720
+Distances:
+[[  0.      102.47197]
+ [102.47197   0.     ]]
+loss: : 0.03597623109817505
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[144  20]
+ [ 16 140]]
+True label en classified as 0, likelihood 0.9
+True label cn classified as 1, likelihood 0.875
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[33  6]
+ [ 7 34]]
+True label en classified as 0, likelihood 0.825
+True label cn classified as 1, likelihood 0.85
+================================================ite: 736
+Distances:
+[[  0.      102.47198]
+ [102.47198   0.     ]]
+loss: : 0.03622179478406906
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[144  21]
+ [ 16 139]]
+True label en classified as 0, likelihood 0.9
+True label cn classified as 1, likelihood 0.86875
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[34  6]
+ [ 6 34]]
+True label en classified as 0, likelihood 0.85
+True label cn classified as 1, likelihood 0.85
+================================================ite: 752
+Distances:
+[[  0.      102.47198]
+ [102.47198   0.     ]]
+loss: : 0.0364675298333168
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[144  21]
+ [ 16 139]]
+True label en classified as 0, likelihood 0.9
+True label cn classified as 1, likelihood 0.86875
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[34  6]
+ [ 6 34]]
+True label en classified as 0, likelihood 0.85
+True label cn classified as 1, likelihood 0.85
+================================================ite: 768
+Distances:
+[[  0.      102.47198]
+ [102.47198   0.     ]]
+loss: : 0.036713551729917526
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[146  21]
+ [ 14 139]]
+True label en classified as 0, likelihood 0.9125
+True label cn classified as 1, likelihood 0.86875
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[34  6]
+ [ 6 34]]
+True label en classified as 0, likelihood 0.85
+True label cn classified as 1, likelihood 0.85
+================================================ite: 784
+Distances:
+[[  0.      102.47198]
+ [102.47198   0.     ]]
+loss: : 0.03696025162935257
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[146  21]
+ [ 14 139]]
+True label en classified as 0, likelihood 0.9125
+True label cn classified as 1, likelihood 0.86875
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[34  6]
+ [ 6 34]]
+True label en classified as 0, likelihood 0.85
+True label cn classified as 1, likelihood 0.85
+================================================ite: 800
+Distances:
+[[  0.      102.47198]
+ [102.47198   0.     ]]
+loss: : 0.03720647096633911
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[146  21]
+ [ 14 139]]
+True label en classified as 0, likelihood 0.9125
+True label cn classified as 1, likelihood 0.86875
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[34  6]
+ [ 6 34]]
+True label en classified as 0, likelihood 0.85
+True label cn classified as 1, likelihood 0.85
+================================================ite: 816
+Distances:
+[[  0.       102.471985]
+ [102.471985   0.      ]]
+loss: : 0.037452954798936844
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[147  21]
+ [ 13 139]]
+True label en classified as 0, likelihood 0.91875
+True label cn classified as 1, likelihood 0.86875
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[35  6]
+ [ 5 34]]
+True label en classified as 0, likelihood 0.875
+True label cn classified as 1, likelihood 0.85
+================================================ite: 832
+Distances:
+[[  0.       102.471985]
+ [102.471985   0.      ]]
+loss: : 0.037699855864048004
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[147  21]
+ [ 13 139]]
+True label en classified as 0, likelihood 0.91875
+True label cn classified as 1, likelihood 0.86875
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[35  6]
+ [ 5 34]]
+True label en classified as 0, likelihood 0.875
+True label cn classified as 1, likelihood 0.85
+================================================ite: 848
+Distances:
+[[  0.      102.47199]
+ [102.47199   0.     ]]
+loss: : 0.037947140634059906
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[147  22]
+ [ 13 138]]
+True label en classified as 0, likelihood 0.91875
+True label cn classified as 1, likelihood 0.8625
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[35  6]
+ [ 5 34]]
+True label en classified as 0, likelihood 0.875
+True label cn classified as 1, likelihood 0.85
+================================================ite: 864
+Distances:
+[[  0.      102.47199]
+ [102.47199   0.     ]]
+loss: : 0.03819512575864792
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[147  22]
+ [ 13 138]]
+True label en classified as 0, likelihood 0.91875
+True label cn classified as 1, likelihood 0.8625
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[35  6]
+ [ 5 34]]
+True label en classified as 0, likelihood 0.875
+True label cn classified as 1, likelihood 0.85
+================================================ite: 880
+Distances:
+[[  0.      102.47199]
+ [102.47199   0.     ]]
+loss: : 0.038442354649305344
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[148  23]
+ [ 12 137]]
+True label en classified as 0, likelihood 0.925
+True label cn classified as 1, likelihood 0.85625
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[35  6]
+ [ 5 34]]
+True label en classified as 0, likelihood 0.875
+True label cn classified as 1, likelihood 0.85
+================================================ite: 896
+Distances:
+[[  0.      102.47199]
+ [102.47199   0.     ]]
+loss: : 0.0386885330080986
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[149  23]
+ [ 11 137]]
+True label en classified as 0, likelihood 0.93125
+True label cn classified as 1, likelihood 0.85625
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[35  6]
+ [ 5 34]]
+True label en classified as 0, likelihood 0.875
+True label cn classified as 1, likelihood 0.85
+================================================ite: 912
+Distances:
+[[  0.    102.472]
+ [102.472   0.   ]]
+loss: : 0.03893459588289261
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[149  24]
+ [ 11 136]]
+True label en classified as 0, likelihood 0.93125
+True label cn classified as 1, likelihood 0.85
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[35  6]
+ [ 5 34]]
+True label en classified as 0, likelihood 0.875
+True label cn classified as 1, likelihood 0.85
+================================================ite: 928
+Distances:
+[[  0.    102.472]
+ [102.472   0.   ]]
+loss: : 0.03918074816465378
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[149  25]
+ [ 11 135]]
+True label en classified as 0, likelihood 0.93125
+True label cn classified as 1, likelihood 0.84375
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[35  6]
+ [ 5 34]]
+True label en classified as 0, likelihood 0.875
+True label cn classified as 1, likelihood 0.85
+================================================ite: 944
+Distances:
+[[  0.      102.47201]
+ [102.47201   0.     ]]
+loss: : 0.03942505270242691
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[150  25]
+ [ 10 135]]
+True label en classified as 0, likelihood 0.9375
+True label cn classified as 1, likelihood 0.84375
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[35  6]
+ [ 5 34]]
+True label en classified as 0, likelihood 0.875
+True label cn classified as 1, likelihood 0.85
+================================================ite: 960
+Distances:
+[[  0.      102.47201]
+ [102.47201   0.     ]]
+loss: : 0.039668530225753784
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[150  25]
+ [ 10 135]]
+True label en classified as 0, likelihood 0.9375
+True label cn classified as 1, likelihood 0.84375
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[35  6]
+ [ 5 34]]
+True label en classified as 0, likelihood 0.875
+True label cn classified as 1, likelihood 0.85
+================================================ite: 976
+Distances:
+[[  0.      102.47201]
+ [102.47201   0.     ]]
+loss: : 0.039911579340696335
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[150  25]
+ [ 10 135]]
+True label en classified as 0, likelihood 0.9375
+True label cn classified as 1, likelihood 0.84375
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[35  6]
+ [ 5 34]]
+True label en classified as 0, likelihood 0.875
+True label cn classified as 1, likelihood 0.85
+================================================ite: 992
+Distances:
+[[  0.      102.47201]
+ [102.47201   0.     ]]
+loss: : 0.04015428572893143
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[150  25]
+ [ 10 135]]
+True label en classified as 0, likelihood 0.9375
+True label cn classified as 1, likelihood 0.84375
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[35  6]
+ [ 5 34]]
+True label en classified as 0, likelihood 0.875
+True label cn classified as 1, likelihood 0.85
+================================================ite: 1008
+Distances:
+[[  0.       102.472015]
+ [102.472015   0.      ]]
+loss: : 0.04039619490504265
+Prediction on train set: : 
+(pred_axis, truth_axis) 
+[[150  26]
+ [ 10 134]]
+True label en classified as 0, likelihood 0.9375
+True label cn classified as 1, likelihood 0.8375
+Prediction on test set: : 
+(pred_axis, truth_axis) 
+[[35  6]
+ [ 5 34]]
+True label en classified as 0, likelihood 0.875
+True label cn classified as 1, likelihood 0.85

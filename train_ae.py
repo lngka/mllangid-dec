@@ -8,12 +8,12 @@ from AutoEncoder_2 import AutoEncoder
 from dataset import get_data_set, get_stacked_data_set
 from Callbacks import LossAndErrorPrintingCallback, ModelCheckpoint
 
-MODEL_ID = '71'  # use to name log txt file and save model
+MODEL_ID = '80_3L'  # use to name log txt file and save model
 
 ''' Step1: Get nice data
 '''
 #languages = ['en', 'de', 'cn', 'fr', 'ru']
-languages = ['en', 'cn']
+languages = ['en', 'de', 'cn']
 
 dataset_train, classes_train, dataset_test, classes_test = get_data_set(
     languages,  split=False)
