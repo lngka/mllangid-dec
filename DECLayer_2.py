@@ -76,10 +76,13 @@ class MDECLayer(Layer):
         for i in range(self.n_clusters):
             x = x_minus_mu[:, i, :]
             left = K.dot(x, self.inv_covmat[i])
+            left = K.expand_dims(left, axis=1)
             if len(left_term) == 0:
                 left_term = left
             else:
-                left_term = K.stack([left_term, left], axis=1)
+                #left_term = K.stack([left_term, left], axis=1)
+                left_term = K.concatenate([left_term, left], axis=1)
+
         #print('inv_covmat', self.inv_covmat.shape)
         #print('left_term', left_term.shape)
 
@@ -95,10 +98,15 @@ class MDECLayer(Layer):
         for i in range(self.n_clusters):
             m = mahal[i, :, :]
             diagonal = tf.linalg.tensor_diag_part(m)
+            diagonal = K.expand_dims(diagonal, axis=1)
+
             if len(mahal_diagonal) == 0:
                 mahal_diagonal = diagonal
             else:
-                mahal_diagonal = K.stack([mahal_diagonal, diagonal], axis=1)
+                #mahal_diagonal = K.stack([mahal_diagonal, diagonal], axis=1)
+                mahal_diagonal = K.concatenate(
+                    [mahal_diagonal, diagonal], axis=1)
+
         #print('mahal_diagonal', mahal_diagonal.shape)
 
         md = K.sqrt(mahal_diagonal)
