@@ -45,8 +45,8 @@ languageDEC.initialize(data, classes)
     max_iteration: how many times to go through whole data set, aka. epochs
     update_interval: 
 '''
-optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001)
-#optimizer = tf.keras.optimizers.SGD(learning_rate=0.001)
+optimizer = tf.keras.optimizers.Adam(learning_rate=0.00001)
+#optimizer = tf.keras.optimizers.SGD(learning_rate=0.00001)
 languageDEC.compile(optimizer=optimizer, loss='kld')
-languageDEC.fit(x=data, y=classes, max_iteration=4096,
-                update_interval=16, x_test=data_test, y_test=classes_test)
+languageDEC.fit(x=data, y=classes, max_iteration=32000,
+                update_interval=1, x_test=data_test, y_test=classes_test)
