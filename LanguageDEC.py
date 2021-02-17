@@ -136,6 +136,11 @@ class LanguageDEC:
         if not os.path.exists(checkpoint_path):
             os.makedirs(checkpoint_path)
 
+        np.save(f'{checkpoint_path}/train_x.npy', x)
+        np.save(f'{checkpoint_path}/train_y.npy', y)
+        np.save(f'{checkpoint_path}/test_x.npy', x_test)
+        np.save(f'{checkpoint_path}/test_y.npy', y_test)
+
         self.write_training_log()  # write the model summary
         index = 0
         best_acc = 0
@@ -188,6 +193,9 @@ class LanguageDEC:
                         name='clustering').get_weights()
                     if self.robust:
                         # robust model has two weights
+                        # first save the inversed variance matrix
+                        np.save(
+                            f'{checkpoint_path}/VI_ite{ite}.npy', centroids[1])
                         centroids = centroids[0]
                     np.save(
                         f'{checkpoint_path}/centroids_ite{ite}.npy', centroids)
