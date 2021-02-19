@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from scipy.io.wavfile import read as wavread
 from scipy.io.wavfile import write as wavwrite
 
-SAMPLING_RATE = 8000
+SAMPLING_RATE = 16000
 WIN_SAMPLES = int(SAMPLING_RATE * 0.025)
 HOP_SAMPLES = int(SAMPLING_RATE * 0.010)
 N_FRAMES = 400
@@ -59,7 +59,6 @@ def preprocess(mixedpath, use_mel=False):
 
         mix_stft = tf.signal.stft(
             mix_wav, frame_length=WIN_SAMPLES, frame_step=HOP_SAMPLES, fft_length=FFT_LENGTH)
-
         mix_stft = toFixedNumFrames(mix_stft, N_FRAMES)
 
         mix_phase = tf.angle(mix_stft)
@@ -70,44 +69,55 @@ def preprocess(mixedpath, use_mel=False):
                 y=mixedsamples, sr=SAMPLING_RATE, n_fft=WIN_SAMPLES, hop_length=HOP_SAMPLES, n_mels=40)
             mel = np.transpose(mel)
             mel = toFixedNumFrames(mel, N_FRAMES)
-            return mix_phase, mel
+            return np.array(mix_phase), np.array(mel)
 
-        return mix_phase, mix_spectrum
+        return np.array(mix_phase), np.array(mix_spectrum)
     except EnvironmentError as err:
         print('Error in handle signal', mixedpath)
         print(err)
 
 
 def toFixedNumFrames(arr, nframe):
-    current = arr.shape[0]
+    current = int(arr.shape[0])
     if(current == nframe):
         return arr
     if(current > nframe):
-        return arr[:nframe, :]
+        return arr[-nframe:, :]
     else:
-        # fill missing frames with data sliced from start of arr
+        # fill missing frames with data sliced from end of arr
         missing = nframe - current
-        slice_arr = arr[:missing, :arr.shape[1]]
+        slice_arr = arr[-missing:, :arr.shape[1]]
         new_arr = tf.concat([arr, slice_arr], axis=0)
 
-        # fill missing frames with zeros
-        #new_arr = np.zeros(shape=[nframe, arr.shape[1]], dtype=complex)
-        #new_arr[:arr.shape[0], :arr.shape[1]] = arr
+        missing = nframe - int(new_arr.shape[0])
+        while missing > 0:
+            slice_arr = arr[-missing:, :arr.shape[1]]
+            new_arr = tf.concat([new_arr, slice_arr], axis=0)
+            missing = nframe - int(new_arr.shape[0])
+
         return new_arr
 
 
 def loadWaveFolder(pathToFiles, use_mel=False):
-    phases = []
-    features = []
+    phases = None
+    features = None
 
     files = librosa.util.find_files(pathToFiles, ext=['wav'])
     files = np.asarray(files)
     for f in files:
         phase, feature = preprocess(f, use_mel=use_mel)
-        phases.append(np.array(phase))
-        features.append(np.array(feature))
+        feature = np.expand_dims(feature, 0)
+        phase = np.expand_dims(phase, 0)
 
-    return np.array(phases), np.array(features)
+        if features is None:
+            features = feature
+            phases = phase
+
+        else:
+            features = np.concatenate((features, feature), axis=0)
+            phases = np.concatenate((phases, phase), axis=0)
+
+    return phases, features
 
 
 def get_shuffled_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts', **kwargs):
@@ -153,7 +163,7 @@ def get_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts',
     feature_type: stfts or mel
     '''
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    saveFolder = f'{dir_path}/8K_200'
+    saveFolder = f'{dir_path}/16K_1000'
 
     dataset = list()
     classes = list()
@@ -162,13 +172,19 @@ def get_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts',
 
     for i in range(len(languages)):
         lang = languages[i]
-        features = np.load(f'{saveFolder}/{lang}_{feature_type}.npy')
+        features = np.load(
+            f'{saveFolder}/{lang}_{feature_type}.npy', allow_pickle=True)
         n_samples = features.shape[0]
         labels = np.full(shape=(n_samples, ), fill_value=i)
 
         if split == True:
-            X_train, X_test, y_train, y_test = train_test_split(
-                features, labels, test_size=0.2, random_state=1)
+            # X_train, X_test, y_train, y_test = train_test_split(
+            #    features, labels, test_size=0.2, random_state=1)
+            X_train = features[:950, :, :]
+            X_test = features[-50:, :, :]
+            y_train = labels[:950, ]
+            y_test = labels[-50:, ]
+
         else:
             X_train = features
             y_train = labels
@@ -201,9 +217,10 @@ if __name__ == "__main__":
     use_mel = False
     #languages = ['en', 'de', 'cn', 'fr', 'ru']
     languages = ['en', 'de', 'cn']
+
     dir_path = os.path.dirname(os.path.realpath(__file__))
 
-    saveFolder = f'{dir_path}/8K_200'
+    saveFolder = f'{dir_path}/16K_1000'
     if not os.path.exists(saveFolder):
         os.makedirs(saveFolder)
 
@@ -211,7 +228,10 @@ if __name__ == "__main__":
         lang = languages[i]
 
         phases, features = loadWaveFolder(
-            f'/Users/nvckhoa/speech/8K_200/{lang}', use_mel=use_mel)
+            f'/Users/nvckhoa/speech/16K_1000/{lang}', use_mel=use_mel)
+
+        print('lang', lang)
+        print('features', features.shape)
 
         if use_mel == True:
             np.save(f'{saveFolder}/{lang}_mel', features)

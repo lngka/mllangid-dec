@@ -18,9 +18,6 @@ languages = ['en', 'de', 'cn']
 dataset_train, classes_train, dataset_test, classes_test = get_data_set(
     languages,  split=False)
 
-print(f'Train dataset with shape {dataset_train.shape}')
-
-
 #dataset_train = np.expand_dims(dataset_train, -1)
 #dataset_test = np.expand_dims(dataset_test, -1)
 
