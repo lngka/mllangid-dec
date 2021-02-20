@@ -100,7 +100,11 @@ class LanguageDEC:
                     #is_inlier = np.ones(lang_features.shape[0], dtype=int)
                     #is_inlier[outlier] = 0
 
+                    before = int(lang_features.shape[0])
                     lang_features = lang_features[is_inlier == 1]
+                    after = int(lang_features.shape[0])
+                    self.write_training_log(
+                        'Removed', f'{before - after} outliers')
 
                     lang_centroid = np.average(lang_features, axis=0)
                     cluster_centers.append(lang_centroid)
