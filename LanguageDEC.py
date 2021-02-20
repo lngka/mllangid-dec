@@ -14,7 +14,7 @@ import os
 
 from tensorflow.keras.layers import Layer, InputSpec
 import tensorflow.keras.backend as K
-from helpers import robust_mahalanobis_method, mahalanobis_method, robust_mahalanobis_params
+from helpers import robust_mahalanobis_method, mahalanobis_method, robust_mahalanobis_params, isolation_forest_method
 
 
 class LanguageDEC:
@@ -74,6 +74,7 @@ class LanguageDEC:
 
             for i in range(len(self.languages)):
                 lang_features = features[training_label == i, ]
+
                 df = pd.DataFrame(lang_features)
                 mean, inv_cov = robust_mahalanobis_params(df)
                 mean_list.append(mean)
@@ -90,13 +91,14 @@ class LanguageDEC:
             else:
                 # init using outlier removal & averaging
                 for i in range(len(self.languages)):
-                    lang_features = features[training_label == i, ]
-
                     # remove outliers
-                    df = pd.DataFrame(lang_features)
-                    outlier, _ = robust_mahalanobis_method(df)
-                    is_inlier = np.ones(lang_features.shape[0], dtype=int)
-                    is_inlier[outlier] = 0
+                    lang_features = features[training_label == i, ]
+                    is_inlier = isolation_forest_method(lang_features)
+
+                    #df = pd.DataFrame(lang_features)
+                    #outlier, _ = robust_mahalanobis_method(df)
+                    #is_inlier = np.ones(lang_features.shape[0], dtype=int)
+                    #is_inlier[outlier] = 0
 
                     lang_features = lang_features[is_inlier == 1]
 

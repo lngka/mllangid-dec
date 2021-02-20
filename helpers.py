@@ -5,6 +5,7 @@ import numpy as np
 
 from scipy.stats import chi2
 from sklearn.covariance import MinCovDet
+from sklearn.ensemble import IsolationForest
 
 
 def robust_mahalanobis_params(df):
@@ -77,3 +78,9 @@ def mahalanobis_method(df):
         else:
             continue
     return outlier, md
+
+
+def isolation_forest_method(data):
+    is_inlier = IsolationForest(
+        random_state=0, max_features=50, contamination=0.2).fit_predict(data)
+    return is_inlier
