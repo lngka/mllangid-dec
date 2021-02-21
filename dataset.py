@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from scipy.io.wavfile import read as wavread
 from scipy.io.wavfile import write as wavwrite
 
-SAMPLING_RATE = 16000
+SAMPLING_RATE = 8000
 WIN_SAMPLES = int(SAMPLING_RATE * 0.025)
 HOP_SAMPLES = int(SAMPLING_RATE * 0.010)
 N_FRAMES = 400
@@ -163,7 +163,7 @@ def get_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts',
     feature_type: stfts or mel
     '''
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    saveFolder = f'{dir_path}/16K_1000'
+    saveFolder = f'{dir_path}/8K_1000'
 
     dataset = list()
     classes = list()
@@ -220,7 +220,7 @@ if __name__ == "__main__":
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
 
-    saveFolder = f'{dir_path}/16K_1000'
+    saveFolder = f'{dir_path}/8K_1000'
     if not os.path.exists(saveFolder):
         os.makedirs(saveFolder)
 
@@ -228,7 +228,7 @@ if __name__ == "__main__":
         lang = languages[i]
 
         phases, features = loadWaveFolder(
-            f'/Users/nvckhoa/speech/16K_1000/{lang}', use_mel=use_mel)
+            f'/Users/nvckhoa/speech/8K_1000/{lang}', use_mel=use_mel)
 
         print('lang', lang)
         print('features', features.shape)

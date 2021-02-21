@@ -14,7 +14,7 @@ import os
 
 from tensorflow.keras.layers import Layer, InputSpec
 import tensorflow.keras.backend as K
-from helpers import robust_mahalanobis_method, mahalanobis_method, robust_mahalanobis_params
+from helpers import robust_mahalanobis_method, mahalanobis_method, robust_mahalanobis_params, isolation_forest_method
 
 
 class LanguageDEC:
@@ -65,47 +65,6 @@ class LanguageDEC:
         weight = q ** 2 / q.sum(0)
         return (weight.T / weight.sum(1)).T
 
-    def initialize(self, training_data, training_label=[], robust=False):
-        features = self.extract_features(training_data)
-
-        if self.robust:
-            mean_list = list()
-            inv_cov_list = list()
-
-            for i in range(len(self.languages)):
-                lang_features = features[training_label == i, ]
-                df = pd.DataFrame(lang_features)
-                mean, inv_cov = robust_mahalanobis_params(df)
-                mean_list.append(mean)
-                inv_cov_list.append(inv_cov)
-            weights = [np.array(mean_list), np.array(inv_cov_list)]
-
-        if not self.robust:
-            cluster_centers = list()
-            if len(training_label) == 0:
-                # init using kmean
-                kmeans = KMeans(n_clusters=self.n_lang)
-                kmeans.fit_predict(features)
-                cluster_centers = kmeans.cluster_centers_
-            else:
-                # init using outlier removal & averaging
-                for i in range(len(self.languages)):
-                    lang_features = features[training_label == i, ]
-
-                    # remove outliers
-                    df = pd.DataFrame(lang_features)
-                    outlier, _ = robust_mahalanobis_method(df)
-                    is_inlier = np.ones(lang_features.shape[0], dtype=int)
-                    is_inlier[outlier] = 0
-
-                    lang_features = lang_features[is_inlier == 1]
-
-                    lang_centroid = np.average(lang_features, axis=0)
-                    cluster_centers.append(lang_centroid)
-                weights = [np.array(cluster_centers)]
-
-        self.model.get_layer(name='clustering').set_weights(weights)
-
     def write_training_log(self, key=None, value=''):
         '''
         Write to log file 
@@ -131,7 +90,69 @@ class LanguageDEC:
             else:
                 print(f'{key}: {value}', file=text_file)
 
-    def fit(self, x, y, x_test=None, y_test=None, max_iteration=128, batch_size=64, update_interval=32, **kwargs):
+    def initialize(self, training_data, training_label=[], robust=False):
+        features = self.extract_features(training_data)
+
+        if self.robust:
+            mean_list = list()
+            inv_cov_list = list()
+
+            for i in range(len(self.languages)):
+                lang_features = features[training_label == i, ]
+
+                #is_inlier = isolation_forest_method(lang_features)
+
+                # df = pd.DataFrame(lang_features)
+                # outlier, _ = robust_mahalanobis_method(df)
+                # is_inlier = np.ones(lang_features.shape[0], dtype=int)
+                # is_inlier[outlier] = 0
+
+                # before = int(lang_features.shape[0])
+                # lang_features = lang_features[is_inlier == 1]
+                # after = int(lang_features.shape[0])
+                # n_removed = before - after
+                # self.write_training_log(
+                #     'Removed', f'{n_removed} outliers in {self.languages[i]}')
+
+                df = pd.DataFrame(lang_features)
+                mean, inv_cov = robust_mahalanobis_params(df)
+                mean_list.append(mean)
+                inv_cov_list.append(inv_cov)
+            weights = [np.array(mean_list), np.array(inv_cov_list)]
+
+        if not self.robust:
+            cluster_centers = list()
+            if len(training_label) == 0:
+                # init using kmean
+                kmeans = KMeans(n_clusters=self.n_lang)
+                kmeans.fit_predict(features)
+                cluster_centers = kmeans.cluster_centers_
+            else:
+                # init using outlier removal & averaging
+                for i in range(len(self.languages)):
+                    # remove outliers
+                    lang_features = features[training_label == i, ]
+                    is_inlier = isolation_forest_method(lang_features)
+
+                    #df = pd.DataFrame(lang_features)
+                    #outlier, _ = robust_mahalanobis_method(df)
+                    #is_inlier = np.ones(lang_features.shape[0], dtype=int)
+                    #is_inlier[outlier] = 0
+
+                    before = int(lang_features.shape[0])
+                    lang_features = lang_features[is_inlier == 1]
+                    after = int(lang_features.shape[0])
+                    n_removed = before - after
+                    self.write_training_log(
+                        'Removed', f'{n_removed} outliers')
+
+                    lang_centroid = np.average(lang_features, axis=0)
+                    cluster_centers.append(lang_centroid)
+                weights = [np.array(cluster_centers)]
+
+        self.model.get_layer(name='clustering').set_weights(weights)
+
+    def fit(self, x, y, x_test=None, y_test=None, max_iteration=512, batch_size=128, update_interval=64, **kwargs):
         checkpoint_path = f'{self.dir_path}/model_checkpoints/dec_{self.model_id}'
         if not os.path.exists(checkpoint_path):
             os.makedirs(checkpoint_path)
@@ -181,10 +202,10 @@ class LanguageDEC:
                 self.write_training_log('Prediction on test set: ', )
                 q = self.model.predict(x_test)
                 y_pred_test = q.argmax(1)
-                test_acc = Metrics.evaluate(
+                test_acc, pred_classes = Metrics.evaluate(
                     y_test, y_pred_test, languages=self.languages, model_id=self.model_id)
 
-                if test_acc > best_acc:
+                if test_acc > best_acc and np.unique(pred_classes).size == self.n_lang:
                     best_acc = test_acc
                     self.encoder.save(
                         f'{checkpoint_path}/trained_encoder_ite{ite}.h5')
@@ -250,12 +271,12 @@ class Metrics:
         Metrics.write_training_log(
             "(pred_axis, truth_axis) \n", w, model_id=model_id)
 
-        true_labelmap = tf.argmax(w, axis=0)
+        pred_classes = tf.argmax(w, axis=0)
         likelihood = tf.reduce_max(w, axis=0) / tf.reduce_sum(w, axis=0)
 
         for i in range(len(languages)):
             Metrics.write_training_log(
-                f'True label {languages[i]} classified as ', f'{true_labelmap[i]}, likelihood {likelihood[i]}', model_id=model_id)
+                f'True label {languages[i]} classified as ', f'{pred_classes[i]}, likelihood {likelihood[i]}', model_id=model_id)
 
         average_acc = tf.math.reduce_mean(likelihood)
-        return average_acc
+        return average_acc, pred_classes

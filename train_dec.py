@@ -7,7 +7,7 @@ import os
 
 tf.compat.v1.enable_eager_execution()
 
-MODEL_ID = '80_3L'  # use to name log txt file and save model
+MODEL_ID = '80_3L_1K'  # use to name log txt file and save model
 
 ''' Step0: Get nice data
 '''
@@ -49,4 +49,5 @@ optimizer = tf.keras.optimizers.Adam(learning_rate=0.00001)
 #optimizer = tf.keras.optimizers.SGD(learning_rate=0.00001)
 languageDEC.compile(optimizer=optimizer, loss='kld')
 languageDEC.fit(x=data, y=classes, max_iteration=32000,
-                update_interval=1, x_test=data_test, y_test=classes_test)
+                update_interval=1, batch_size=150,
+                x_test=data_test, y_test=classes_test)
