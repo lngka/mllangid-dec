@@ -99,7 +99,6 @@ class LanguageDEC:
 
             for i in range(len(self.languages)):
                 lang_features = features[training_label == i, ]
-
                 #is_inlier = isolation_forest_method(lang_features)
 
                 # df = pd.DataFrame(lang_features)
