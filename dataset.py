@@ -13,6 +13,7 @@ import librosa.display
 import matplotlib.pyplot as plt
 from scipy.io.wavfile import read as wavread
 from scipy.io.wavfile import write as wavwrite
+import pickle
 
 SAMPLING_RATE = 8000
 WIN_SAMPLES = int(SAMPLING_RATE * 0.025)
@@ -117,7 +118,7 @@ def loadWaveFolder(pathToFiles, use_mel=False):
             features = np.concatenate((features, feature), axis=0)
             phases = np.concatenate((phases, phase), axis=0)
 
-    return phases, features
+    return phases, features, files
 
 
 def get_shuffled_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts', **kwargs):
@@ -158,17 +159,18 @@ def get_stacked_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type=
     return dataset, np.array(stacked_dataset), classes
 
 
-def get_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts', split=False):
+def get_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts', split=False, get_names=False):
     '''
     feature_type: stfts or mel
     '''
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    saveFolder = f'{dir_path}/8K_1000'
+    saveFolder = f'{dir_path}/8K_2000'
 
     dataset = list()
     classes = list()
     dataset_test = list()
     classes_test = list()
+    file_names = list()
 
     for i in range(len(languages)):
         lang = languages[i]
@@ -176,6 +178,10 @@ def get_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts',
             f'{saveFolder}/{lang}_{feature_type}.npy', allow_pickle=True)
         n_samples = features.shape[0]
         labels = np.full(shape=(n_samples, ), fill_value=i)
+
+        names = np.load(
+            f'{saveFolder}/{lang}_file_names.npy', allow_pickle=True)
+        names = np.expand_dims(names, axis=0)
 
         if split == True:
             # X_train, X_test, y_train, y_test = train_test_split(
@@ -196,13 +202,18 @@ def get_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts',
             classes = y_train
             dataset_test = X_test
             classes_test = y_test
+            file_names = names
         else:
             dataset = np.concatenate((dataset, X_train), axis=0)
             classes = np.concatenate((classes, y_train), axis=0)
             dataset_test = np.concatenate((dataset_test, X_test), axis=0)
             classes_test = np.concatenate((classes_test, y_test), axis=0)
+            file_names = np.concatenate((file_names, names), axis=0)
 
-    return dataset, classes, dataset_test, classes_test
+    if get_names:
+        return dataset, classes, dataset_test, classes_test, file_names
+    else:
+        return dataset, classes, dataset_test, classes_test
 
 
 def shuffle_data_with_label(dataset, classes):
@@ -215,23 +226,24 @@ def shuffle_data_with_label(dataset, classes):
 
 if __name__ == "__main__":
     use_mel = False
-    #languages = ['en', 'de', 'cn', 'fr', 'ru']
-    languages = ['en', 'de', 'cn']
+    languages = ['en', 'de', 'cn', 'fr', 'ru']
+    #languages = ['en', 'de', 'cn']
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
 
-    saveFolder = f'{dir_path}/8K_1000'
+    saveFolder = f'{dir_path}/8K_2000'
     if not os.path.exists(saveFolder):
         os.makedirs(saveFolder)
 
     for i in range(len(languages)):
         lang = languages[i]
 
-        phases, features = loadWaveFolder(
-            f'/Users/nvckhoa/speech/8K_1000/{lang}', use_mel=use_mel)
+        phases, features, file_names = loadWaveFolder(
+            f'/Users/nvckhoa/speech/8K_2000/{lang}', use_mel=use_mel)
 
         print('lang', lang)
         print('features', features.shape)
+        print('file_names', file_names.shape)
 
         if use_mel == True:
             np.save(f'{saveFolder}/{lang}_mel', features)
@@ -239,3 +251,4 @@ if __name__ == "__main__":
             np.save(f'{saveFolder}/{lang}_stfts', features)
 
         np.save(f'{saveFolder}/{lang}_phases', phases)
+        np.save(f'{saveFolder}/{lang}_file_names', file_names)
