@@ -184,12 +184,8 @@ def get_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts',
         names = np.expand_dims(names, axis=0)
 
         if split == True:
-            # X_train, X_test, y_train, y_test = train_test_split(
-            #    features, labels, test_size=0.2, random_state=1)
-            X_train = features[:950, :, :]
-            X_test = features[-50:, :, :]
-            y_train = labels[:950, ]
-            y_test = labels[-50:, ]
+            X_train, X_test, y_train, y_test = train_test_split(
+                features, labels, test_size=0.05, random_state=1)
 
         else:
             X_train = features
