@@ -19,8 +19,8 @@ SAMPLING_RATE = 8000
 WIN_SAMPLES = int(SAMPLING_RATE * 0.025)
 HOP_SAMPLES = int(SAMPLING_RATE * 0.010)
 N_FRAMES = 400
-# FFT_LENGTH = 198  # fft_bins = fft_length // 2 + 1 = 100
-FFT_LENGTH = 78  # fft_bins = fft_length // 2 + 1 = 40
+FFT_LENGTH = 198  # fft_bins = fft_length // 2 + 1 = 100
+# FFT_LENGTH = int(SAMPLING_RATE * 0.025)  # fft_bins = fft_length // 2 + 1 = 40
 
 
 def read_wav(in_path):
@@ -164,7 +164,7 @@ def get_data_set(languages=['en', 'de', 'cn', 'fr', 'ru'], feature_type='stfts',
     feature_type: stfts or mel
     '''
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    saveFolder = f'{dir_path}/8K_2000'
+    saveFolder = f'{dir_path}/8K_filtered_1196'
 
     dataset = list()
     classes = list()
@@ -223,7 +223,7 @@ def shuffle_data_with_label(dataset, classes):
 if __name__ == "__main__":
     use_mel = False
     languages = ['en', 'de', 'cn', 'fr', 'ru']
-    #languages = ['en', 'de', 'cn']
+    #languages = ['en']
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
 
